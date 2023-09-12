@@ -67,6 +67,7 @@ public class SeckillStockBucketArrangementServiceImpl implements SeckillStockBuc
     private ResourceTransactionManager dataSourceTransactionManager;
     @Autowired
     private TransactionDefinition transactionDefinition;
+
     @Value("${place.order.type:bucket}")
     private String placeOrderType;
 
