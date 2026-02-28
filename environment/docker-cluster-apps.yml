@@ -1,0 +1,32 @@
+version: '3.2'
+
+networks:
+  binghe-cluster-apps:
+    driver: overlay
+
+volumes:
+  prometheus_data: {}
+services:
+  seckill-app:
+    image: seckill-app
+    container_name: seckill-app
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    ports:
+      - 8090:8090
+    networks:
+      - binghe-cluster-apps
+    restart: on-failure
+  seckill-gateway:
+    image: seckill-gateway
+    container_name: seckill-gateway
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    ports:
+      - 8080:8080
+    networks:
+      - binghe-cluster-apps
+    restart: on-failure
+
+
+
