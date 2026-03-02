@@ -31,17 +31,6 @@
 - [《MySQL核心技术》](https://mp.weixin.qq.com/s/jd7vTSZ7wqj3BMLRlhn3DA) —— 全书共19章、16万字，涵盖了MySQL核心基础知识的方方面面内容，非常适合MySQL数据库初学者入门，也适合MySQL技术高手系统化的梳理MySQL基础知识，及时查漏补缺，全网累计下载5万+。
 - [《Spring IOC核心技术》](https://mp.weixin.qq.com/s/5wCnprKkMRx0Pd1gDImKtg) —— 全书共27章，19万字，涵盖Spring IOC最核心的技术，全网累计下载8万+。
 
-## 《Seckill秒杀系统》专栏文章
-
-* [《Seckill秒杀系统》开篇：我要手把手教你搭建并研发一套抗瞬时百万流量的秒杀系统](https://articles.zsxq.com/id_52v1wwqt8uez.html)
-* [《Seckill秒杀系统》第1章：从多个角度聊聊为何要学习秒杀系统](https://articles.zsxq.com/id_568x6zv029p0.html)
-* [《Seckill秒杀系统》第2章：秒杀系统的目标与挑战](https://articles.zsxq.com/id_o8mpr6wa7ckz.html)
-* [《Seckill秒杀系统》第3章：秒杀系统高并发大流量的应对之道](https://articles.zsxq.com/id_twifx1gmaqp5.html)
-* [《Seckill秒杀系统》第4章：秒杀系统需求与流程梳理](https://articles.zsxq.com/id_dl7wxs3uea1x.html)
-* [《Seckill秒杀系统》第5章：秒杀系统技术流程梳理](https://articles.zsxq.com/id_34je77wpb9ul.html)
-* [《Seckill秒杀系统》第6章：秒杀系统总体方案目标与架构设计](https://articles.zsxq.com/id_6beq5lgdxv16.html)
-* [《Seckill秒杀系统》第7章：秒杀系统基础环境搭建](https://articles.zsxq.com/id_k0a488ltsvsc.html)
-* [《Seckill秒杀系统》第8章：秒杀系统研发环境搭建](https://articles.zsxq.com/id_0icjzih3iia1.html)
 
 ## 联系我
 
@@ -54,6 +43,18 @@
 <div align="center">
     <a href="https://github.com/binghe001/BingheGuide">关注冰河技术，解锁更多技能！</a>
 </div>
+
+## 专栏文章
+
+* [《Seckill秒杀系统》开篇：我要手把手教你搭建并研发一套抗瞬时百万流量的秒杀系统](https://articles.zsxq.com/id_52v1wwqt8uez.html)
+* [《Seckill秒杀系统》第1章：从多个角度聊聊为何要学习秒杀系统](https://articles.zsxq.com/id_568x6zv029p0.html)
+* [《Seckill秒杀系统》第2章：秒杀系统的目标与挑战](https://articles.zsxq.com/id_o8mpr6wa7ckz.html)
+* [《Seckill秒杀系统》第3章：秒杀系统高并发大流量的应对之道](https://articles.zsxq.com/id_twifx1gmaqp5.html)
+* [《Seckill秒杀系统》第4章：秒杀系统需求与流程梳理](https://articles.zsxq.com/id_dl7wxs3uea1x.html)
+* [《Seckill秒杀系统》第5章：秒杀系统技术流程梳理](https://articles.zsxq.com/id_34je77wpb9ul.html)
+* [《Seckill秒杀系统》第6章：秒杀系统总体方案目标与架构设计](https://articles.zsxq.com/id_6beq5lgdxv16.html)
+* [《Seckill秒杀系统》第7章：秒杀系统基础环境搭建](https://articles.zsxq.com/id_k0a488ltsvsc.html)
+* [《Seckill秒杀系统》第8章：秒杀系统研发环境搭建](https://articles.zsxq.com/id_0icjzih3iia1.html)
 
 
 ## 加群交流
