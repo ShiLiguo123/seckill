@@ -33,7 +33,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @MapperScan(value = {"io.binghe.seckill.infrastructure.mapper"})
 @ComponentScan(value = {"io.binghe.seckill"})
 @PropertySource(value = {"classpath:properties/jdbc.properties", "classpath:properties/mybatis.properties"})
-@Import({JdbcConfig.class, MyBatisConfig.class})
+@Import({JdbcConfig.class, RedisConfig.class, MyBatisConfig.class})
 @EnableTransactionManagement(proxyTargetClass = true)
 public class TransactionConfig {
 

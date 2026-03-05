@@ -16,7 +16,8 @@
 package io.binghe.seckill.interfaces.controller;
 
 import io.binghe.seckill.application.service.SeckillUserService;
-import io.binghe.seckill.domain.code.ErrorCode;
+import io.binghe.seckill.domain.code.HttpCode;
+import io.binghe.seckill.domain.dto.SeckillUserDTO;
 import io.binghe.seckill.domain.model.SeckillUser;
 import io.binghe.seckill.domain.response.ResponseMessage;
 import io.binghe.seckill.domain.response.ResponseMessageBuilder;
@@ -42,6 +43,14 @@ public class SeckillUserController {
      */
     @RequestMapping(value = "/get", method = {RequestMethod.GET, RequestMethod.POST})
     public ResponseMessage<SeckillUser> getUser(@RequestParam(value = "username") String userName){
-       return ResponseMessageBuilder.build(ErrorCode.SUCCESS.getCode(), seckillUserService.getSeckillUserByUserName(userName));
+       return ResponseMessageBuilder.build(HttpCode.SUCCESS.getCode(), seckillUserService.getSeckillUserByUserName(userName));
+    }
+
+    /**
+     * 登录系统
+     */
+    @RequestMapping(value = "/login", method = {RequestMethod.GET, RequestMethod.POST})
+    public ResponseMessage<String> login(@RequestBody SeckillUserDTO seckillUserDTO){
+        return ResponseMessageBuilder.build(HttpCode.SUCCESS.getCode(), seckillUserService.login(seckillUserDTO.getUserName(), seckillUserDTO.getPassword()));
     }
 }
