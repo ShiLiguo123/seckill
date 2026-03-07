@@ -42,8 +42,8 @@ public class SeckillUserController {
      * 测试系统
      */
     @RequestMapping(value = "/get", method = {RequestMethod.GET, RequestMethod.POST})
-    public ResponseMessage<SeckillUser> getUser(@RequestParam(value = "username") String userName){
-       return ResponseMessageBuilder.build(HttpCode.SUCCESS.getCode(), seckillUserService.getSeckillUserByUserName(userName));
+    public ResponseMessage<SeckillUser> getUser(@RequestAttribute Long userId){
+       return ResponseMessageBuilder.build(HttpCode.SUCCESS.getCode(), seckillUserService.getSeckillUserByUserId(userId));
     }
 
     /**

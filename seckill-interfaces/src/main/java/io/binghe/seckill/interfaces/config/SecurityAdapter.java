@@ -13,31 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.binghe.seckill.application.service;
+package io.binghe.seckill.interfaces.config;
 
-import io.binghe.seckill.domain.model.SeckillUser;
+import io.binghe.seckill.interfaces.interceptor.AuthInterceptor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  * @author binghe(微信 : hacker_binghe)
  * @version 1.0.0
- * @description 用户
+ * @description 安全适配器
  * @github https://github.com/binghe001
  * @copyright 公众号: 冰河技术
  */
-public interface SeckillUserService {
+@Configuration
+public class SecurityAdapter implements WebMvcConfigurer {
 
-    /**
-     * 根据用户名获取用户信息
-     */
-    SeckillUser getSeckillUserByUserName(String userName);
+    @Autowired
+    private AuthInterceptor authInterceptor;
 
-    /**
-     * 根据用户id获取用户信息
-     */
-    SeckillUser getSeckillUserByUserId(Long userId);
-
-    /**
-     * 登录
-     */
-    String login(String userName, String password);
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(authInterceptor).addPathPatterns("/**").excludePathPatterns("/user/login");
+    }
 }
