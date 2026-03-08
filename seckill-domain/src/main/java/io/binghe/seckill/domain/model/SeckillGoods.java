@@ -56,7 +56,7 @@ public class SeckillGoods implements Serializable {
     private String description;
     //图片
     private String imgUrl;
-    //秒杀状态 0：已发布； 1：上线； 2：下线
+    //秒杀状态 0：已发布； 1：上线； -1：下线
     private Integer status;
 
     public Long getId() {

@@ -39,7 +39,7 @@ public class SeckillActivity implements Serializable {
     //活动结束时间
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date endTime;
-    //活动状态 0：已发布； 1：上线； 2：下线
+    //活动状态 0：已发布； 1：上线； -1：下线
     private Integer status;
     //活动描述
     private String activityDesc;
