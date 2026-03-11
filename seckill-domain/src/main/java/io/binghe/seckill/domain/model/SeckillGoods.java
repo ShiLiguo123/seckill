@@ -15,6 +15,7 @@
  */
 package io.binghe.seckill.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
@@ -38,9 +39,11 @@ public class SeckillGoods implements Serializable {
     private Long activityId;
     //活动开始时间
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+08:00")
     private Date startTime;
     //活动结束时间
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+08:00")
     private Date endTime;
     //商品原价
     private BigDecimal originalPrice;

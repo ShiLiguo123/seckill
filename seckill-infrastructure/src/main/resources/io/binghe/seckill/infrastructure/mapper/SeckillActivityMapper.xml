@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="io.binghe.seckill.infrastructure.mapper.SeckillActivityMapper" >
+
+    <resultMap id="baseResultMap" type="io.binghe.seckill.domain.model.SeckillActivity">
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="activity_name" property="activityName" jdbcType="VARCHAR"/>
+        <result column="start_time" property="startTime" jdbcType="TIMESTAMP"/>
+        <result column="end_time" property="endTime" jdbcType="TIMESTAMP"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="activity_desc" property="activityDesc" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, activity_name, start_time, end_time, status, activity_desc
+    </sql>
+
+    <insert id="saveSeckillActivity" parameterType="io.binghe.seckill.domain.model.SeckillActivity">
+        insert into seckill_activity(
+         <include refid="Base_Column_List"/>
+        )values(#{id}, #{activityName}, #{startTime}, #{endTime}, #{status}, #{activityDesc})
+
+    </insert>
+
+    <select id="getSeckillActivityList" resultMap="baseResultMap">
+        select  <include refid="Base_Column_List" /> from seckill_activity where 1 = 1
+        <if test="status != null">
+            and status = #{status}
+        </if>
+    </select>
+    
+    <select id="getSeckillActivityById" resultMap="baseResultMap">
+        select  <include refid="Base_Column_List" /> from seckill_activity where id = #{id}
+    </select>
+
+    <update id="updateStatus">
+        update seckill_activity set status = #{status} where id = #{id}
+    </update>
+
+    <select id="getSeckillActivityListBetweenStartTimeAndEndTime" resultMap="baseResultMap">
+        select  <include refid="Base_Column_List" /> from seckill_activity where status = #{status} and start_time &lt;= #{currentTime} and end_time &gt;= #{currentTime}
+    </select>
+
+
+</mapper>

@@ -15,6 +15,7 @@
  */
 package io.binghe.seckill.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
@@ -50,6 +51,7 @@ public class SeckillOrder implements Serializable {
     private Integer status;
     //创建时间
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+08:00")
     private Date createTime;
 
     public Long getId() {
