@@ -1,8 +1,8 @@
-var g_host="127.0.0.1:8080";
+var g_host="localhost:8080";
 
 var common_localstorage_key = "common_localstorage_key";
 
-var base_image_url = "http://localhost:10001/seckill"
+var base_image_url = "http://localhost:10000/seckill"
 
 function currentTime(){
     var time = new Date();
@@ -31,6 +31,16 @@ function get(key){
 function getImageUrl(url){
     return base_image_url + url;
 }
+
+function dateFormat(dateTime){
+    if(dateTime.indexOf('T') != -1){
+        dateTime += ':00'
+        dateTime = dateTime.replace('T',' ')
+        return dateTime;
+    }
+}
+
+
 
 function getParameterByName(name, url = window.location.href) {
     name = name.replace(/[\[\]]/g, '\\$&');

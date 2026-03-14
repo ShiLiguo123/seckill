@@ -61,6 +61,7 @@
 * [《Seckill秒杀系统》第12章：访问登录授权限制接口的流程设计与实现](https://articles.zsxq.com/id_hnrl4fo6novx.html)
 * [《Seckill秒杀系统》第13章：秒杀活动业务流程与接口设计](https://articles.zsxq.com/id_wdfwtvodfnb4.html)
 * [《Seckill秒杀系统》第14章：秒杀活动后端业务与接口开发](https://articles.zsxq.com/id_20cgmqtahkow.html)
+* [《Seckill秒杀系统》第15章：秒杀活动运营端业务开发](https://articles.zsxq.com/id_rphbmq1x6ohj.html)
 
 
 ## 加群交流
