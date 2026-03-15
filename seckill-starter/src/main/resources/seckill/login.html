@@ -61,6 +61,7 @@
                     if (data.code == "1001") {
                         alert("登录成功");
                         set(common_localstorage_key, data.data);
+                        window.location.href = "activity_list.html";
                     } else {
                         alert("登录失败：" + data.data);
                     }

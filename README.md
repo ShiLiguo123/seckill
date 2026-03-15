@@ -62,6 +62,7 @@
 * [《Seckill秒杀系统》第13章：秒杀活动业务流程与接口设计](https://articles.zsxq.com/id_wdfwtvodfnb4.html)
 * [《Seckill秒杀系统》第14章：秒杀活动后端业务与接口开发](https://articles.zsxq.com/id_20cgmqtahkow.html)
 * [《Seckill秒杀系统》第15章：秒杀活动运营端业务开发](https://articles.zsxq.com/id_rphbmq1x6ohj.html)
+* [《Seckill秒杀系统》第16章：秒杀活动用户端业务开发](https://articles.zsxq.com/id_b0r7cbkn1z5d.html)
 
 
 ## 加群交流
