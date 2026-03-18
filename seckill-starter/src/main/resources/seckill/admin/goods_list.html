@@ -10,18 +10,25 @@
 
 <body>
 <div class="content">
-	<h3 class="form-title">活动列表</h3>
+	<h3 class="form-title">商品列表</h3>
 	<div class="table-responsive">
-		<div style="float:right; padding-right: 200px"><input type="button" value="添加活动" onclick="submitActivity()"></div>
+		<div style="float:right; padding-right: 200px"><input type="button" value="返回" onclick="rollback()"></div>
 		<table class="table">
 			<thead>
 			<tr>
+				<th>商品图片</th>
+				<th>商品编号</th>
+				<th>商品名称</th>
 				<th>活动编号</th>
-				<th>活动名称</th>
 				<th>开始时间</th>
 				<th>结束时间</th>
-				<th>活动状态</th>
-				<th>活动描述</th>
+				<th>原价</th>
+				<th>秒杀价</th>
+				<th>初始库存</th>
+				<th>当前库存</th>
+				<th>限购个数</th>
+				<th>商品描述</th>
+				<th>状态</th>
 				<th>操作</th>
 			</tr>
 			</thead>
@@ -35,28 +42,30 @@
 
 <script>
 	// 定义全局活动数组信息
-	var g_activityList = [];
+	var g_goodsList = [];
+
 	jQuery(document).ready(function () {
-		getActivityList();
+		showGoodsList();
 	})
 
-	//获取活动列表
-	function getActivityList(){
+	function showGoodsList(){
+		var activityId = getParameterByName("activityId");
 		$.ajax({
 			type:"GET",
 			headers:{
 				"access-token": get(common_localstorage_key)
 			},
-			url:"http://"+g_host+"/activity/getSeckillActivityList",
+			url:"http://"+g_host+"/goods/getSeckillGoodsByActivityId?activityId=" + activityId,
 			xhrFields: {withCredentials: true},
 			success:function (data) {
 				if (data.code == 1001) {
-					g_activityList = data.data;
+					g_goodsList = data.data;
 					reloadDom();
 				}else if (data.code == 2012){
-					alert("请登录后操作")
+					alert("请登录后操作");
 					window.location.href = "login.html";
 				}
+
 				else {
 					alert("获取活动信息失败");
 				}
@@ -69,15 +78,22 @@
 
 	function reloadDom() {
 		$("#container").html('')
-		for (var i = 0; i < g_activityList.length; i ++){
-			var itemVO = g_activityList[i];
-			var dom = "<tr id='activityDetail"+ itemVO.id +"'>" +
+		for (var i = 0; i < g_goodsList.length; i ++){
+			var itemVO = g_goodsList[i];
+			var dom = "<tr id='goodsDetail"+ itemVO.id +"'>" +
+					"<td><img style='width: 100px;height: auto' src='"+ getImageUrl(itemVO.imgUrl) +"'></td>" +
 					"<td>"+ itemVO.id +"</td>" +
-					"<td>"+ itemVO.activityName +"</td>" +
+					"<td>"+ itemVO.goodsName +"</td>" +
+					"<td>"+ itemVO.activityId +"</td>" +
 					"<td>"+ itemVO.startTime +"</td>" +
 					"<td>"+ itemVO.endTime +"</td>" +
+					"<td>"+ itemVO.originalPrice +"</td>" +
+					"<td>"+ itemVO.activityPrice +"</td>" +
+					"<td>"+ itemVO.initialStock +"</td>" +
+					"<td>"+ itemVO.availableStock +"</td>" +
+					"<td>"+ itemVO.limitNum +"</td>" +
+					"<td>"+ itemVO.description +"</td>" +
 					"<td>"+ getStatus(itemVO.status) +"</td>" +
-					"<td>"+ itemVO.activityDesc +"</td>" +
 					"<td>"+ showButton(itemVO) +"</td>" +
 					"</tr>";
 			$("#container").append($(dom));
@@ -88,33 +104,31 @@
 	function showButton(itemVO){
 		var innerHtml = "";
 		if(itemVO.status == 0){
-			innerHtml += "<input type='button' data-id='"+ itemVO.id +"' data-start-time='"+ itemVO.startTime +"' data-end-time='"+ itemVO.endTime +"' value='发布商品' onclick='submitGoods(this)'/>" +
-			"<input type='button' value='查看商品' onclick='getGoods(" + itemVO.id + ")'/>" +
-			"<input type='button' value='上线' onclick='onlineActivity(" + itemVO.id + ")'/>";
+			innerHtml += "<input type='button' value='上线' onclick='onlineGoods(" + itemVO.id + ")'/>";
 		}else if (itemVO.status == 1){
-			innerHtml += "<input type='button' data-id='"+ itemVO.id +"' data-start-time='"+ itemVO.startTime +"' data-end-time='"+ itemVO.endTime +"' value='发布商品' onclick='submitGoods(this)'/>" +
-					"<input type='button' value='查看商品' onclick='getGoods(" + itemVO.id + ")'/>" +
-					"<input type='button' value='下线' onclick='offlineActivity(" + itemVO.id + ")'/>";
-		}else {
-			innerHtml += "<input type='button' value='查看商品' onclick='getGoods(" + itemVO.id + ")'/>"
+			innerHtml += "<input type='button' value='下线' onclick='offlineGoods(" + itemVO.id + ")'/>";
 		}
 		return innerHtml;
 	}
 
-	//上线活动
-	function onlineActivity(activityId){
+	function rollback(){
+		window.location.href = "activity_list.html";
+	}
+
+	//上线商品
+	function onlineGoods(activityId){
 		$.ajax({
 			type:"GET",
 			headers:{
 				"access-token": get(common_localstorage_key)
 			},
 			data: { "status": 1, "id": activityId},
-			url:"http://"+g_host+"/activity/updateStatus",
+			url:"http://"+g_host+"/goods/updateStatus",
 			xhrFields: {withCredentials: true},
 			success:function (data) {
 				if (data.code == 1001) {
 					alert("上线成功");
-					getActivityList();
+					showGoodsList();
 				}else if (data.code == 2012){
 					alert("请登录后操作")
 					window.location.href = "login.html";
@@ -128,20 +142,20 @@
 			}
 		})
 	}
-	//下线活动
-	function offlineActivity(activityId){
+	//下线商品
+	function offlineGoods(activityId){
 		$.ajax({
 			type:"GET",
 			headers:{
 				"access-token": get(common_localstorage_key)
 			},
 			data: { "status": -1, "id": activityId},
-			url:"http://"+g_host+"/activity/updateStatus",
+			url:"http://"+g_host+"/goods/updateStatus",
 			xhrFields: {withCredentials: true},
 			success:function (data) {
 				if (data.code == 1001) {
 					alert("下线成功");
-					getActivityList();
+					showGoodsList();
 				}else if (data.code == 2012){
 					alert("请登录后操作")
 					window.location.href = "login.html";
@@ -156,32 +170,14 @@
 		})
 	}
 
-	//查看商品
-	function getGoods(activityId){
-		window.location.href="goods_list.html?activityId=" + activityId;
-	}
-	//添加商品
-	function submitGoods(data){
-		var id = $(data).attr("data-id");
-		var endTime = $(data).attr("data-end-time");
-		if (currentTime() > endTime){
-			alert("秒杀活动已经结束，不能发布商品");
-			return;
-		}
-		window.location.href="create_goods.html?activityId=" + id;
-	}
-	//添加活动
-	function submitActivity(){
-		window.location.href="create_activity.html";
-	}
 
 	function getStatus(status){
 		if (status == 0){
 			return "已发布";
 		}else if (status == 1){
-			return "上线";
+			return "已上线";
 		}else if (status == -1){
-			return "下线";
+			return "已下线";
 		}
 	}
 </script>

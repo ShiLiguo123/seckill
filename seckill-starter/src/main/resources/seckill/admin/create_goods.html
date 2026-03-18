@@ -1,0 +1,176 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link href="../static/assets/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <link href="../static/assets/global/css/components.css" rel="stylesheet" type="text/css"/>
+    <link href="../static/assets/admin/pages/css/login.css" rel="stylesheet" type="text/css"/>
+    <script src="../static/assets/global/plugins/jquery-1.11.0.min.js" type="text/javascript"></script>
+    <script src="../js/common.js" type="text/javascript"></script>
+</head>
+
+<body class="login">
+    <div class="content">
+        <h3 class="form-title">添加商品</h3>
+        <div class="form-group">
+            <label class="control-label">商品名称</label>
+            <div>
+                <input class="form-control" type="text" name="goodsName" id="goodsName"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label">商品原价</label>
+            <div>
+                <input class="form-control" type="text" name="originalPrice" id="originalPrice"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label">商品秒杀价</label>
+            <div>
+                <input class="form-control" type="text" name="activityPrice" id="activityPrice"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label">商品库存</label>
+            <div>
+                <input class="form-control" type="text" name="initialStock" id="initialStock"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label">限购个数</label>
+            <div>
+                <input class="form-control" type="text" name="limitNum" id="limitNum"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label">描述</label>
+            <div>
+                <input class="form-control" type="text" name="description" id="description"/>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button class="btn blue" id="create" type="submit">
+                提交
+            </button>
+        </div>
+    </div>
+</body>
+
+
+<script>
+
+    jQuery(document).ready(function () {
+        //绑定otp的click时间用于向后端发送获取手机验证码的请求
+        $("#create").on("click", function () {
+            var goodsName = $("#goodsName").val();
+            var originalPrice = $("#originalPrice").val();
+            var activityPrice = $("#activityPrice").val();
+            var initialStock = $("#initialStock").val();
+            var description = $("#description").val();
+            var limitNum = $("#limitNum").val();
+
+            if (goodsName == null || goodsName == "") {
+                alert("商品名称不能为空");
+                return false;
+            }
+            if (originalPrice == null || originalPrice == "") {
+                alert("原价不能为空");
+                return false;
+            }
+            if (originalPrice <= 0){
+                alert("原价不能小于或者等于0");
+                return false;
+            }
+            if (activityPrice == null || activityPrice == "") {
+                alert("秒杀价格不能为空");
+                return false;
+            }
+
+            if (activityPrice <= 0){
+                alert("秒杀价格不能小于或者等于0");
+                return false;
+            }
+
+            if (activityPrice > originalPrice){
+                alert("秒杀价格不能大于商品原价格");
+                return false;
+            }
+
+            if (initialStock == null || initialStock == "") {
+                alert("商品库存不能为空");
+                return false;
+            }
+
+            if (initialStock <= 0){
+                alert("商品库存不能小于或者等于0");
+                return false;
+            }
+
+
+            if (limitNum == null || limitNum == "") {
+                alert("限购个数不能为空");
+                return false;
+            }
+
+            if (limitNum <= 0){
+                alert("限购个数不能小于或者等于0");
+                return false;
+            }
+
+            if (description == null || description == "") {
+                alert("商品描述不能为空");
+                return false;
+            }
+
+            var activityId = getParameterByName("activityId");
+            if (activityId == null || activityId == "") {
+                alert("未获取到活动编号");
+                return false;
+            }
+
+            $.ajax({
+                type: "POST",
+                headers:{
+                    "access-token": get(common_localstorage_key)
+                },
+                contentType: "application/x-www-form-urlencoded",
+                url: "http://"+g_host+"/goods/saveSeckillGoods",
+                data: {
+                    "goodsName": goodsName,
+                    "activityId": activityId,
+                    "originalPrice": originalPrice,
+                    "activityPrice": activityPrice,
+                    "initialStock": initialStock,
+                    "description": description,
+                    "limitNum": limitNum,
+                    "imgUrl": "/static/img/avatar.png",
+                },
+                xhrFields: {withCredentials: true},
+                success: function (data) {
+                    if (data.code == "1001") {
+                        alert("创建成功");
+                        window.location.href="goods_list.html?activityId=" + activityId;
+                    }else if (data.code == 2012){
+                        alert("请登录后操作");
+                        window.location.href = "login.html";
+                    }
+                    else {
+                        alert("创建失败");
+                    }
+                },
+                error: function (data) {
+                    alert("创建失败");
+                }
+            });
+            return false;
+        });
+
+    });
+
+
+</script>
+
+
+</html>
