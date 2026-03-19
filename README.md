@@ -66,6 +66,7 @@
 * [《Seckill秒杀系统》第17章：秒杀商品业务流程与接口设计](https://articles.zsxq.com/id_7xeu66680um9.html)
 * [《Seckill秒杀系统》第18章：秒杀商品后端业务与接口开发](https://articles.zsxq.com/id_oljjuu2nwrgd.html)
 * [《Seckill秒杀系统》第19章：秒杀商品运营端业务开发](https://articles.zsxq.com/id_w3ii5bkwh5gm.html)
+* [《Seckill秒杀系统》第20章：秒杀商品用户端业务开发](https://articles.zsxq.com/id_ocqncwn7kji9.html)
 
 
 ## 加群交流
