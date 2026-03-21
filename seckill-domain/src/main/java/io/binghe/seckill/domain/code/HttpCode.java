@@ -38,7 +38,9 @@ public enum HttpCode {
     BEYOND_LIMIT_NUM(2011, "下单数量不能超过限购数量"),
     USER_NOT_LOGIN(2012, "用户未登录"),
     TOKEN_EXPIRE(2013, "Token失效"),
-    DATA_PARSE_FAILED(2014, "数据解析失败");
+    GOODS_OFFLINE(2014, "商品已下线"),
+    GOODS_PUBLISH(2015, "商品未上线"),
+    DATA_PARSE_FAILED(2016, "数据解析失败");
 
     private final Integer code;
     private final String mesaage;
