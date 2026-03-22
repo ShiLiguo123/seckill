@@ -1,0 +1,178 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link href="./static/assets/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <link href="./static/assets/global/css/components.css" rel="stylesheet" type="text/css"/>
+    <link href="./static/assets/admin/pages/css/login.css" rel="stylesheet" type="text/css"/>
+    <script src="./static/assets/global/plugins/jquery-1.11.0.min.js" type="text/javascript"></script>
+    <script src="./js/common.js" type="text/javascript"></script>
+</head>
+
+<body class="login">
+    <div class="content">
+        <h3 class="form-title">抢购</h3>
+        <div class="form-group">
+            <label class="control-label">商品名称</label>
+            <div>
+                <input class="form-control" type="text" disabled="disabled" name="goodsName" id="goodsName"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label">商品原价</label>
+            <div>
+                <input class="form-control" type="text" disabled="disabled"  name="originalPrice" id="originalPrice"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label">商品秒杀价</label>
+            <div>
+                <input class="form-control" type="text" disabled="disabled"  name="activityPrice" id="activityPrice"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label">当前库存</label>
+            <div>
+                <input class="form-control" type="text" disabled="disabled"  name="availableStock" id="availableStock"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label">限购个数</label>
+            <div>
+                <input class="form-control" type="text" disabled="disabled"  name="limitNum" id="limitNum"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label">商品描述</label>
+            <div>
+                <input class="form-control" type="text" disabled="disabled"  name="description" id="description"/>
+            </div>
+        </div>
+
+
+
+        <div class="form-group">
+            <label class="control-label">购买数量</label>
+            <div>
+                <input class="form-control" type="text" name="quantity" id="quantity"/>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button class="btn blue" id="create" type="submit">
+                下单
+            </button>
+        </div>
+    </div>
+</body>
+
+
+<script>
+    var goodsDetail;
+    jQuery(document).ready(function () {
+        //goodsId=" + id + "&activityId=" + activityId + "&activityPrice=" + activityPrice + "&goodsName=" + goodsName + "&limitNum=" + limitNum
+        var goodsId = getParameterByName("goodsId");
+        $.ajax({
+            type:"GET",
+            headers:{
+                "access-token": get(common_localstorage_key)
+            },
+            url:"http://"+g_host+"/goods/getSeckillGoodsId?id=" + goodsId,
+            xhrFields: {withCredentials: true},
+            success:function (data) {
+                if (data.code == 1001) {
+                    goodsDetail = data.data;
+                    reloadDom();
+                }else if (data.code == 2012){
+                    alert("请登录后操作");
+                    window.location.href = "login.html";
+                } else {
+                    alert("获取商品信息失败");
+                }
+            },
+            error:function (data) {
+                alert("获取商品信息失败");
+            }
+        });
+    });
+
+    //重载Dom元素
+    function reloadDom(){
+        var userId = 100001;
+        var activityId = goodsDetail.activityId;
+        var limitNum = goodsDetail.limitNum;
+        var activityPrice = goodsDetail.activityPrice;
+        var originalPrice = goodsDetail.originalPrice;
+        var goodsName = goodsDetail.goodsName;
+        var goodsId = goodsDetail.id;
+        var availableStock = goodsDetail.availableStock;
+        var description = goodsDetail.description;
+        $("#goodsName").val(goodsName);
+        $("#activityPrice").val(activityPrice);
+        $("#originalPrice").val(originalPrice);
+        $("#availableStock").val(availableStock);
+        $("#limitNum").val(limitNum);
+        $("#description").val(description);
+
+        //绑定otp的click时间用于向后端发送获取手机验证码的请求
+        $("#create").on("click", function () {
+            var quantity = $("#quantity").val();
+            if (quantity == null || quantity == ""){
+                alert("购买数量不能为空");
+                return false;
+            }
+            if (quantity <= 0){
+                alert("购买数量不能小于或者等于0");
+                return false;
+            }
+            if (quantity > limitNum){
+                alert("当前商品限购" + limitNum + "个，购买数量不能超过限购数量")
+                return false;
+            }
+
+            $.ajax({
+                type: "POST",
+                headers:{
+                    "access-token": get(common_localstorage_key)
+                },
+                contentType: "application/x-www-form-urlencoded",
+                url: "http://"+g_host+"/order/saveSeckillOrder",
+                data: {
+                    "userId": userId,
+                    "goodsId": goodsId,
+                    "goodsName": goodsName,
+                    "activityPrice": activityPrice,
+                    "quantity": quantity,
+                    "activityId": activityId
+                },
+                xhrFields: {withCredentials: true},
+                success: function (data) {
+                    if (data.code == "1001") {  //成功
+                        alert("抢购成功");
+                        window.location.href="order_list.html?userId=" + userId;
+                    } else if (data.code == 2012){  //用户未登录
+                        alert("请登录后操作")
+                        window.location.href = "login.html";
+                    }else if (data.code == 2014){
+                        alert("商品已下线");
+                        window.location.href = "goods_list.html?activityId=" + activityId;
+                    }
+                    else {
+                        alert("创建失败：" + data.data);
+                    }
+                },
+                error: function (data) {
+                    alert("创建失败：" + data.data);
+                }
+            });
+            return false;
+        });
+    }
+
+
+</script>
+
+
+</html>

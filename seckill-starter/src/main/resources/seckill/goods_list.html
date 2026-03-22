@@ -122,9 +122,7 @@
 			alert("秒杀活动已经结束，不能抢购");
 			return false;
 		}
-
-		alert("跳转到下单页面");
-		//TODO 后续完善
+		window.location.href = "create_order.html?goodsId=" + id;
 	}
 
 	function getStatus(status){
