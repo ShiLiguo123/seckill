@@ -98,7 +98,12 @@
 		}else {
 			innerHtml += "<input type='button' value='查看商品' onclick='getGoods(" + itemVO.id + ")'/>"
 		}
+		innerHtml +=  "<input type='button' value='查看订单' onclick='getOrders(" + itemVO.id + ")'/>";
 		return innerHtml;
+	}
+
+	function getOrders(activityId){
+		window.location.href = "order_list.html?activityId=" + activityId;
 	}
 
 	//上线活动
