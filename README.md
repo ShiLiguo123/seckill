@@ -72,6 +72,192 @@
 * [《Seckill秒杀系统》第23章：秒杀订单用户端业务开发](https://articles.zsxq.com/id_r16tqrglj0zd.html)
 * [《Seckill秒杀系统》第24章：秒杀订单运营端业务开发](https://articles.zsxq.com/id_1tww82zwaj30.html)
 
+## 基础环境安装
+
+之前安装的操作系统为CentOS7版本，所以，这里以CentOS7为例安装Docker环境，具体安装步骤如下所示。
+
+### 查看操作系统内核版本
+
+由于Docker CE 支持 64 位版本 CentOS 7，并且要求内核版本不低于 3.10，所以这里先查看下安装的CentOS7操作系统的内核版本。在，命令行输入如下命令。
+
+```bash
+uname -srm
+```
+
+输出的结果信息如下所示。
+
+```bash
+Linux 3.10.0-1160.el7.x86_64 x86_64
+```
+
+可以看到，内核版本是3.10，符合要求。
+
+### 卸载旧版本Docker
+
+如果之前安装过旧版本的Docker，则可以执行如下命令卸载。
+
+```bash
+yum remove docker docker-client docker-client-latest docker-common docker-latest docker-latest-logrotate docker-logrotate docker-selinux docker-engine-selinux docker-engine docker-ce
+```
+
+### 安装gcc环境
+
+安装gcc环境主要是为了更加顺利的安装Docker环境，在命令行分别执行如下两条命令来安装gcc环境。
+
+```bash
+yum -y install gcc
+yum -y install gcc-c++
+```
+
+### 安装yum工具
+
+在命令行执行如下命令安装yum工具。
+
+```bash
+yum install -y yum-utils device-mapper-persistent-data lvm2 --skip-broken
+```
+
+### 设置Docker镜像仓库
+
+这里，我将Docker的镜像仓库设置为阿里镜像源，执行如下命令即可。
+
+```bash
+yum-config-manager --add-repo https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
+```
+
+执行如下命令将docker-ce.repo镜像仓库配置文件中的镜像源修改成阿里镜像源。
+
+```bash
+sed -i 's/download.docker.com/mirrors.aliyun.com\/docker-ce/g' /etc/yum.repos.d/docker-ce.repo
+```
+
+### 更新yum包软件索引
+
+更新yum包软件索引后，执行yum命令安装软件会快一些，在命令行执行如下命令更新yum包软件索引。
+
+```bash
+yum makecache fast
+```
+
+### 安装Docker
+
+在命令行执行如下命令安装Docker。
+
+```bash
+yum -y install docker-ce docker-ce-cli containerd.io
+```
+
+### 启动Docker
+
+在命令行执行如下命令启动Docker。
+
+```bash
+systemctl start docker
+```
+
+### 设置Docker开机自启动
+
+在命令行执行如下命令设置Docker开机自启动。
+
+```bash
+systemctl enable docker
+```
+
+### 查看Docker版本
+
+在命令行输入如下命令查看Docker版本。
+
+```bash
+docker version
+```
+
+输出的结果信息如下所示。
+
+```bash
+Client: Docker Engine - Community
+ Version:           23.0.6
+ API version:       1.42
+ Go version:        go1.19.9
+ Git commit:        ef23cbc
+ Built:             Fri May  5 21:21:29 2023
+ OS/Arch:           linux/amd64
+ Context:           default
+
+Server: Docker Engine - Community
+ Engine:
+  Version:          23.0.6
+  API version:      1.42 (minimum version 1.12)
+  Go version:       go1.19.9
+  Git commit:       9dbdbd4
+  Built:            Fri May  5 21:20:38 2023
+  OS/Arch:          linux/amd64
+  Experimental:     false
+ containerd:
+  Version:          1.6.21
+  GitCommit:        3dce8eb055cbb6872793272b4f20ed16117344f8
+ runc:
+  Version:          1.1.7
+  GitCommit:        v1.1.7-0-g860f061
+ docker-init:
+  Version:          0.19.0
+  GitCommit:        de40ad0
+```
+
+### 配置镜像加速
+
+docker官方镜像仓库网速较差，我们需要设置国内镜像服务,将来下载镜像我们都会到镜像地址里面下载,这里小编配置的是阿里云镜像。
+参考阿里云的镜像加速文档 [点击跳转](https://cr.console.aliyun.com/cn-hangzhou/instances/mirrors)
+
+复制以下全部命令直接执行即可。
+
+```bash
+sudo mkdir -p /etc/docker
+sudo tee /etc/docker/daemon.json <<-'EOF'
+{
+  "registry-mirrors": ["https://zz3sblpi.mirror.aliyuncs.com"]
+}
+EOF
+sudo systemctl daemon-reload
+sudo systemctl restart docker
+```
+
+### Docker常用命令
+
+这里，给大家列举一些常用的Docker命令，如下所示。
+
+```bash
+systemctl daemon-reload //重载系统服务
+systemctl list-unit-files --type service //查看全部服务命令
+systemctl status docker  // 查看docker服务状态
+systemctl enable docker //设置docker开机自启动
+systemctl disable docker // 关闭docker开机启动
+systemctl start docker // 启动docker服务
+systemctl stop docker // 停止docker服务
+systemctl restart docker // 重启docker服务
+```
+
+## 安装docker-compose环境
+
+安装docker-compose环境相对就比较简单了，在命令行执行如下命令下载并安装docker-compose。
+
+```bash
+curl -SL https://github.com/docker/compose/releases/download/v2.17.3/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
+```
+
+下载并安装成功后，使用如下命令创建docker-compose软链接。
+
+```bash
+ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+```
+
+随后查看docker-compose版本，如下所示。
+
+```bash
+[root@binghe]# docker-compose version
+Docker Compose version v2.17.3
+```
+
+可以看到，安装的docker-compose版本为2.17.3，说明docker-compose安装成功。
 
 ## 加群交流
 
