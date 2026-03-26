@@ -44,7 +44,7 @@ public class SeckillActivityController {
      * 保存秒杀活动
      */
     @RequestMapping(value = "/saveSeckillActivity", method = {RequestMethod.GET,RequestMethod.POST})
-    public ResponseMessage<String> saveSeckillActivityDTO(@RequestBody SeckillActivityDTO seckillActivityDTO){
+    public ResponseMessage<String> saveSeckillActivityDTO(SeckillActivityDTO seckillActivityDTO){
         seckillActivityService.saveSeckillActivityDTO(seckillActivityDTO);
         return ResponseMessageBuilder.build(HttpCode.SUCCESS.getCode());
     }
