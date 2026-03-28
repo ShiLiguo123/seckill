@@ -72,6 +72,7 @@
 * [《Seckill秒杀系统》第23章：秒杀订单用户端业务开发](https://articles.zsxq.com/id_r16tqrglj0zd.html)
 * [《Seckill秒杀系统》第24章：秒杀订单运营端业务开发](https://articles.zsxq.com/id_1tww82zwaj30.html)
 * [《Seckill秒杀系统》第25章：重现刷单流量问题](https://articles.zsxq.com/id_lpob0g9wq78k.html)
+* [《Seckill秒杀系统》第26章：重现库存超卖问题](https://articles.zsxq.com/id_iuwm7wxw65z1.html)
 
 ## 基础环境安装
 
