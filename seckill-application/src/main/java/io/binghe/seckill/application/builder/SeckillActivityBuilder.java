@@ -13,46 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.binghe.seckill.application.service;
+package io.binghe.seckill.application.builder;
 
 import io.binghe.seckill.application.command.SeckillActivityCommand;
 import io.binghe.seckill.domain.model.dto.SeckillActivityDTO;
 import io.binghe.seckill.domain.model.entity.SeckillActivity;
-
-import java.util.Date;
-import java.util.List;
+import io.binghe.seckill.infrastructure.utils.beans.BeanUtil;
 
 /**
  * @author binghe(微信 : hacker_binghe)
  * @version 1.0.0
- * @description 活动
+ * @description 秒杀活动构建类
  * @github https://github.com/binghe001
  * @copyright 公众号: 冰河技术
  */
-public interface SeckillActivityService {
+public class SeckillActivityBuilder {
 
-    /**
-     * 保存活动信息
-     */
-    void saveSeckillActivity(SeckillActivityCommand seckillActivityCommand);
+    public static SeckillActivity toSeckillActivity(SeckillActivityCommand seckillActivityCommand){
+        if (seckillActivityCommand == null){
+            return null;
+        }
+        SeckillActivity seckillActivity = new SeckillActivity();
+        BeanUtil.copyProperties(seckillActivityCommand, seckillActivity);
+        return seckillActivity;
+    }
 
-    /**
-     * 根据状态获取活动列表
-     */
-    List<SeckillActivity> getSeckillActivityList(Integer status);
-
-    /**
-     * 根据时间和状态获取活动列表
-     */
-    List<SeckillActivity> getSeckillActivityListBetweenStartTimeAndEndTime(Date currentTime, Integer status);
-
-    /**
-     * 根据id获取活动信息
-     */
-    SeckillActivity getSeckillActivityById(Long id);
-
-    /**
-     * 修改状态
-     */
-    int updateStatus(Integer status, Long id);
+    public static SeckillActivityDTO toSeckillActivityDTO(SeckillActivity seckillActivity){
+        if (seckillActivity == null){
+            return null;
+        }
+        SeckillActivityDTO seckillActivityDTO = new SeckillActivityDTO();
+        BeanUtil.copyProperties(seckillActivity, seckillActivityDTO);
+        return seckillActivityDTO;
+    }
 }

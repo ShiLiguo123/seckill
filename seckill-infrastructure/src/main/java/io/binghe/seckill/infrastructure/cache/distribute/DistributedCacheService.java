@@ -13,31 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.binghe.seckill.domain.enums;
+package io.binghe.seckill.infrastructure.cache.distribute;
+
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author binghe(微信 : hacker_binghe)
  * @version 1.0.0
- * @description 活动状态
+ * @description 分布式缓存接口
  * @github https://github.com/binghe001
  * @copyright 公众号: 冰河技术
  */
-public enum SeckillUserStatus {
+public interface DistributedCacheService {
 
-    NORMAL(1),
-    FREEZE(2);
+    void put(String key, String value);
 
-    private final Integer code;
+    void put(String key, Object value);
 
-    SeckillUserStatus(Integer code) {
-        this.code = code;
-    }
+    void put(String key, Object value, long timeout, TimeUnit unit);
 
-    public static boolean isNormal(Integer status) {
-        return NORMAL.getCode().equals(status);
-    }
+    void put(String key, Object value, long expireTime);
 
-    public Integer getCode() {
-        return code;
-    }
+    <T> T getObject(String key, Class<T> targetClass);
+
+    String getString(String key);
+
+    <T> List<T> getList(String key, Class<T> targetClass);
+
+    Boolean delete(String key);
+
+    Boolean hasKey(String key);
 }

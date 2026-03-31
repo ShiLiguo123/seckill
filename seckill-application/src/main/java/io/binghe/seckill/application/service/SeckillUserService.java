@@ -15,7 +15,7 @@
  */
 package io.binghe.seckill.application.service;
 
-import io.binghe.seckill.domain.model.SeckillUser;
+import io.binghe.seckill.domain.model.entity.SeckillUser;
 
 /**
  * @author binghe(微信 : hacker_binghe)

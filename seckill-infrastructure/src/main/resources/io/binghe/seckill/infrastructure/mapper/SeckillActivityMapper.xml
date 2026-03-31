@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="io.binghe.seckill.infrastructure.mapper.SeckillActivityMapper" >
 
-    <resultMap id="baseResultMap" type="io.binghe.seckill.domain.model.SeckillActivity">
+    <resultMap id="baseResultMap" type="io.binghe.seckill.domain.model.entity.SeckillActivity">
         <id column="id" property="id" jdbcType="INTEGER" />
         <result column="activity_name" property="activityName" jdbcType="VARCHAR"/>
         <result column="start_time" property="startTime" jdbcType="TIMESTAMP"/>
@@ -15,7 +15,7 @@
         id, activity_name, start_time, end_time, status, activity_desc
     </sql>
 
-    <insert id="saveSeckillActivity" parameterType="io.binghe.seckill.domain.model.SeckillActivity">
+    <insert id="saveSeckillActivity" parameterType="io.binghe.seckill.domain.model.entity.SeckillActivity">
         insert into seckill_activity(
          <include refid="Base_Column_List"/>
         )values(#{id}, #{activityName}, #{startTime}, #{endTime}, #{status}, #{activityDesc})

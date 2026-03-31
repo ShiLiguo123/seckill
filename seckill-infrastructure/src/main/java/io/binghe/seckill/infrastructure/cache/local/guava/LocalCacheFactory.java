@@ -13,29 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.binghe.seckill.infrastructure.repository;
+package io.binghe.seckill.infrastructure.cache.local.guava;
 
-import io.binghe.seckill.domain.model.entity.SeckillUser;
-import io.binghe.seckill.domain.repository.SeckillUserRepository;
-import io.binghe.seckill.infrastructure.mapper.SeckillUserMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author binghe(微信 : hacker_binghe)
  * @version 1.0.0
- * @description 用户
+ * @description 本地缓存工厂
  * @github https://github.com/binghe001
  * @copyright 公众号: 冰河技术
  */
-@Component
-public class SeckillUserRepositoryImpl implements SeckillUserRepository {
+public class LocalCacheFactory {
 
-    @Autowired
-    private SeckillUserMapper seckillUserMapper;
-
-    @Override
-    public SeckillUser getSeckillUserByUserName(String userName) {
-        return seckillUserMapper.getSeckillUserByUserName(userName);
+    public static <K, V> Cache<K, V> getLocalCache(){
+        return CacheBuilder.newBuilder().initialCapacity(15).concurrencyLevel(5).expireAfterWrite(5, TimeUnit.SECONDS).build();
     }
 }

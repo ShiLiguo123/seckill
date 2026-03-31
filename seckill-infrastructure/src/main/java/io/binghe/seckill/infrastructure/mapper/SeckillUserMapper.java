@@ -15,7 +15,7 @@
  */
 package io.binghe.seckill.infrastructure.mapper;
 
-import io.binghe.seckill.domain.model.SeckillUser;
+import io.binghe.seckill.domain.model.entity.SeckillUser;
 import org.apache.ibatis.annotations.Param;
 
 /**

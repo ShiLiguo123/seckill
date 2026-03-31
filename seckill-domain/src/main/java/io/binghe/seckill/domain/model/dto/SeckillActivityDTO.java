@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.binghe.seckill.domain.model;
+package io.binghe.seckill.domain.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -24,12 +24,12 @@ import java.util.Date;
 /**
  * @author binghe(微信 : hacker_binghe)
  * @version 1.0.0
- * @description 秒杀活动
+ * @description 活动DTO
  * @github https://github.com/binghe001
  * @copyright 公众号: 冰河技术
  */
-public class SeckillActivity implements Serializable {
-    private static final long serialVersionUID = -7079319520596736847L;
+public class SeckillActivityDTO implements Serializable {
+    private static final long serialVersionUID = 1507710823959609002L;
     //活动id
     private Long id;
     //活动名称

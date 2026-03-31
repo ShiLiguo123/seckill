@@ -17,11 +17,11 @@ package io.binghe.seckill.application.service.impl;
 
 import io.binghe.seckill.application.service.SeckillGoodsService;
 import io.binghe.seckill.domain.code.HttpCode;
-import io.binghe.seckill.domain.dto.SeckillGoodsDTO;
-import io.binghe.seckill.domain.enums.SeckillGoodsStatus;
+import io.binghe.seckill.domain.model.dto.SeckillGoodsDTO;
+import io.binghe.seckill.domain.model.enums.SeckillGoodsStatus;
 import io.binghe.seckill.domain.exception.SeckillException;
-import io.binghe.seckill.domain.model.SeckillActivity;
-import io.binghe.seckill.domain.model.SeckillGoods;
+import io.binghe.seckill.domain.model.entity.SeckillActivity;
+import io.binghe.seckill.domain.model.entity.SeckillGoods;
 import io.binghe.seckill.domain.repository.SeckillActivityRepository;
 import io.binghe.seckill.domain.repository.SeckillGoodsRepository;
 import io.binghe.seckill.infrastructure.utils.beans.BeanUtil;

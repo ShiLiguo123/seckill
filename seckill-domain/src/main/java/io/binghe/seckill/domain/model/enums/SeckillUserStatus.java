@@ -13,29 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.binghe.seckill.infrastructure.repository;
-
-import io.binghe.seckill.domain.model.entity.SeckillUser;
-import io.binghe.seckill.domain.repository.SeckillUserRepository;
-import io.binghe.seckill.infrastructure.mapper.SeckillUserMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+package io.binghe.seckill.domain.model.enums;
 
 /**
  * @author binghe(微信 : hacker_binghe)
  * @version 1.0.0
- * @description 用户
+ * @description 活动状态
  * @github https://github.com/binghe001
  * @copyright 公众号: 冰河技术
  */
-@Component
-public class SeckillUserRepositoryImpl implements SeckillUserRepository {
+public enum SeckillUserStatus {
 
-    @Autowired
-    private SeckillUserMapper seckillUserMapper;
+    NORMAL(1),
+    FREEZE(2);
 
-    @Override
-    public SeckillUser getSeckillUserByUserName(String userName) {
-        return seckillUserMapper.getSeckillUserByUserName(userName);
+    private final Integer code;
+
+    SeckillUserStatus(Integer code) {
+        this.code = code;
+    }
+
+    public static boolean isNormal(Integer status) {
+        return NORMAL.getCode().equals(status);
+    }
+
+    public Integer getCode() {
+        return code;
     }
 }

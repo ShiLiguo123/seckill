@@ -20,7 +20,7 @@ import io.binghe.seckill.application.service.SeckillUserService;
 import io.binghe.seckill.domain.code.HttpCode;
 import io.binghe.seckill.domain.constants.SeckillConstants;
 import io.binghe.seckill.domain.exception.SeckillException;
-import io.binghe.seckill.domain.model.SeckillUser;
+import io.binghe.seckill.domain.model.entity.SeckillUser;
 import io.binghe.seckill.domain.repository.SeckillUserRepository;
 import io.binghe.seckill.infrastructure.shiro.utils.CommonsUtils;
 import io.binghe.seckill.infrastructure.shiro.utils.JwtUtils;

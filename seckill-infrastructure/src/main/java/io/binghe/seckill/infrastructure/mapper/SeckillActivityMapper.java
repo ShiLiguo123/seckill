@@ -15,7 +15,7 @@
  */
 package io.binghe.seckill.infrastructure.mapper;
 
-import io.binghe.seckill.domain.model.SeckillActivity;
+import io.binghe.seckill.domain.model.entity.SeckillActivity;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;

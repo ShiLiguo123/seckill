@@ -13,29 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.binghe.seckill.infrastructure.repository;
+package io.binghe.seckill.infrastructure.cache.local.guava;
 
-import io.binghe.seckill.domain.model.entity.SeckillUser;
-import io.binghe.seckill.domain.repository.SeckillUserRepository;
-import io.binghe.seckill.infrastructure.mapper.SeckillUserMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import com.google.common.cache.Cache;
+import io.binghe.seckill.infrastructure.cache.local.LocalCacheService;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Service;
 
 /**
  * @author binghe(微信 : hacker_binghe)
  * @version 1.0.0
- * @description 用户
+ * @description 基于Guava实现的本地缓存
  * @github https://github.com/binghe001
  * @copyright 公众号: 冰河技术
  */
-@Component
-public class SeckillUserRepositoryImpl implements SeckillUserRepository {
-
-    @Autowired
-    private SeckillUserMapper seckillUserMapper;
+@Service
+@ConditionalOnProperty(name = "local.cache.type", havingValue = "guava")
+public class GuavaLocalCacheService<K, V> implements LocalCacheService<K, V> {
+    //本地缓存，基于Guava实现
+    private final Cache<K, V> cache = LocalCacheFactory.getLocalCache();
 
     @Override
-    public SeckillUser getSeckillUserByUserName(String userName) {
-        return seckillUserMapper.getSeckillUserByUserName(userName);
+    public void put(K key, V value) {
+        cache.put(key, value);
+    }
+
+    @Override
+    public V getIfPresent(Object key) {
+        return cache.getIfPresent(key);
     }
 }

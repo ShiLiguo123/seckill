@@ -15,12 +15,14 @@
  */
 package io.binghe.seckill.application.service.impl;
 
+import io.binghe.seckill.application.builder.SeckillActivityBuilder;
+import io.binghe.seckill.application.command.SeckillActivityCommand;
 import io.binghe.seckill.application.service.SeckillActivityService;
 import io.binghe.seckill.domain.code.HttpCode;
-import io.binghe.seckill.domain.dto.SeckillActivityDTO;
-import io.binghe.seckill.domain.enums.SeckillActivityStatus;
+import io.binghe.seckill.domain.model.dto.SeckillActivityDTO;
+import io.binghe.seckill.domain.model.enums.SeckillActivityStatus;
 import io.binghe.seckill.domain.exception.SeckillException;
-import io.binghe.seckill.domain.model.SeckillActivity;
+import io.binghe.seckill.domain.model.entity.SeckillActivity;
 import io.binghe.seckill.domain.repository.SeckillActivityRepository;
 import io.binghe.seckill.infrastructure.utils.beans.BeanUtil;
 import io.binghe.seckill.infrastructure.utils.id.SnowFlakeFactory;
@@ -44,12 +46,11 @@ public class SeckillActivityServiceImpl implements SeckillActivityService {
     private SeckillActivityRepository seckillActivityRepository;
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void saveSeckillActivityDTO(SeckillActivityDTO seckillActivityDTO) {
-        if (seckillActivityDTO == null){
+    public void saveSeckillActivity(SeckillActivityCommand seckillActivityCommand) {
+        if (seckillActivityCommand == null){
             throw new SeckillException(HttpCode.PARAMS_INVALID);
         }
-        SeckillActivity seckillActivity = new SeckillActivity();
-        BeanUtil.copyProperties(seckillActivityDTO, seckillActivity);
+        SeckillActivity seckillActivity = SeckillActivityBuilder.toSeckillActivity(seckillActivityCommand);
         seckillActivity.setId(SnowFlakeFactory.getSnowFlakeFromCache().nextId());
         seckillActivity.setStatus(SeckillActivityStatus.PUBLISHED.getCode());
         seckillActivityRepository.saveSeckillActivity(seckillActivity);

@@ -15,7 +15,7 @@
  */
 package io.binghe.seckill.domain.repository;
 
-import io.binghe.seckill.domain.model.SeckillActivity;
+import io.binghe.seckill.domain.model.entity.SeckillActivity;
 
 import java.util.Date;
 import java.util.List;

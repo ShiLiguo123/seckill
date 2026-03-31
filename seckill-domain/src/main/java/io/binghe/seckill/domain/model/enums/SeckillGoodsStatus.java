@@ -13,29 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.binghe.seckill.infrastructure.repository;
-
-import io.binghe.seckill.domain.model.entity.SeckillUser;
-import io.binghe.seckill.domain.repository.SeckillUserRepository;
-import io.binghe.seckill.infrastructure.mapper.SeckillUserMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+package io.binghe.seckill.domain.model.enums;
 
 /**
  * @author binghe(微信 : hacker_binghe)
  * @version 1.0.0
- * @description 用户
+ * @description 活动状态
  * @github https://github.com/binghe001
  * @copyright 公众号: 冰河技术
  */
-@Component
-public class SeckillUserRepositoryImpl implements SeckillUserRepository {
+public enum SeckillGoodsStatus {
 
-    @Autowired
-    private SeckillUserMapper seckillUserMapper;
+    PUBLISHED(0),
+    ONLINE(1),
+    OFFLINE(-1);
 
-    @Override
-    public SeckillUser getSeckillUserByUserName(String userName) {
-        return seckillUserMapper.getSeckillUserByUserName(userName);
+    private final Integer code;
+
+    SeckillGoodsStatus(Integer code) {
+        this.code = code;
+    }
+
+    public static boolean isOffline(Integer status) {
+        return OFFLINE.getCode().equals(status);
+    }
+
+    public static boolean isOnline(Integer status) {
+        return ONLINE.getCode().equals(status);
+    }
+
+    public Integer getCode() {
+        return code;
     }
 }

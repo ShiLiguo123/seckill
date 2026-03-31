@@ -17,7 +17,7 @@ package io.binghe.seckill.infrastructure.repository;
 
 import io.binghe.seckill.domain.code.HttpCode;
 import io.binghe.seckill.domain.exception.SeckillException;
-import io.binghe.seckill.domain.model.SeckillGoods;
+import io.binghe.seckill.domain.model.entity.SeckillGoods;
 import io.binghe.seckill.domain.repository.SeckillGoodsRepository;
 import io.binghe.seckill.infrastructure.mapper.SeckillGoodsMapper;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -15,10 +15,10 @@
  */
 package io.binghe.seckill.interfaces.controller;
 
+import io.binghe.seckill.application.command.SeckillActivityCommand;
 import io.binghe.seckill.application.service.SeckillActivityService;
 import io.binghe.seckill.domain.code.HttpCode;
-import io.binghe.seckill.domain.dto.SeckillActivityDTO;
-import io.binghe.seckill.domain.model.SeckillActivity;
+import io.binghe.seckill.domain.model.entity.SeckillActivity;
 import io.binghe.seckill.domain.response.ResponseMessage;
 import io.binghe.seckill.domain.response.ResponseMessageBuilder;
 import io.binghe.seckill.infrastructure.utils.date.JodaDateTimeUtils;
@@ -44,8 +44,8 @@ public class SeckillActivityController {
      * 保存秒杀活动
      */
     @RequestMapping(value = "/saveSeckillActivity", method = {RequestMethod.GET,RequestMethod.POST})
-    public ResponseMessage<String> saveSeckillActivityDTO(SeckillActivityDTO seckillActivityDTO){
-        seckillActivityService.saveSeckillActivityDTO(seckillActivityDTO);
+    public ResponseMessage<String> saveSeckillActivityDTO(SeckillActivityCommand seckillActivityCommand){
+        seckillActivityService.saveSeckillActivity(seckillActivityCommand);
         return ResponseMessageBuilder.build(HttpCode.SUCCESS.getCode());
     }
 

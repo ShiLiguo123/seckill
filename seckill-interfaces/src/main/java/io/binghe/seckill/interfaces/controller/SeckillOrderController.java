@@ -17,8 +17,8 @@ package io.binghe.seckill.interfaces.controller;
 
 import io.binghe.seckill.application.service.SeckillOrderService;
 import io.binghe.seckill.domain.code.HttpCode;
-import io.binghe.seckill.domain.dto.SeckillOrderDTO;
-import io.binghe.seckill.domain.model.SeckillOrder;
+import io.binghe.seckill.domain.model.dto.SeckillOrderDTO;
+import io.binghe.seckill.domain.model.entity.SeckillOrder;
 import io.binghe.seckill.domain.response.ResponseMessage;
 import io.binghe.seckill.domain.response.ResponseMessageBuilder;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -13,36 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.binghe.seckill.domain.enums;
+package io.binghe.seckill.infrastructure.cache.local;
 
 /**
  * @author binghe(微信 : hacker_binghe)
  * @version 1.0.0
- * @description 活动状态
+ * @description 本地缓存服务接口
  * @github https://github.com/binghe001
  * @copyright 公众号: 冰河技术
  */
-public enum SeckillActivityStatus {
+public interface LocalCacheService<K, V> {
 
-    PUBLISHED(0),
-    ONLINE(1),
-    OFFLINE(-1);
+    void put(K key, V value);
 
-    private final Integer code;
-
-    SeckillActivityStatus(Integer code) {
-        this.code = code;
-    }
-
-    public static boolean isOffline(Integer status) {
-        return OFFLINE.getCode().equals(status);
-    }
-
-    public static boolean isOnline(Integer status) {
-        return ONLINE.getCode().equals(status);
-    }
-
-    public Integer getCode() {
-        return code;
-    }
+    V getIfPresent(Object key);
 }
