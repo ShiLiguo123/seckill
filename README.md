@@ -75,6 +75,7 @@
 * [《Seckill秒杀系统》第26章：重现库存超卖问题](https://articles.zsxq.com/id_iuwm7wxw65z1.html)
 * [《Seckill秒杀系统》第27章：秒杀系统混合型缓存设计场景与原则](https://articles.zsxq.com/id_vkg89cwmiplq.html)
 * [《Seckill秒杀系统》第28章：秒杀系统混合型缓存架构设计与技术选型](https://articles.zsxq.com/id_b1k5io028b3w.html)
+* [《Seckill秒杀系统》第29章：秒杀系统混合型缓存通用代码设计与实现](https://articles.zsxq.com/id_0wkdzau58v0j.html)
 
 ## 基础环境安装
 

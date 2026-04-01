@@ -23,7 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -35,7 +35,7 @@ import java.util.concurrent.TimeUnit;
  * @github https://github.com/binghe001
  * @copyright 公众号: 冰河技术
  */
-@Component
+@Service
 @ConditionalOnProperty(name = "distributed.cache.type", havingValue = "redis")
 public class RedisCacheService implements DistributedCacheService {
 

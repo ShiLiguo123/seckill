@@ -28,7 +28,6 @@ import java.util.concurrent.TimeUnit;
  * @copyright 公众号: 冰河技术
  */
 public class LocalCacheFactory {
-
     public static <K, V> Cache<K, V> getLocalCache(){
         return CacheBuilder.newBuilder().initialCapacity(15).concurrencyLevel(5).expireAfterWrite(5, TimeUnit.SECONDS).build();
     }
