@@ -18,6 +18,7 @@ package io.binghe.seckill.interfaces.controller;
 import io.binghe.seckill.application.command.SeckillActivityCommand;
 import io.binghe.seckill.application.service.SeckillActivityService;
 import io.binghe.seckill.domain.code.HttpCode;
+import io.binghe.seckill.domain.model.dto.SeckillActivityDTO;
 import io.binghe.seckill.domain.model.entity.SeckillActivity;
 import io.binghe.seckill.domain.response.ResponseMessage;
 import io.binghe.seckill.domain.response.ResponseMessageBuilder;
@@ -55,6 +56,15 @@ public class SeckillActivityController {
     @RequestMapping(value = "/getSeckillActivityList", method = {RequestMethod.GET,RequestMethod.POST})
     public ResponseMessage<List<SeckillActivity>> getSeckillActivityList(@RequestParam(value = "status", required = false) Integer status){
         return ResponseMessageBuilder.build(HttpCode.SUCCESS.getCode(), seckillActivityService.getSeckillActivityList(status));
+    }
+
+    /**
+     * 获取秒杀活动列表
+     */
+    @RequestMapping(value = "/seckillActivityList", method = {RequestMethod.GET,RequestMethod.POST})
+    public ResponseMessage<List<SeckillActivityDTO>> getSeckillActivityList(@RequestParam(value = "status", required = false) Integer status,
+                                                                            @RequestParam(value = "version", required = false) Long version){
+        return ResponseMessageBuilder.build(HttpCode.SUCCESS.getCode(), seckillActivityService.getSeckillActivityList(status, version));
     }
 
     /**

@@ -15,6 +15,7 @@
  */
 package io.binghe.seckill.application.builder;
 
+import io.binghe.seckill.application.builder.common.SeckillCommonBuilder;
 import io.binghe.seckill.application.command.SeckillActivityCommand;
 import io.binghe.seckill.domain.model.dto.SeckillActivityDTO;
 import io.binghe.seckill.domain.model.entity.SeckillActivity;
@@ -27,7 +28,7 @@ import io.binghe.seckill.infrastructure.utils.beans.BeanUtil;
  * @github https://github.com/binghe001
  * @copyright 公众号: 冰河技术
  */
-public class SeckillActivityBuilder {
+public class SeckillActivityBuilder extends SeckillCommonBuilder {
 
     public static SeckillActivity toSeckillActivity(SeckillActivityCommand seckillActivityCommand){
         if (seckillActivityCommand == null){

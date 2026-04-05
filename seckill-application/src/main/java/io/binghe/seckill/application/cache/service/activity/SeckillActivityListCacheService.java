@@ -13,37 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.binghe.seckill.infrastructure.cache.distribute;
+package io.binghe.seckill.application.cache.service.activity;
+
+import io.binghe.seckill.application.cache.model.SeckillBusinessCache;
+import io.binghe.seckill.application.cache.service.common.SeckillCacheService;
+import io.binghe.seckill.domain.model.entity.SeckillActivity;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author binghe(微信 : hacker_binghe)
  * @version 1.0.0
- * @description 分布式缓存接口
+ * @description 加有缓存的秒杀活动服务接口
  * @github https://github.com/binghe001
  * @copyright 公众号: 冰河技术
  */
-public interface DistributedCacheService {
+public interface SeckillActivityListCacheService extends SeckillCacheService {
 
-    void put(String key, String value);
+    /**
+     * 增加二级缓存的根据状态获取活动列表
+     */
+    SeckillBusinessCache<List<SeckillActivity>> getCachedActivities(Integer status, Long version);
 
-    void put(String key, Object value);
-
-    void put(String key, Object value, long timeout, TimeUnit unit);
-
-    void put(String key, Object value, long expireTime);
-
-    <T> T getObject(String key, Class<T> targetClass);
-
-    Object getObject(String key);
-
-    String getString(String key);
-
-    <T> List<T> getList(String key, Class<T> targetClass);
-
-    Boolean delete(String key);
-
-    Boolean hasKey(String key);
+    /**
+     * 更新缓存数据
+     */
+    SeckillBusinessCache<List<SeckillActivity>> tryUpdateSeckillActivityCacheByLock(Integer status);
 }
