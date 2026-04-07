@@ -24,7 +24,10 @@ import io.binghe.seckill.domain.response.ResponseMessage;
 import io.binghe.seckill.domain.response.ResponseMessageBuilder;
 import io.binghe.seckill.infrastructure.utils.date.JodaDateTimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -65,6 +68,15 @@ public class SeckillActivityController {
     public ResponseMessage<List<SeckillActivityDTO>> getSeckillActivityList(@RequestParam(value = "status", required = false) Integer status,
                                                                             @RequestParam(value = "version", required = false) Long version){
         return ResponseMessageBuilder.build(HttpCode.SUCCESS.getCode(), seckillActivityService.getSeckillActivityList(status, version));
+    }
+
+    /**
+     * 获取id获取秒杀活动详情
+     */
+    @RequestMapping(value = "/seckillActivity", method = {RequestMethod.GET,RequestMethod.POST})
+    public ResponseMessage<SeckillActivityDTO> getSeckillActivityById(@RequestParam(value = "id", required = false) Long id,
+                                                                      @RequestParam(value = "version", required = false) Long version){
+        return ResponseMessageBuilder.build(HttpCode.SUCCESS.getCode(), seckillActivityService.getSeckillActivity(id, version));
     }
 
     /**

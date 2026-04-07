@@ -60,4 +60,9 @@ public interface SeckillActivityService {
      * 活动列表
      */
     List<SeckillActivityDTO> getSeckillActivityList(Integer status, Long version);
+
+    /**
+     * 获取活动信息，带有缓存
+     */
+    SeckillActivityDTO getSeckillActivity(Long id, Long version);
 }

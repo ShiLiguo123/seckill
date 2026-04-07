@@ -17,14 +17,15 @@ package io.binghe.seckill.application.service.impl;
 
 import io.binghe.seckill.application.builder.SeckillActivityBuilder;
 import io.binghe.seckill.application.cache.model.SeckillBusinessCache;
+import io.binghe.seckill.application.cache.service.activity.SeckillActivityCacheService;
 import io.binghe.seckill.application.cache.service.activity.SeckillActivityListCacheService;
 import io.binghe.seckill.application.command.SeckillActivityCommand;
 import io.binghe.seckill.application.service.SeckillActivityService;
 import io.binghe.seckill.domain.code.HttpCode;
-import io.binghe.seckill.domain.model.dto.SeckillActivityDTO;
-import io.binghe.seckill.domain.model.enums.SeckillActivityStatus;
 import io.binghe.seckill.domain.exception.SeckillException;
+import io.binghe.seckill.domain.model.dto.SeckillActivityDTO;
 import io.binghe.seckill.domain.model.entity.SeckillActivity;
+import io.binghe.seckill.domain.model.enums.SeckillActivityStatus;
 import io.binghe.seckill.domain.repository.SeckillActivityRepository;
 import io.binghe.seckill.infrastructure.utils.beans.BeanUtil;
 import io.binghe.seckill.infrastructure.utils.id.SnowFlakeFactory;
@@ -50,6 +51,8 @@ public class SeckillActivityServiceImpl implements SeckillActivityService {
     private SeckillActivityRepository seckillActivityRepository;
     @Autowired
     private SeckillActivityListCacheService seckillActivityListCacheService;
+    @Autowired
+    private SeckillActivityCacheService seckillActivityCacheService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -100,5 +103,24 @@ public class SeckillActivityServiceImpl implements SeckillActivityService {
             return seckillActivityDTO;
         }).collect(Collectors.toList());
         return seckillActivityDTOList;
+    }
+
+    @Override
+    public SeckillActivityDTO getSeckillActivity(Long id, Long version) {
+        if (id == null){
+            throw new SeckillException(HttpCode.PARAMS_INVALID);
+        }
+        SeckillBusinessCache<SeckillActivity> seckillActivityCache = seckillActivityCacheService.getCachedSeckillActivity(id, version);
+        //缓存中的活动数据不存在
+        if (!seckillActivityCache.isExist()){
+            throw new SeckillException(HttpCode.ACTIVITY_NOT_EXISTS);
+        }
+        //稍后再试，前端需要对这个状态做特殊处理，即不去刷新数据，静默稍后再试
+        if (seckillActivityCache.isRetryLater()){
+            throw new SeckillException(HttpCode.RETRY_LATER);
+        }
+        SeckillActivityDTO seckillActivityDTO = SeckillActivityBuilder.toSeckillActivityDTO(seckillActivityCache.getData());
+        seckillActivityDTO.setVersion(seckillActivityCache.getVersion());
+        return seckillActivityDTO;
     }
 }
