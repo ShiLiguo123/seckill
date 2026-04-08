@@ -13,55 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.binghe.seckill.application.service;
+package io.binghe.seckill.application.builder;
 
+import io.binghe.seckill.application.builder.common.SeckillCommonBuilder;
 import io.binghe.seckill.application.command.SeckillGoodsCommond;
 import io.binghe.seckill.domain.model.dto.SeckillGoodsDTO;
 import io.binghe.seckill.domain.model.entity.SeckillGoods;
-
-import java.util.List;
+import io.binghe.seckill.infrastructure.utils.beans.BeanUtil;
 
 /**
  * @author binghe(微信 : hacker_binghe)
  * @version 1.0.0
- * @description 商品
+ * @description 秒杀商品转化类
  * @github https://github.com/binghe001
  * @copyright 公众号: 冰河技术
  */
-public interface SeckillGoodsService {
+public class SeckillGoodsBuilder extends SeckillCommonBuilder {
 
-    /**
-     * 保存商品信息
-     */
-    int saveSeckillGoods(SeckillGoodsCommond seckillGoodsCommond);
+    public static SeckillGoods toSeckillGoods(SeckillGoodsCommond seckillGoodsCommond){
+        if (seckillGoodsCommond == null){
+            return null;
+        }
+        SeckillGoods seckillGoods = new SeckillGoods();
+        BeanUtil.copyProperties(seckillGoodsCommond, seckillGoods);
+        return seckillGoods;
+    }
 
-    /**
-     * 根据id获取商品详细信息
-     */
-    SeckillGoods getSeckillGoodsId(Long id);
-
-    /**
-     * 根据活动id获取商品列表
-     */
-    List<SeckillGoods> getSeckillGoodsByActivityId(Long activityId);
-
-    /**
-     * 修改商品状态
-     */
-    int updateStatus(Integer status, Long id);
-
-    /**
-     * 扣减库存
-     */
-    int updateAvailableStock(Integer count, Long id);
-
-    /**
-     * 获取当前可用库存
-     */
-    Integer getAvailableStockById(Long id);
-
-    /**
-     * 根据活动id从缓存中获取数据
-     */
-    List<SeckillGoodsDTO> getSeckillGoodsList(Long activityId, Long version);
+    public static SeckillGoodsDTO toSeckillGoodsDTO(SeckillGoods seckillGoods){
+        if (seckillGoods == null){
+            return null;
+        }
+        SeckillGoodsDTO seckillGoodsDTO = new SeckillGoodsDTO();
+        BeanUtil.copyProperties(seckillGoods, seckillGoodsDTO);
+        return seckillGoodsDTO;
+    }
 }

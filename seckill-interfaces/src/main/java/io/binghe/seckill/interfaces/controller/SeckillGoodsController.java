@@ -15,6 +15,7 @@
  */
 package io.binghe.seckill.interfaces.controller;
 
+import io.binghe.seckill.application.command.SeckillGoodsCommond;
 import io.binghe.seckill.application.service.SeckillGoodsService;
 import io.binghe.seckill.domain.code.HttpCode;
 import io.binghe.seckill.domain.model.dto.SeckillGoodsDTO;
@@ -46,8 +47,8 @@ public class SeckillGoodsController {
      * 保存秒杀商品
      */
     @RequestMapping(value = "/saveSeckillGoods", method = {RequestMethod.GET,RequestMethod.POST})
-    public ResponseMessage<String> saveSeckillActivityDTO(SeckillGoodsDTO seckillGoodsDTO){
-        seckillGoodsService.saveSeckillGoods(seckillGoodsDTO);
+    public ResponseMessage<String> saveSeckillGoods(SeckillGoodsCommond seckillGoodsCommond){
+        seckillGoodsService.saveSeckillGoods(seckillGoodsCommond);
         return ResponseMessageBuilder.build(HttpCode.SUCCESS.getCode());
     }
 
@@ -74,5 +75,13 @@ public class SeckillGoodsController {
     public ResponseMessage<String> updateStatus(Integer status, Long id){
         seckillGoodsService.updateStatus(status, id);
         return ResponseMessageBuilder.build(HttpCode.SUCCESS.getCode());
+    }
+
+    /**
+     * 获取商品列表(带缓存)
+     */
+    @RequestMapping(value = "/getSeckillGoodsList", method = {RequestMethod.GET,RequestMethod.POST})
+    public ResponseMessage<List<SeckillGoodsDTO>> getSeckillGoodsByActivityId(Long activityId, Long version){
+        return ResponseMessageBuilder.build(HttpCode.SUCCESS.getCode(), seckillGoodsService.getSeckillGoodsList(activityId, version));
     }
 }

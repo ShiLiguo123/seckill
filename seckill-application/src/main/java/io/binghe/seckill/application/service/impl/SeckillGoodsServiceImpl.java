@@ -15,13 +15,17 @@
  */
 package io.binghe.seckill.application.service.impl;
 
+import io.binghe.seckill.application.builder.SeckillGoodsBuilder;
+import io.binghe.seckill.application.cache.model.SeckillBusinessCache;
+import io.binghe.seckill.application.cache.service.goods.SeckillGoodsListCacheService;
+import io.binghe.seckill.application.command.SeckillGoodsCommond;
 import io.binghe.seckill.application.service.SeckillGoodsService;
 import io.binghe.seckill.domain.code.HttpCode;
-import io.binghe.seckill.domain.model.dto.SeckillGoodsDTO;
-import io.binghe.seckill.domain.model.enums.SeckillGoodsStatus;
 import io.binghe.seckill.domain.exception.SeckillException;
+import io.binghe.seckill.domain.model.dto.SeckillGoodsDTO;
 import io.binghe.seckill.domain.model.entity.SeckillActivity;
 import io.binghe.seckill.domain.model.entity.SeckillGoods;
+import io.binghe.seckill.domain.model.enums.SeckillGoodsStatus;
 import io.binghe.seckill.domain.repository.SeckillActivityRepository;
 import io.binghe.seckill.domain.repository.SeckillGoodsRepository;
 import io.binghe.seckill.infrastructure.utils.beans.BeanUtil;
@@ -31,6 +35,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author binghe(微信 : hacker_binghe)
@@ -45,22 +50,23 @@ public class SeckillGoodsServiceImpl implements SeckillGoodsService {
     private SeckillGoodsRepository seckillGoodsRepository;
     @Autowired
     private SeckillActivityRepository seckillActivityRepository;
+    @Autowired
+    private SeckillGoodsListCacheService seckillGoodsListCacheService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public int saveSeckillGoods(SeckillGoodsDTO seckillGoodsDTO) {
-        if (seckillGoodsDTO == null){
+    public int saveSeckillGoods(SeckillGoodsCommond seckillGoodsCommond) {
+        if (seckillGoodsCommond == null){
             throw new SeckillException(HttpCode.PARAMS_INVALID);
         }
-        SeckillActivity seckillActivity = seckillActivityRepository.getSeckillActivityById(seckillGoodsDTO.getActivityId());
+        SeckillActivity seckillActivity = seckillActivityRepository.getSeckillActivityById(seckillGoodsCommond.getActivityId());
         if (seckillActivity == null){
             throw new SeckillException(HttpCode.ACTIVITY_NOT_EXISTS);
         }
-        SeckillGoods seckillGoods = new SeckillGoods();
-        BeanUtil.copyProperties(seckillGoodsDTO, seckillGoods);
+        SeckillGoods seckillGoods = SeckillGoodsBuilder.toSeckillGoods(seckillGoodsCommond);
         seckillGoods.setStartTime(seckillActivity.getStartTime());
         seckillGoods.setEndTime(seckillActivity.getEndTime());
-        seckillGoods.setAvailableStock(seckillGoodsDTO.getInitialStock());
+        seckillGoods.setAvailableStock(seckillGoodsCommond.getInitialStock());
         seckillGoods.setId(SnowFlakeFactory.getSnowFlakeFromCache().nextId());
         seckillGoods.setStatus(SeckillGoodsStatus.PUBLISHED.getCode());
         return seckillGoodsRepository.saveSeckillGoods(seckillGoods);
@@ -91,5 +97,27 @@ public class SeckillGoodsServiceImpl implements SeckillGoodsService {
     @Override
     public Integer getAvailableStockById(Long id) {
         return seckillGoodsRepository.getAvailableStockById(id);
+    }
+
+    @Override
+    public List<SeckillGoodsDTO> getSeckillGoodsList(Long activityId, Long version) {
+        if (activityId == null){
+            throw new SeckillException(HttpCode.ACTIVITY_NOT_EXISTS);
+        }
+        SeckillBusinessCache<List<SeckillGoods>> seckillGoodsListCache = seckillGoodsListCacheService.getCachedGoodsList(activityId, version);
+        if (!seckillGoodsListCache.isExist()){
+            throw new SeckillException(HttpCode.ACTIVITY_NOT_EXISTS);
+        }
+        //稍后再试，前端需要对这个状态做特殊处理，即不去刷新数据，静默稍后再试
+        if (seckillGoodsListCache.isRetryLater()){
+            throw new SeckillException(HttpCode.RETRY_LATER);
+        }
+        List<SeckillGoodsDTO> seckillActivityDTOList = seckillGoodsListCache.getData().stream().map((seckillGoods) -> {
+            SeckillGoodsDTO seckillGoodsDTO = new SeckillGoodsDTO();
+            BeanUtil.copyProperties(seckillGoods, seckillGoodsDTO);
+            seckillGoodsDTO.setVersion(seckillGoodsListCache.getVersion());
+            return seckillGoodsDTO;
+        }).collect(Collectors.toList());
+        return seckillActivityDTOList;
     }
 }
