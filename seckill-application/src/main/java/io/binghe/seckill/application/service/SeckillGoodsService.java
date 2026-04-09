@@ -64,4 +64,9 @@ public interface SeckillGoodsService {
      * 根据活动id从缓存中获取数据
      */
     List<SeckillGoodsDTO> getSeckillGoodsList(Long activityId, Long version);
+
+    /**
+     * 根据id获取商品详细信息（带缓存）
+     */
+    SeckillGoodsDTO getSeckillGoods(Long id, Long version);
 }

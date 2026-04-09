@@ -84,4 +84,12 @@ public class SeckillGoodsController {
     public ResponseMessage<List<SeckillGoodsDTO>> getSeckillGoodsByActivityId(Long activityId, Long version){
         return ResponseMessageBuilder.build(HttpCode.SUCCESS.getCode(), seckillGoodsService.getSeckillGoodsList(activityId, version));
     }
+
+    /**
+     * 获取商品详情（带缓存）
+     */
+    @RequestMapping(value = "/getSeckillGoods", method = {RequestMethod.GET,RequestMethod.POST})
+    public ResponseMessage<SeckillGoodsDTO> getSeckillGoods(Long id, Long version){
+        return ResponseMessageBuilder.build(HttpCode.SUCCESS.getCode(), seckillGoodsService.getSeckillGoods(id, version));
+    }
 }
