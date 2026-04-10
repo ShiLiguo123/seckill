@@ -44,6 +44,7 @@
         <junit.version>4.12</junit.version>
         <redisson.version>3.16.3</redisson.version>
         <mybatis.version>3.4.6</mybatis.version>
+        <cola.version>3.0.0</cola.version>
         <shiro.spring.version>1.3.2</shiro.spring.version>
         <jwt.version>3.4.0</jwt.version>
         <mybatis.spring.version>1.3.2</mybatis.spring.version>
@@ -122,6 +123,18 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>${commons-lang3.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>cola-core</artifactId>
+            <version>${cola.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>cola-common</artifactId>
+            <version>${cola.version}</version>
         </dependency>
 
         <!--Joda-Time-->
