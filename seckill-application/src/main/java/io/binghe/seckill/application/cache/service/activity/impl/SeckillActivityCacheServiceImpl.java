@@ -126,8 +126,12 @@ public class SeckillActivityCacheServiceImpl implements SeckillActivityCacheServ
             if (!isLockSuccess){
                 return new SeckillBusinessCache<SeckillActivity>().retryLater();
             }
+            //获取锁成功后，再次从缓存中获取数据，防止高并发下多个线程争抢锁的过程中，后续的线程在等待1秒的过程中，前面的线程释放了锁，后续的线程获取锁成功后再次更新分布式缓存数据
+            SeckillBusinessCache<SeckillActivity> seckillActivityCache = SeckillActivityBuilder.getSeckillBusinessCache(distributedCacheService.getObject(buildCacheKey(activityId)), SeckillActivity.class);
+            if (seckillActivityCache != null){
+                return seckillActivityCache;
+            }
             SeckillActivity seckillActivity = seckillActivityRepository.getSeckillActivityById(activityId);
-            SeckillBusinessCache<SeckillActivity> seckillActivityCache;
             if (seckillActivity == null){
                 seckillActivityCache = new SeckillBusinessCache<SeckillActivity>().notExist();
             }else{

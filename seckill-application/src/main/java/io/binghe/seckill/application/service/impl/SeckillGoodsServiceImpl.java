@@ -109,12 +109,12 @@ public class SeckillGoodsServiceImpl implements SeckillGoodsService {
             throw new SeckillException(HttpCode.ACTIVITY_NOT_EXISTS);
         }
         SeckillBusinessCache<List<SeckillGoods>> seckillGoodsListCache = seckillGoodsListCacheService.getCachedGoodsList(activityId, version);
-        if (!seckillGoodsListCache.isExist()){
-            throw new SeckillException(HttpCode.ACTIVITY_NOT_EXISTS);
-        }
         //稍后再试，前端需要对这个状态做特殊处理，即不去刷新数据，静默稍后再试
         if (seckillGoodsListCache.isRetryLater()){
             throw new SeckillException(HttpCode.RETRY_LATER);
+        }
+        if (!seckillGoodsListCache.isExist()){
+            throw new SeckillException(HttpCode.ACTIVITY_NOT_EXISTS);
         }
         List<SeckillGoodsDTO> seckillActivityDTOList = seckillGoodsListCache.getData().stream().map((seckillGoods) -> {
             SeckillGoodsDTO seckillGoodsDTO = new SeckillGoodsDTO();
@@ -131,13 +131,13 @@ public class SeckillGoodsServiceImpl implements SeckillGoodsService {
             throw new SeckillException(HttpCode.PARAMS_INVALID);
         }
         SeckillBusinessCache<SeckillGoods> seckillGoodsCache = seckillGoodsCacheService.getSeckillGoods(id, version);
-        //缓存中不存在商品数据
-        if (!seckillGoodsCache.isExist()){
-            throw new SeckillException(HttpCode.ACTIVITY_NOT_EXISTS);
-        }
         //稍后再试，前端需要对这个状态做特殊处理，即不去刷新数据，静默稍后再试
         if (seckillGoodsCache.isRetryLater()){
             throw new SeckillException(HttpCode.RETRY_LATER);
+        }
+        //缓存中不存在商品数据
+        if (!seckillGoodsCache.isExist()){
+            throw new SeckillException(HttpCode.ACTIVITY_NOT_EXISTS);
         }
         SeckillGoodsDTO seckillGoodsDTO = SeckillGoodsBuilder.toSeckillGoodsDTO(seckillGoodsCache.getData());
         seckillGoodsDTO.setVersion(SystemClock.millisClock().now());

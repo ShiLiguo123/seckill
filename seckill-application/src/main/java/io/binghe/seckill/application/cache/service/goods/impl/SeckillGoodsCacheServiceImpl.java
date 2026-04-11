@@ -127,8 +127,12 @@ public class SeckillGoodsCacheServiceImpl implements SeckillGoodsCacheService {
             if (!isSuccess){
                 return new SeckillBusinessCache<SeckillGoods>().retryLater();
             }
+            //获取锁成功后，再次从缓存中获取数据，防止高并发下多个线程争抢锁的过程中，后续的线程在等待1秒的过程中，前面的线程释放了锁，后续的线程获取锁成功后再次更新分布式缓存数据
+            SeckillBusinessCache<SeckillGoods> seckillGoodsCache = SeckillGoodsBuilder.getSeckillBusinessCache(distributedCacheService.getObject(buildCacheKey(goodsId)), SeckillGoods.class);
+            if (seckillGoodsCache != null){
+                return seckillGoodsCache;
+            }
             SeckillGoods seckillGoods = seckillGoodsRepository.getSeckillGoodsId(goodsId);
-            SeckillBusinessCache<SeckillGoods> seckillGoodsCache;
             if (seckillGoods == null){
                 seckillGoodsCache = new SeckillBusinessCache<SeckillGoods>().notExist();
             }else {
