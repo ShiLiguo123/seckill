@@ -16,6 +16,7 @@
 package io.binghe.seckill.domain.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
@@ -93,5 +94,16 @@ public class SeckillActivity implements Serializable {
 
     public void setActivityDesc(String activityDesc) {
         this.activityDesc = activityDesc;
+    }
+
+    public boolean validateParams(){
+        if (StringUtils.isEmpty(activityDesc)
+                || startTime == null
+                || endTime == null
+                || endTime.before(startTime)
+                || endTime.before(new Date())){
+            return false;
+        }
+        return true;
     }
 }

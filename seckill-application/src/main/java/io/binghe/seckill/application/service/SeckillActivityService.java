@@ -54,7 +54,7 @@ public interface SeckillActivityService {
     /**
      * 修改状态
      */
-    int updateStatus(Integer status, Long id);
+    void updateStatus(Integer status, Long id);
 
     /**
      * 活动列表

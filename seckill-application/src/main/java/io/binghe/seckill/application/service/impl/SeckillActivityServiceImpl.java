@@ -82,8 +82,8 @@ public class SeckillActivityServiceImpl implements SeckillActivityService {
     }
 
     @Override
-    public int updateStatus(Integer status, Long id) {
-        return seckillActivityRepository.updateStatus(status, id);
+    public void updateStatus(Integer status, Long id) {
+        seckillActivityRepository.updateStatus(status, id);
     }
 
     @Override
