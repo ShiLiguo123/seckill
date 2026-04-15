@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.binghe.seckill.application.service;
+package io.binghe.seckill.domain.service;
 
-import io.binghe.seckill.application.command.SeckillGoodsCommond;
-import io.binghe.seckill.domain.model.dto.SeckillGoodsDTO;
 import io.binghe.seckill.domain.model.entity.SeckillGoods;
 
 import java.util.List;
@@ -24,16 +22,15 @@ import java.util.List;
 /**
  * @author binghe(微信 : hacker_binghe)
  * @version 1.0.0
- * @description 商品
+ * @description 商品领域层接口
  * @github https://github.com/binghe001
  * @copyright 公众号: 冰河技术
  */
-public interface SeckillGoodsService {
-
+public interface SeckillGoodsDomainService {
     /**
      * 保存商品信息
      */
-    void saveSeckillGoods(SeckillGoodsCommond seckillGoodsCommond);
+    void saveSeckillGoods(SeckillGoods seckillGoods);
 
     /**
      * 根据id获取商品详细信息
@@ -55,18 +52,9 @@ public interface SeckillGoodsService {
      */
     void updateAvailableStock(Integer count, Long id);
 
+
     /**
      * 获取当前可用库存
      */
     Integer getAvailableStockById(Long id);
-
-    /**
-     * 根据活动id从缓存中获取数据
-     */
-    List<SeckillGoodsDTO> getSeckillGoodsList(Long activityId, Long version);
-
-    /**
-     * 根据id获取商品详细信息（带缓存）
-     */
-    SeckillGoodsDTO getSeckillGoods(Long id, Long version);
 }

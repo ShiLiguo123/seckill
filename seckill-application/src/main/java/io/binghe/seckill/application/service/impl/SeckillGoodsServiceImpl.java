@@ -27,8 +27,8 @@ import io.binghe.seckill.domain.model.dto.SeckillGoodsDTO;
 import io.binghe.seckill.domain.model.entity.SeckillActivity;
 import io.binghe.seckill.domain.model.entity.SeckillGoods;
 import io.binghe.seckill.domain.model.enums.SeckillGoodsStatus;
-import io.binghe.seckill.domain.repository.SeckillActivityRepository;
-import io.binghe.seckill.domain.repository.SeckillGoodsRepository;
+import io.binghe.seckill.domain.service.SeckillActivityDomainService;
+import io.binghe.seckill.domain.service.SeckillGoodsDomainService;
 import io.binghe.seckill.infrastructure.utils.beans.BeanUtil;
 import io.binghe.seckill.infrastructure.utils.id.SnowFlakeFactory;
 import io.binghe.seckill.infrastructure.utils.time.SystemClock;
@@ -49,9 +49,9 @@ import java.util.stream.Collectors;
 @Service
 public class SeckillGoodsServiceImpl implements SeckillGoodsService {
     @Autowired
-    private SeckillGoodsRepository seckillGoodsRepository;
+    private SeckillGoodsDomainService seckillGoodsDomainService;
     @Autowired
-    private SeckillActivityRepository seckillActivityRepository;
+    private SeckillActivityDomainService seckillActivityDomainService;
     @Autowired
     private SeckillGoodsListCacheService seckillGoodsListCacheService;
     @Autowired
@@ -59,11 +59,11 @@ public class SeckillGoodsServiceImpl implements SeckillGoodsService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public int saveSeckillGoods(SeckillGoodsCommond seckillGoodsCommond) {
+    public void saveSeckillGoods(SeckillGoodsCommond seckillGoodsCommond) {
         if (seckillGoodsCommond == null){
             throw new SeckillException(HttpCode.PARAMS_INVALID);
         }
-        SeckillActivity seckillActivity = seckillActivityRepository.getSeckillActivityById(seckillGoodsCommond.getActivityId());
+        SeckillActivity seckillActivity = seckillActivityDomainService.getSeckillActivityById(seckillGoodsCommond.getActivityId());
         if (seckillActivity == null){
             throw new SeckillException(HttpCode.ACTIVITY_NOT_EXISTS);
         }
@@ -73,34 +73,34 @@ public class SeckillGoodsServiceImpl implements SeckillGoodsService {
         seckillGoods.setAvailableStock(seckillGoodsCommond.getInitialStock());
         seckillGoods.setId(SnowFlakeFactory.getSnowFlakeFromCache().nextId());
         seckillGoods.setStatus(SeckillGoodsStatus.PUBLISHED.getCode());
-        return seckillGoodsRepository.saveSeckillGoods(seckillGoods);
+        seckillGoodsDomainService.saveSeckillGoods(seckillGoods);
     }
 
     @Override
     public SeckillGoods getSeckillGoodsId(Long id) {
-       return seckillGoodsRepository.getSeckillGoodsId(id);
+       return seckillGoodsDomainService.getSeckillGoodsId(id);
     }
 
 
     @Override
     public List<SeckillGoods> getSeckillGoodsByActivityId(Long activityId) {
-        return seckillGoodsRepository.getSeckillGoodsByActivityId(activityId);
+        return seckillGoodsDomainService.getSeckillGoodsByActivityId(activityId);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public int updateStatus(Integer status, Long id) {
-        return seckillGoodsRepository.updateStatus(status, id);
+    public void updateStatus(Integer status, Long id) {
+        seckillGoodsDomainService.updateStatus(status, id);
     }
 
     @Override
-    public int updateAvailableStock(Integer count, Long id) {
-        return seckillGoodsRepository.updateAvailableStock(count, id);
+    public void updateAvailableStock(Integer count, Long id) {
+         seckillGoodsDomainService.updateAvailableStock(count, id);
     }
 
     @Override
     public Integer getAvailableStockById(Long id) {
-        return seckillGoodsRepository.getAvailableStockById(id);
+        return seckillGoodsDomainService.getAvailableStockById(id);
     }
 
     @Override
