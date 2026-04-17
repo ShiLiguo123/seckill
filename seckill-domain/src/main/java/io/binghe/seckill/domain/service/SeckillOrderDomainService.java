@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.binghe.seckill.domain.repository;
+package io.binghe.seckill.domain.service;
 
 import io.binghe.seckill.domain.model.entity.SeckillOrder;
 
@@ -22,11 +22,11 @@ import java.util.List;
 /**
  * @author binghe(微信 : hacker_binghe)
  * @version 1.0.0
- * @description 订单
+ * @description 订单领域层接口
  * @github https://github.com/binghe001
  * @copyright 公众号: 冰河技术
  */
-public interface SeckillOrderRepository {
+public interface SeckillOrderDomainService {
 
     /**
      * 保存订单
