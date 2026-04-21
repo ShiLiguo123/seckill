@@ -42,7 +42,8 @@ public enum HttpCode {
     DATA_PARSE_FAILED(2015, "数据解析失败"),
     RETRY_LATER(2016, "稍后再试"),
     USER_INVALID(2017, "当前账户异常，不能参与秒杀"),
-    GOODS_PUBLISH(2018, "商品未上线");
+    GOODS_PUBLISH(2018, "商品未上线"),
+    ORDER_FAILED(2019, "下单失败");
 
     private final Integer code;
     private final String mesaage;

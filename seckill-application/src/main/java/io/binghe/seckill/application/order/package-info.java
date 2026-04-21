@@ -12,33 +12,18 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
-package io.binghe.seckill.application.service;
-
-import java.util.concurrent.TimeUnit;
-
-/**
+ *
  * @author binghe(微信 : hacker_binghe)
- * @version 1.0.0
- * @description Redis缓存接口
+ * @description
  * @github https://github.com/binghe001
+ * @version 1.0.0
  * @copyright 公众号: 冰河技术
  */
-public interface RedisService {
-
-    /**
-     * 设置缓存
-     */
-    void set(String key, Object value);
-
-
-    /**
-     * 设置缓存并设置超时时间
-     */
-    void set(String key, Object value, long timeout, TimeUnit unit);
-
-    /**
-     * 从缓存获取数据
-     */
-    Object get(String key);
-}
+/**
+ * @author binghe(微信 : hacker_binghe)
+ * @description
+ * @github https://github.com/binghe001
+ * @version 1.0.0
+ * @copyright 公众号: 冰河技术
+ */
+package io.binghe.seckill.application.order;

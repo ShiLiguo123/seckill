@@ -42,7 +42,7 @@
     </update>
 
     <update id="updateAvailableStock">
-        update seckill_goods set available_stock = available_stock - #{count} where id = #{id}
+        update seckill_goods set available_stock = available_stock - #{count} where id = #{id} and available_stock >= #{count}
     </update>
 
     <select id="getAvailableStockById" resultType="java.lang.Integer">

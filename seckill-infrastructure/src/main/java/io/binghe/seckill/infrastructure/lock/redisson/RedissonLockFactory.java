@@ -54,6 +54,11 @@ public class RedissonLockFactory implements DistributedLockFactory {
             }
 
             @Override
+            public boolean tryLock() throws InterruptedException {
+                return rLock.tryLock();
+            }
+
+            @Override
             public void lock(long leaseTime, TimeUnit unit) {
                 rLock.lock(leaseTime, unit);
             }

@@ -42,4 +42,9 @@ public class GuavaLocalCacheService<K, V> implements LocalCacheService<K, V> {
     public V getIfPresent(Object key) {
         return cache.getIfPresent(key);
     }
+
+    @Override
+    public void delete(Object key) {
+        cache.invalidate(key);
+    }
 }

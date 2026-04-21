@@ -15,13 +15,13 @@
  */
 package io.binghe.seckill.application.service.impl;
 
-import io.binghe.seckill.application.service.RedisService;
 import io.binghe.seckill.application.service.SeckillUserService;
 import io.binghe.seckill.domain.code.HttpCode;
 import io.binghe.seckill.domain.constants.SeckillConstants;
 import io.binghe.seckill.domain.exception.SeckillException;
 import io.binghe.seckill.domain.model.entity.SeckillUser;
 import io.binghe.seckill.domain.repository.SeckillUserRepository;
+import io.binghe.seckill.infrastructure.cache.distribute.DistributedCacheService;
 import io.binghe.seckill.infrastructure.shiro.utils.CommonsUtils;
 import io.binghe.seckill.infrastructure.shiro.utils.JwtUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -40,7 +40,7 @@ public class SeckillUserServiceImpl implements SeckillUserService {
     @Autowired
     private SeckillUserRepository seckillUserRepository;
     @Autowired
-    private RedisService redisService;
+    private DistributedCacheService distributedCacheService;
 
     @Override
     public SeckillUser getSeckillUserByUserName(String userName) {
@@ -50,7 +50,7 @@ public class SeckillUserServiceImpl implements SeckillUserService {
     @Override
     public SeckillUser getSeckillUserByUserId(Long userId) {
         String key = SeckillConstants.getKey(SeckillConstants.USER_KEY_PREFIX, String.valueOf(userId));
-        return (SeckillUser) redisService.get(key);
+        return distributedCacheService.getObject(key, SeckillUser.class);
     }
 
     @Override
@@ -72,7 +72,7 @@ public class SeckillUserServiceImpl implements SeckillUserService {
         String token = JwtUtils.sign(seckillUser.getId());
         String key = SeckillConstants.getKey(SeckillConstants.USER_KEY_PREFIX, String.valueOf(seckillUser.getId()));
         //缓存到Redis
-        redisService.set(key, seckillUser);
+        distributedCacheService.put(key, seckillUser);
         //返回Token
         return token;
     }

@@ -15,13 +15,14 @@
  */
 package io.binghe.seckill.interfaces.controller;
 
+import io.binghe.seckill.application.command.SeckillOrderCommand;
 import io.binghe.seckill.application.service.SeckillOrderService;
 import io.binghe.seckill.domain.code.HttpCode;
-import io.binghe.seckill.domain.model.dto.SeckillOrderDTO;
 import io.binghe.seckill.domain.model.entity.SeckillOrder;
 import io.binghe.seckill.domain.response.ResponseMessage;
 import io.binghe.seckill.domain.response.ResponseMessageBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -46,9 +47,9 @@ public class SeckillOrderController {
      * 保存秒杀订单
      */
     @RequestMapping(value = "/saveSeckillOrder", method = {RequestMethod.GET,RequestMethod.POST})
-    public ResponseMessage<SeckillOrder> saveSeckillOrder(SeckillOrderDTO seckillOrderDTO){
-        SeckillOrder seckillOrder = seckillOrderService.saveSeckillOrder(seckillOrderDTO);
-        return ResponseMessageBuilder.build(HttpCode.SUCCESS.getCode());
+    public ResponseMessage<Long> saveSeckillOrder(@RequestAttribute Long userId, SeckillOrderCommand seckillOrderCommand){
+        Long orderId = seckillOrderService.saveSeckillOrder(userId, seckillOrderCommand);
+        return ResponseMessageBuilder.build(HttpCode.SUCCESS.getCode(), orderId);
     }
     /**
      * 获取用户维度的订单列表
