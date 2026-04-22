@@ -81,7 +81,7 @@ public class RedisCacheService implements DistributedCacheService {
             return null;
         }
         try {
-            return JSON.parseObject((String) result, targetClass);
+            return JSON.parseObject(result.toString() , targetClass);
         } catch (Exception e) {
             return null;
         }
@@ -124,7 +124,14 @@ public class RedisCacheService implements DistributedCacheService {
         return redisTemplate.hasKey(key);
     }
 
-    public RedisTemplate<String, Object> getRedisTemplate() {
-        return redisTemplate;
+    @Override
+    public Long decrement(String key, long delta) {
+        return redisTemplate.opsForValue().decrement(key, delta);
     }
+
+    @Override
+    public Long increment(String key, long delta) {
+        return redisTemplate.opsForValue().increment(key, delta);
+    }
+
 }
