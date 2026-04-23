@@ -58,4 +58,29 @@ public interface DistributedCacheService {
     default Long increment(String key, long delta){
         return null;
     }
+
+    /**
+     * 使用Lua脚本扣减库存
+     */
+    default Long decrementByLua(String key, Integer quantity){
+        return null;
+    }
+    /**
+     * 使用Lua脚本增加库存
+     */
+    default Long incrementByLua(String key, Integer quantity){
+        return null;
+    }
+
+    /**
+     * 使用Lua脚本初始化库存
+     */
+    default Long initByLua(String key, Integer quantity){
+        return null;
+    }
+
+    /**
+     * 检测结果Lua执行结果
+     */
+    default void checkResult(Long result){}
 }
