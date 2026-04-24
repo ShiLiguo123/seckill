@@ -94,6 +94,11 @@
 * [《Seckill秒杀系统》第45章：基于分布式锁设计并实现库存防超卖](https://articles.zsxq.com/id_ugbgwqmpqf06.html)
 * [《Seckill秒杀系统》第46章：基于Lua脚本设计并实现库存防超卖](https://articles.zsxq.com/id_488nwittqk50.html)
 
+## 基础框架与中间件
+SpringBoot: 2.4.5  
+Dubbo: 3.0.7  
+Nacos: 2.0.3
+
 ## 基础环境安装
 
 之前安装的操作系统为CentOS7版本，所以，这里以CentOS7为例安装Docker环境，具体安装步骤如下所示。

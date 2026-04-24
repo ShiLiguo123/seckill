@@ -1,0 +1,184 @@
+<html>
+<head>
+	<meta charset="UTF-8">
+	<link href="../static/assets/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+	<link href="../static/assets/global/css/components.css" rel="stylesheet" type="text/css"/>
+	<link href="../static/assets/admin/pages/css/login.css" rel="stylesheet" type="text/css"/>
+	<script src="../static/assets/global/plugins/jquery-1.11.0.min.js" type="text/javascript"></script>
+	<script src="../js/common.js" type="text/javascript"></script>
+</head>
+
+<body>
+<div class="content">
+	<h3 class="form-title">商品列表</h3>
+	<div class="table-responsive">
+		<div style="float:right; padding-right: 200px"><input type="button" value="返回" onclick="rollback()"></div>
+		<table class="table">
+			<thead>
+			<tr>
+				<th>商品图片</th>
+				<th>商品编号</th>
+				<th>商品名称</th>
+				<th>活动编号</th>
+				<th>开始时间</th>
+				<th>结束时间</th>
+				<th>原价</th>
+				<th>秒杀价</th>
+				<th>初始库存</th>
+				<th>当前库存</th>
+				<th>限购个数</th>
+				<th>商品描述</th>
+				<th>状态</th>
+				<th>操作</th>
+			</tr>
+			</thead>
+			<tbody id="container">
+			</tbody>
+		</table>
+	</div>
+</div>
+
+</body>
+
+<script>
+	// 定义全局活动数组信息
+	var g_activityList = [];
+
+	jQuery(document).ready(function () {
+		showGoodsList();
+	})
+
+	function showGoodsList(){
+		var activityId = getParameterByName("activityId");
+		$.ajax({
+			type:"GET",
+			headers:{
+				"access-token": get(common_localstorage_key)
+			},
+			url:"http://"+g_host+"/goods/getSeckillGoodsByActivityId?activityId=" + activityId,
+			xhrFields: {withCredentials: true},
+			success:function (data) {
+				if (data.code == 1001) {
+					g_activityList = data.data;
+					reloadDom();
+				}else if (data.code == 2012){
+					alert("请登录后操作");
+					window.location.href = "login.html";
+				}
+
+				else {
+					alert("获取活动信息失败");
+				}
+			},
+			error:function (data) {
+				alert("获取活动信息失败");
+			}
+		})
+	}
+
+	function reloadDom() {
+		$("#container").html('')
+		for (var i = 0; i < g_activityList.length; i ++){
+			var itemVO = g_activityList[i];
+			var dom = "<tr id='goodsDetail"+ itemVO.id +"'>" +
+					"<td><img style='width: 100px;height: auto' src='"+ getImageUrl(itemVO.imgUrl) +"'></td>" +
+					"<td>"+ itemVO.id +"</td>" +
+					"<td>"+ itemVO.goodsName +"</td>" +
+					"<td>"+ itemVO.activityId +"</td>" +
+					"<td>"+ itemVO.startTime +"</td>" +
+					"<td>"+ itemVO.endTime +"</td>" +
+					"<td>"+ itemVO.originalPrice +"</td>" +
+					"<td>"+ itemVO.activityPrice +"</td>" +
+					"<td>"+ itemVO.initialStock +"</td>" +
+					"<td>"+ itemVO.availableStock +"</td>" +
+					"<td>"+ itemVO.limitNum +"</td>" +
+					"<td>"+ itemVO.description +"</td>" +
+					"<td>"+ getStatus(itemVO.status) +"</td>" +
+					"<td>"+ showButton(itemVO) +"</td>" +
+					"</tr>";
+			$("#container").append($(dom));
+		}
+	}
+
+
+	function showButton(itemVO){
+		var innerHtml = "";
+		if(itemVO.status == 0){
+			innerHtml += "<input type='button' value='上线' onclick='onlineGoods(" + itemVO.id + ")'/>";
+		}else if (itemVO.status == 1){
+			innerHtml += "<input type='button' value='下线' onclick='offlineGoods(" + itemVO.id + ")'/>";
+		}
+		return innerHtml;
+	}
+
+	function rollback(){
+		window.location.href = "activity_list.html";
+	}
+
+	//上线商品
+	function onlineGoods(activityId){
+		$.ajax({
+			type:"GET",
+			headers:{
+				"access-token": get(common_localstorage_key)
+			},
+			data: { "status": 1, "id": activityId},
+			url:"http://"+g_host+"/goods/updateStatus",
+			xhrFields: {withCredentials: true},
+			success:function (data) {
+				if (data.code == 1001) {
+					alert("上线成功");
+					showGoodsList();
+				}else if (data.code == 2012){
+					alert("请登录后操作")
+					window.location.href = "login.html";
+				}
+				else {
+					alert("上线活动失败");
+				}
+			},
+			error:function (data) {
+				alert("上线活动失败");
+			}
+		})
+	}
+	//下线商品
+	function offlineGoods(activityId){
+		$.ajax({
+			type:"GET",
+			headers:{
+				"access-token": get(common_localstorage_key)
+			},
+			data: { "status": -1, "id": activityId},
+			url:"http://"+g_host+"/goods/updateStatus",
+			xhrFields: {withCredentials: true},
+			success:function (data) {
+				if (data.code == 1001) {
+					alert("下线成功");
+					showGoodsList();
+				}else if (data.code == 2012){
+					alert("请登录后操作")
+					window.location.href = "login.html";
+				}
+				else {
+					alert("下线活动失败");
+				}
+			},
+			error:function (data) {
+				alert("下线活动失败");
+			}
+		})
+	}
+
+
+	function getStatus(status){
+		if (status == 0){
+			return "已发布";
+		}else if (status == 1){
+			return "已上线";
+		}else if (status == -1){
+			return "已下线";
+		}
+	}
+</script>
+</html>
