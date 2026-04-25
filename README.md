@@ -93,6 +93,7 @@
 * [《Seckill秒杀系统》第44章：基于数据库设计并实现库存防超卖](https://articles.zsxq.com/id_26bhpj32qsht.html)
 * [《Seckill秒杀系统》第45章：基于分布式锁设计并实现库存防超卖](https://articles.zsxq.com/id_ugbgwqmpqf06.html)
 * [《Seckill秒杀系统》第46章：基于Lua脚本设计并实现库存防超卖](https://articles.zsxq.com/id_488nwittqk50.html)
+* [《Seckill秒杀系统》第47章：从单体到微服务重构项目](https://articles.zsxq.com/id_3iqbf48v3onj.html)
 
 ## 基础框架与中间件
 SpringBoot: 2.4.5  
