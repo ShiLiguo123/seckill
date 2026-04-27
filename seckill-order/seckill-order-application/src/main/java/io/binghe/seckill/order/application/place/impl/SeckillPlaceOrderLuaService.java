@@ -26,6 +26,8 @@ import io.binghe.seckill.order.application.place.SeckillPlaceOrderService;
 import io.binghe.seckill.order.domain.model.entity.SeckillOrder;
 import io.binghe.seckill.order.domain.service.SeckillOrderDomainService;
 import org.apache.dubbo.config.annotation.DubboReference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
@@ -40,6 +42,7 @@ import org.springframework.stereotype.Service;
 @Service
 @ConditionalOnProperty(name = "place.order.type", havingValue = "lua")
 public class SeckillPlaceOrderLuaService implements SeckillPlaceOrderService {
+    private final Logger logger = LoggerFactory.getLogger(SeckillPlaceOrderLuaService.class);
     @Autowired
     private SeckillOrderDomainService seckillOrderDomainService;
 
@@ -69,9 +72,11 @@ public class SeckillPlaceOrderLuaService implements SeckillPlaceOrderService {
         try{
             SeckillOrder seckillOrder = this.buildSeckillOrder(userId, seckillOrderCommand, seckillGoods);
             seckillOrderDomainService.saveSeckillOrder(seckillOrder);
-            seckillGoodsDubboService.updateDbAvailableStock(seckillOrderCommand.getQuantity(), seckillOrderCommand.getGoodsId());
+            seckillGoodsDubboService.updateAvailableStock(seckillOrderCommand.getQuantity(), seckillOrderCommand.getGoodsId());
+            //int i = 1 / 0;
             return seckillOrder.getId();
         }catch (Exception e){
+            logger.error("placeOrder|基于Lua脚本下单异常|{}", e.getMessage());
             //将内存中的库存增加回去
             distributedCacheService.incrementByLua(key, seckillOrderCommand.getQuantity());
             throw e;

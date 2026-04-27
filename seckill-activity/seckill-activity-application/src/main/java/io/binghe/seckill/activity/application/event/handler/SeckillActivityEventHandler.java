@@ -48,8 +48,8 @@ public class SeckillActivityEventHandler implements EventHandlerI<Response, Seck
             logger.info("activityEvent|事件参数错误" );
             return Response.buildSuccess();
         }
-        seckillActivityCacheService.tryUpdateSeckillActivityCacheByLock(seckillActivityEvent.getId());
-        seckillActivityListCacheService.tryUpdateSeckillActivityCacheByLock(seckillActivityEvent.getStatus());
+        seckillActivityCacheService.tryUpdateSeckillActivityCacheByLock(seckillActivityEvent.getId(), false);
+        seckillActivityListCacheService.tryUpdateSeckillActivityCacheByLock(seckillActivityEvent.getStatus(), false);
         return Response.buildSuccess();
     }
 }

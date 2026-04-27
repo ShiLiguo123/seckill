@@ -15,9 +15,9 @@
  */
 package io.binghe.seckill.order.application.place.impl;
 
-import io.binghe.seckill.common.model.dto.SeckillGoodsDTO;
 import io.binghe.seckill.common.exception.ErrorCode;
 import io.binghe.seckill.common.exception.SeckillException;
+import io.binghe.seckill.common.model.dto.SeckillGoodsDTO;
 import io.binghe.seckill.dubbo.interfaces.goods.SeckillGoodsDubboService;
 import io.binghe.seckill.order.application.command.SeckillOrderCommand;
 import io.binghe.seckill.order.application.place.SeckillPlaceOrderService;
@@ -54,7 +54,7 @@ public class SeckillPlaceOrderDbService implements SeckillPlaceOrderService {
         //检测商品信息
         this.checkSeckillGoods(seckillOrderCommand, seckillGoods);
         //扣减库存不成功，则库存不足
-        if (!seckillGoodsDubboService.updateDbAvailableStock(seckillOrderCommand.getQuantity(), seckillOrderCommand.getGoodsId())){
+        if (!seckillGoodsDubboService.updateAvailableStock(seckillOrderCommand.getQuantity(), seckillOrderCommand.getGoodsId())){
             throw new SeckillException(ErrorCode.STOCK_LT_ZERO);
         }
         //构建订单

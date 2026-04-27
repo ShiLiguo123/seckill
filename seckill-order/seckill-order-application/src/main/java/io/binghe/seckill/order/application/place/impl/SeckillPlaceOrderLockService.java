@@ -91,7 +91,7 @@ public class SeckillPlaceOrderLockService implements SeckillPlaceOrderService {
             //保存订单
             seckillOrderDomainService.saveSeckillOrder(seckillOrder);
             //扣减数据库库存
-            seckillGoodsDubboService.updateDbAvailableStock(seckillOrderCommand.getQuantity(), seckillOrderCommand.getGoodsId());
+            seckillGoodsDubboService.updateAvailableStock(seckillOrderCommand.getQuantity(), seckillOrderCommand.getGoodsId());
             //库存数据库库存
             return seckillOrder.getId();
         } catch (Exception e) {

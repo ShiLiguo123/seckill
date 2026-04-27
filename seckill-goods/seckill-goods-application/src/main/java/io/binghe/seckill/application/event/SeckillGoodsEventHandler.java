@@ -49,8 +49,8 @@ public class SeckillGoodsEventHandler implements EventHandlerI<Response, Seckill
             logger.info("goodsEvent|接收秒杀品事件参数错误");
             return Response.buildSuccess();
         }
-        seckillGoodsCacheService.tryUpdateSeckillGoodsCacheByLock(seckillGoodsEvent.getId());
-        seckillGoodsListCacheService.tryUpdateSeckillGoodsCacheByLock(seckillGoodsEvent.getActivityId());
+        seckillGoodsCacheService.tryUpdateSeckillGoodsCacheByLock(seckillGoodsEvent.getId(), false);
+        seckillGoodsListCacheService.tryUpdateSeckillGoodsCacheByLock(seckillGoodsEvent.getActivityId(), false);
         return Response.buildSuccess();
     }
 }

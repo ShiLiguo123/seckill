@@ -97,7 +97,7 @@ public class SeckillActivityCacheServiceImpl implements SeckillActivityCacheServ
         //分布式缓存中没有数据
         if (seckillActivityCache == null){
             // 尝试更新分布式缓存中的数据，注意的是只用一个线程去更新分布式缓存中的数据
-            seckillActivityCache = tryUpdateSeckillActivityCacheByLock(activityId);
+            seckillActivityCache = tryUpdateSeckillActivityCacheByLock(activityId, true);
         }
         //获取的数据不为空，并且不需要重试
         if (seckillActivityCache != null && !seckillActivityCache.isRetryLater()){
@@ -118,7 +118,7 @@ public class SeckillActivityCacheServiceImpl implements SeckillActivityCacheServ
      * 利用分布式锁保证只有一个线程去更新分布式缓存中的数据
      */
     @Override
-    public SeckillBusinessCache<SeckillActivity> tryUpdateSeckillActivityCacheByLock(Long activityId) {
+    public SeckillBusinessCache<SeckillActivity> tryUpdateSeckillActivityCacheByLock(Long activityId, boolean doubleCheck) {
         logger.info("SeckillActivityCache|更新分布式缓存|{}", activityId);
         //获取分布式锁
         DistributedLock lock = distributedLockFactory.getDistributedLock(SECKILL_ACTIVITY_UPDATE_CACHE_LOCK_KEY.concat(String.valueOf(activityId)));
@@ -128,10 +128,13 @@ public class SeckillActivityCacheServiceImpl implements SeckillActivityCacheServ
             if (!isLockSuccess){
                 return new SeckillBusinessCache<SeckillActivity>().retryLater();
             }
-            //获取锁成功后，再次从缓存中获取数据，防止高并发下多个线程争抢锁的过程中，后续的线程再等待1秒的过程中，前面的线程释放了锁，后续的线程获取锁成功后再次更新分布式缓存数据
-            SeckillBusinessCache<SeckillActivity> seckillActivityCache = SeckillActivityBuilder.getSeckillBusinessCache(distributedCacheService.getObject(buildCacheKey(activityId)), SeckillActivity.class);
-            if (seckillActivityCache != null){
-                return seckillActivityCache;
+            SeckillBusinessCache<SeckillActivity> seckillActivityCache;
+            if (doubleCheck){
+                //获取锁成功后，再次从缓存中获取数据，防止高并发下多个线程争抢锁的过程中，后续的线程再等待1秒的过程中，前面的线程释放了锁，后续的线程获取锁成功后再次更新分布式缓存数据
+                seckillActivityCache = SeckillActivityBuilder.getSeckillBusinessCache(distributedCacheService.getObject(buildCacheKey(activityId)), SeckillActivity.class);
+                if (seckillActivityCache != null){
+                    return seckillActivityCache;
+                }
             }
             SeckillActivity seckillActivity = seckillActivityDomainService.getSeckillActivityById(activityId);
             if (seckillActivity == null){
