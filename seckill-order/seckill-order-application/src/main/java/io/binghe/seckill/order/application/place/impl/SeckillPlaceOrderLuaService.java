@@ -73,7 +73,7 @@ public class SeckillPlaceOrderLuaService implements SeckillPlaceOrderService {
             SeckillOrder seckillOrder = this.buildSeckillOrder(userId, seckillOrderCommand, seckillGoods);
             seckillOrderDomainService.saveSeckillOrder(seckillOrder);
             seckillGoodsDubboService.updateAvailableStock(seckillOrderCommand.getQuantity(), seckillOrderCommand.getGoodsId());
-            //int i = 1 / 0;
+            int i = 1 / 0;
             return seckillOrder.getId();
         }catch (Exception e){
             logger.error("placeOrder|基于Lua脚本下单异常|{}", e.getMessage());
