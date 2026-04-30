@@ -49,4 +49,9 @@ public class SeckillGoodsDubboServiceImpl implements SeckillGoodsDubboService {
     public boolean updateAvailableStock(Integer count, Long id) {
         return seckillGoodsService.updateAvailableStock(count, id);
     }
+
+    @Override
+    public Integer getAvailableStockById(Long goodsId) {
+        return seckillGoodsService.getAvailableStockById(goodsId);
+    }
 }

@@ -208,8 +208,8 @@ public class SeckillActivityListCacheServiceImpl implements SeckillActivityListC
                 return new SeckillBusinessCache<List<SeckillActivity>>().retryLater();
             }
             SeckillBusinessCache<List<SeckillActivity>> seckillActivitiyListCache;
+            //获取锁成功后，再次从缓存中获取数据，防止高并发下多个线程争抢锁的过程中，后续的线程再等待1秒的过程中，前面的线程释放了锁，后续的线程获取锁成功后再次更新分布式缓存数据
             if (doubleCheck){
-                //获取锁成功后，再次从缓存中获取数据，防止高并发下多个线程争抢锁的过程中，后续的线程再等待1秒的过程中，前面的线程释放了锁，后续的线程获取锁成功后再次更新分布式缓存数据
                 seckillActivitiyListCache = SeckillActivityBuilder.getSeckillBusinessCacheList(distributedCacheService.getObject(buildCacheKey(key)), SeckillActivity.class);
                 if (seckillActivitiyListCache != null){
                     return seckillActivitiyListCache;

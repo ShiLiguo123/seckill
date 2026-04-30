@@ -13,36 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.binghe.seckill.dubbo.interfaces.goods;
+package io.binghe.seckill.order.test;
 
-import io.binghe.seckill.common.model.dto.SeckillGoodsDTO;
+import io.binghe.seckill.common.cache.distribute.DistributedCacheService;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 /**
  * @author binghe(微信 : hacker_binghe)
  * @version 1.0.0
- * @description 商品Dubbo服务接口
+ * @description 测试分布式缓存
  * @github https://github.com/binghe001
  * @copyright 公众号: 冰河技术
  */
-public interface SeckillGoodsDubboService {
+@SpringBootTest
+@RunWith(SpringRunner.class)
+public class DistributedCacheServiceTest {
 
-    /**
-     * 根据id和版本号获取商品详情
-     */
-    SeckillGoodsDTO getSeckillGoods(Long id, Long version);
+    @Autowired
+    private DistributedCacheService distributedCacheService;
 
-    /**
-     * 扣减数据库库存
-     */
-    boolean updateDbAvailableStock(Integer count, Long id);
-
-    /**
-     * 扣减商品库存
-     */
-    boolean updateAvailableStock(Integer count, Long id);
-
-    /**
-     * 根据商品id获取可用库存
-     */
-    Integer getAvailableStockById(Long goodsId);
+    @Test
+    public void testDecrement(){
+        Long result = distributedCacheService.decrement("binghe", 1);
+        System.out.println(result);
+    }
 }

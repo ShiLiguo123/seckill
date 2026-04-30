@@ -15,6 +15,8 @@
  */
 package io.binghe.seckill.common.cache.distribute;
 
+import org.springframework.lang.Nullable;
+
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -47,6 +49,12 @@ public interface DistributedCacheService {
 
     Boolean hasKey(String key);
 
+    Long addSet(String key, Object... values);
+
+    Long removeSet(String key, Object... values);
+
+    Boolean isMemberSet(String key, Object o);
+
     /**
      * 扣减内存中的数据
      */
@@ -77,6 +85,13 @@ public interface DistributedCacheService {
      * 使用Lua脚本初始化库存
      */
     default Long initByLua(String key, Integer quantity){
+        return null;
+    }
+
+    /**
+     * 检测是否已经恢复缓存的库存数据
+     */
+    default Long checkRecoverStockByLua(String key, Long seconds){
         return null;
     }
 }

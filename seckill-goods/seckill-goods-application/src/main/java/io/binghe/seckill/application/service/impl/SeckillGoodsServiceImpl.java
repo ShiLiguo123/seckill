@@ -15,6 +15,8 @@
  */
 package io.binghe.seckill.application.service.impl;
 
+import cn.hutool.core.util.BooleanUtil;
+import com.alibaba.fastjson.JSONObject;
 import io.binghe.seckill.application.builder.SeckillGoodsBuilder;
 import io.binghe.seckill.application.cache.service.SeckillGoodsCacheService;
 import io.binghe.seckill.application.cache.service.SeckillGoodsListCacheService;
@@ -29,13 +31,20 @@ import io.binghe.seckill.common.exception.SeckillException;
 import io.binghe.seckill.common.model.dto.SeckillActivityDTO;
 import io.binghe.seckill.common.model.dto.SeckillGoodsDTO;
 import io.binghe.seckill.common.model.enums.SeckillGoodsStatus;
+import io.binghe.seckill.common.model.message.ErrorMessage;
+import io.binghe.seckill.common.model.message.TxMessage;
 import io.binghe.seckill.common.utils.beans.BeanUtil;
 import io.binghe.seckill.common.utils.id.SnowFlakeFactory;
 import io.binghe.seckill.dubbo.interfaces.activity.SeckillActivityDubboService;
 import io.binghe.seckill.goods.domain.model.entity.SeckillGoods;
 import io.binghe.seckill.goods.domain.service.SeckillGoodsDomainService;
 import org.apache.dubbo.config.annotation.DubboReference;
+import org.apache.rocketmq.spring.core.RocketMQTemplate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,6 +61,7 @@ import java.util.stream.Collectors;
  */
 @Service
 public class SeckillGoodsServiceImpl implements SeckillGoodsService {
+    private final Logger logger = LoggerFactory.getLogger(SeckillGoodsServiceImpl.class);
     @Autowired
     private SeckillGoodsDomainService seckillGoodsDomainService;
     @DubboReference(version = "1.0.0")
@@ -64,7 +74,8 @@ public class SeckillGoodsServiceImpl implements SeckillGoodsService {
     private SeckillGoodsCacheService seckillGoodsCacheService;
     @Autowired
     private SeckillGoodsListCacheService seckillGoodsListCacheService;
-
+    @Autowired
+    private RocketMQTemplate rocketMQTemplate;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -199,4 +210,42 @@ public class SeckillGoodsServiceImpl implements SeckillGoodsService {
     public Integer getAvailableStockById(Long id) {
         return seckillGoodsDomainService.getAvailableStockById(id);
     }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean updateAvailableStock(TxMessage txMessage) {
+        Boolean decrementStock = distributedCacheService.hasKey(SeckillConstants.getKey(SeckillConstants.GOODS_TX_KEY, String.valueOf(txMessage.getTxNo())));
+        if (BooleanUtil.isTrue(decrementStock)){
+            logger.info("updateAvailableStock|秒杀商品微服务已经扣减过库存|{}", txMessage.getTxNo());
+            return true;
+        }
+        boolean isUpdate = false;
+        try{
+            isUpdate = seckillGoodsDomainService.updateAvailableStock(txMessage.getQuantity(), txMessage.getGoodsId());
+            //成功扣减库存成功
+            if (isUpdate){
+                distributedCacheService.put(SeckillConstants.getKey(SeckillConstants.GOODS_TX_KEY, String.valueOf(txMessage.getTxNo())), txMessage.getTxNo(), SeckillConstants.TX_LOG_EXPIRE_DAY, TimeUnit.DAYS);
+            }else{
+                //发送失败消息给订单微服务
+                rocketMQTemplate.send(SeckillConstants.TOPIC_ERROR_MSG, getErrorMessage(txMessage));
+            }
+        }catch (Exception e){
+            isUpdate = false;
+            logger.error("updateAvailableStock|抛出异常|{}|{}",txMessage.getTxNo(), e.getMessage());
+            //发送失败消息给订单微服务
+            rocketMQTemplate.send(SeckillConstants.TOPIC_ERROR_MSG, getErrorMessage(txMessage));
+        }
+        return isUpdate;
+    }
+
+    /**
+     * 发送给订单微服务的错误消息
+     */
+    private Message<String> getErrorMessage(TxMessage txMessage){
+        ErrorMessage errorMessage = new ErrorMessage(txMessage.getTxNo(), txMessage.getGoodsId(), txMessage.getQuantity(), txMessage.getPlaceOrderType(), txMessage.getException());
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put(SeckillConstants.ERROR_MSG_KEY, errorMessage);
+        return MessageBuilder.withPayload(jsonObject.toJSONString()).build();
+    }
+
 }

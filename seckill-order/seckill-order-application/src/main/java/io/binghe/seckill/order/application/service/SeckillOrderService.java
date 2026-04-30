@@ -16,6 +16,7 @@
 package io.binghe.seckill.order.application.service;
 
 
+import io.binghe.seckill.common.model.message.ErrorMessage;
 import io.binghe.seckill.order.application.command.SeckillOrderCommand;
 import io.binghe.seckill.order.domain.model.entity.SeckillOrder;
 
@@ -44,4 +45,10 @@ public interface SeckillOrderService {
      * 根据活动id获取订单列表
      */
     List<SeckillOrder> getSeckillOrderByActivityId(Long activityId);
+
+    /**
+     * 删除订单
+     */
+    void deleteOrder(ErrorMessage errorMessage);
+
 }

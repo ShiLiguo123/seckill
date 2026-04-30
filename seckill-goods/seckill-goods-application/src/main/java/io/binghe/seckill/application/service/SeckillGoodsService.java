@@ -17,6 +17,7 @@ package io.binghe.seckill.application.service;
 
 import io.binghe.seckill.application.command.SeckillGoodsCommond;
 import io.binghe.seckill.common.model.dto.SeckillGoodsDTO;
+import io.binghe.seckill.common.model.message.TxMessage;
 import io.binghe.seckill.goods.domain.model.entity.SeckillGoods;
 
 import java.util.List;
@@ -74,4 +75,9 @@ public interface SeckillGoodsService {
      * 获取当前可用库存
      */
     Integer getAvailableStockById(Long id);
+
+    /**
+     * 扣减库存
+     */
+    boolean updateAvailableStock(TxMessage txMessage);
 }
