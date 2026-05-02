@@ -39,7 +39,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @copyright 公众号: 冰河技术
  */
 @Component
-@RocketMQTransactionListener(rocketMQTemplateBeanName = "rocketMQTemplate")
+@RocketMQTransactionListener(/*txProducerGroup = SeckillConstants.TX_ORDER_PRODUCER_GROUP,*/ rocketMQTemplateBeanName = "rocketMQTemplate")
 public class OrderTxMessageListener implements RocketMQLocalTransactionListener{
     private final Logger logger = LoggerFactory.getLogger(OrderTxMessageListener.class);
     @Autowired

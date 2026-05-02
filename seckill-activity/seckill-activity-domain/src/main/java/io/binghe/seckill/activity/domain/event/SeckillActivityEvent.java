@@ -27,7 +27,7 @@ import io.binghe.seckill.common.event.SeckillBaseEvent;
  */
 public class SeckillActivityEvent extends SeckillBaseEvent {
 
-    public SeckillActivityEvent(Long id, Integer status) {
-        super(id, status);
+    public SeckillActivityEvent(Long id, Integer status, String topicEvent) {
+        super(id, status, topicEvent);
     }
 }

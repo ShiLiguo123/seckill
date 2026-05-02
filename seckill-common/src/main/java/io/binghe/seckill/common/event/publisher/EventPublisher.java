@@ -16,7 +16,7 @@
 package io.binghe.seckill.common.event.publisher;
 
 
-import com.alibaba.cola.event.DomainEventI;
+import io.binghe.seckill.common.event.SeckillBaseEvent;
 
 /**
  * @author binghe(微信 : hacker_binghe)
@@ -29,5 +29,5 @@ public interface EventPublisher {
     /**
      * 发布事件
      */
-    void publish(DomainEventI domainEvent);
+    void publish(SeckillBaseEvent domainEvent);
 }

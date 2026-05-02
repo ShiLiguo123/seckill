@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.binghe.seckill.application.event;
+package io.binghe.seckill.activity.application.event.handler;
 
 import com.alibaba.cola.dto.Response;
 import com.alibaba.cola.event.EventHandler;
 import com.alibaba.cola.event.EventHandlerI;
 import com.alibaba.fastjson.JSON;
-import io.binghe.seckill.application.cache.service.SeckillGoodsCacheService;
-import io.binghe.seckill.application.cache.service.SeckillGoodsListCacheService;
-import io.binghe.seckill.goods.domain.event.SeckillGoodsEvent;
+import io.binghe.seckill.activity.application.cache.service.SeckillActivityCacheService;
+import io.binghe.seckill.activity.application.cache.service.SeckillActivityListCacheService;
+import io.binghe.seckill.activity.domain.event.SeckillActivityEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,29 +30,28 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 /**
  * @author binghe(微信 : hacker_binghe)
  * @version 1.0.0
- * @description 商品事件处理器
+ * @description 接收活动事件
  * @github https://github.com/binghe001
  * @copyright 公众号: 冰河技术
  */
 @EventHandler
 @ConditionalOnProperty(name = "event.publish.type", havingValue = "cola")
-public class SeckillGoodsEventHandler implements EventHandlerI<Response, SeckillGoodsEvent> {
-    private final Logger logger = LoggerFactory.getLogger(SeckillGoodsEventHandler.class);
-
+public class SeckillActivityColaEventHandler implements EventHandlerI<Response, SeckillActivityEvent> {
+    private final Logger logger = LoggerFactory.getLogger(SeckillActivityColaEventHandler.class);
     @Autowired
-    private SeckillGoodsCacheService seckillGoodsCacheService;
+    private SeckillActivityCacheService seckillActivityCacheService;
     @Autowired
-    private SeckillGoodsListCacheService seckillGoodsListCacheService;
+    private SeckillActivityListCacheService seckillActivityListCacheService;
 
     @Override
-    public Response execute(SeckillGoodsEvent seckillGoodsEvent) {
-        logger.info("goodsEvent|接收秒杀品事件|{}", JSON.toJSON(seckillGoodsEvent));
-        if (seckillGoodsEvent.getId() == null){
-            logger.info("goodsEvent|接收秒杀品事件参数错误");
+    public Response execute(SeckillActivityEvent seckillActivityEvent) {
+        logger.info("cola|activityEvent|接收活动事件|{}", JSON.toJSON(seckillActivityEvent));
+        if (seckillActivityEvent == null){
+            logger.info("cola|activityEvent|事件参数错误" );
             return Response.buildSuccess();
         }
-        seckillGoodsCacheService.tryUpdateSeckillGoodsCacheByLock(seckillGoodsEvent.getId(), false);
-        seckillGoodsListCacheService.tryUpdateSeckillGoodsCacheByLock(seckillGoodsEvent.getActivityId(), false);
+        seckillActivityCacheService.tryUpdateSeckillActivityCacheByLock(seckillActivityEvent.getId(), false);
+        seckillActivityListCacheService.tryUpdateSeckillActivityCacheByLock(seckillActivityEvent.getStatus(), false);
         return Response.buildSuccess();
     }
 }

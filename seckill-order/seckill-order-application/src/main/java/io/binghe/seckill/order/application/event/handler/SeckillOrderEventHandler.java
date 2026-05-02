@@ -22,6 +22,7 @@ import com.alibaba.fastjson.JSON;
 import io.binghe.seckill.order.domain.event.SeckillOrderEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 
 /**
  * @author binghe(微信 : hacker_binghe)
@@ -31,6 +32,7 @@ import org.slf4j.LoggerFactory;
  * @copyright 公众号: 冰河技术
  */
 @EventHandler
+@ConditionalOnProperty(name = "event.publish.type", havingValue = "cola")
 public class SeckillOrderEventHandler implements EventHandlerI<Response, SeckillOrderEvent> {
     private final Logger logger = LoggerFactory.getLogger(SeckillOrderEventHandler.class);
     @Override

@@ -28,8 +28,8 @@ public class SeckillGoodsEvent extends SeckillBaseEvent {
    private Long activityId;
 
 
-    public SeckillGoodsEvent(Long id, Long activityId, Integer status) {
-        super(id, status);
+    public SeckillGoodsEvent(Long id, Long activityId, Integer status, String topicEvent) {
+        super(id, status, topicEvent);
         this.activityId = activityId;
     }
 

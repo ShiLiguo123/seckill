@@ -15,41 +15,53 @@
  */
 package io.binghe.seckill.activity.application.event.handler;
 
-import com.alibaba.cola.dto.Response;
-import com.alibaba.cola.event.EventHandler;
-import com.alibaba.cola.event.EventHandlerI;
-import com.alibaba.fastjson.JSON;
+import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSONObject;
 import io.binghe.seckill.activity.application.cache.service.SeckillActivityCacheService;
 import io.binghe.seckill.activity.application.cache.service.SeckillActivityListCacheService;
 import io.binghe.seckill.activity.domain.event.SeckillActivityEvent;
+import io.binghe.seckill.common.constants.SeckillConstants;
+import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
+import org.apache.rocketmq.spring.core.RocketMQListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Component;
 
 /**
  * @author binghe(微信 : hacker_binghe)
  * @version 1.0.0
- * @description 接收活动事件
+ * @description 接收rocketmq事件消息
  * @github https://github.com/binghe001
  * @copyright 公众号: 冰河技术
  */
-@EventHandler
-public class SeckillActivityEventHandler implements EventHandlerI<Response, SeckillActivityEvent> {
-    private final Logger logger = LoggerFactory.getLogger(SeckillActivityEventHandler.class);
+@Component
+@ConditionalOnProperty(name = "event.publish.type", havingValue = "rocketmq")
+@RocketMQMessageListener(consumerGroup = SeckillConstants.EVENT_ACTIVITY_CONSUMER_GROUP, topic = SeckillConstants.TOPIC_EVENT_ROCKETMQ_ACTIVITY)
+public class SeckillActivityRocketMQEventHandler implements RocketMQListener<String> {
+
+    private final Logger logger = LoggerFactory.getLogger(SeckillActivityRocketMQEventHandler.class);
     @Autowired
     private SeckillActivityCacheService seckillActivityCacheService;
     @Autowired
     private SeckillActivityListCacheService seckillActivityListCacheService;
 
     @Override
-    public Response execute(SeckillActivityEvent seckillActivityEvent) {
-        logger.info("activityEvent|接收活动事件|{}", JSON.toJSON(seckillActivityEvent));
-        if (seckillActivityEvent == null){
-            logger.info("activityEvent|事件参数错误" );
-            return Response.buildSuccess();
+    public void onMessage(String message) {
+        logger.info("rocketmq|activityEvent|接收活动事件|{}", message);
+        if (StrUtil.isEmpty(message)){
+            logger.info("rocketmq|activityEvent|事件参数错误" );
+            return;
         }
+        SeckillActivityEvent seckillActivityEvent = this.getEventMessage(message);
         seckillActivityCacheService.tryUpdateSeckillActivityCacheByLock(seckillActivityEvent.getId(), false);
         seckillActivityListCacheService.tryUpdateSeckillActivityCacheByLock(seckillActivityEvent.getStatus(), false);
-        return Response.buildSuccess();
+    }
+
+    private SeckillActivityEvent getEventMessage(String msg){
+        JSONObject jsonObject = JSONObject.parseObject(msg);
+        String eventStr = jsonObject.getString(SeckillConstants.EVENT_MSG_KEY);
+        return JSONObject.parseObject(eventStr, SeckillActivityEvent.class);
     }
 }

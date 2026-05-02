@@ -110,6 +110,57 @@ public class SeckillConstants {
     public static final String ERROR_MSG_KEY = "errorMessage";
 
     /**
+     * 事件消息Key
+     */
+    public static final String EVENT_MSG_KEY = "eventMessage";
+
+    /**
+     * 活动事件消息topic
+     */
+    public static final String TOPIC_EVENT_ROCKETMQ_ACTIVITY = "topic_event_rocketmq_activity";
+
+    /**
+     * 商品事件消息topic
+     */
+    public static final String TOPIC_EVENT_ROCKETMQ_GOODS = "topic_event_rocketmq_goods";
+
+    /**
+     * 订单事件消息topic
+     */
+    public static final String TOPIC_EVENT_ROCKETMQ_ORDER = "topic_event_rocketmq_order";
+
+    /**
+     * 订单消费分组
+     */
+    public static final String EVENT_ORDER_CONSUMER_GROUP = "event_order_consumer_group";
+
+    /**
+     * 商品消费分组
+     */
+    public static final String EVENT_GOODS_CONSUMER_GROUP = "event_goods_consumer_group";
+
+    /**
+     * 活动消费分组
+     */
+    public static final String EVENT_ACTIVITY_CONSUMER_GROUP = "event_activity_consumer_group";
+
+
+    /**
+     * Cola订阅事件
+     */
+    public static final String TOPIC_EVENT_COLA = "topic_event_cola";
+
+    /**
+     * cola事件类型
+     */
+    public static final String EVENT_PUBLISH_TYPE_COLA = "cola";
+
+    /**
+     * RocketMQ事件类型
+     */
+    public static final String EVENT_PUBLISH_TYPE_ROCKETMQ = "rocketmq";
+
+    /**
      * 订单事务分组
      */
     public static final String TX_ORDER_PRODUCER_GROUP = "tx_order_producer_group";
@@ -117,7 +168,7 @@ public class SeckillConstants {
     /**
      * 订单消费分组
      */
-    public static final String TX_ORDER_CPNSUMER_GROUP = "tx_order_consumer_group";
+    public static final String TX_ORDER_CONSUMER_GROUP = "tx_order_consumer_group";
 
     /**
      * 商品事务分组

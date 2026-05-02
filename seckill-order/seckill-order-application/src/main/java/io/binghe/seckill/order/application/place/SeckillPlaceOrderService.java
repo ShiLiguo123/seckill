@@ -127,5 +127,4 @@ public interface SeckillPlaceOrderService {
         return MessageBuilder.withPayload(jsonObject.toJSONString()).build();
     }
 
-
 }

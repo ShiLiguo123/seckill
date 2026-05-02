@@ -28,10 +28,12 @@ public class SeckillBaseEvent implements DomainEventI {
 
     private Long id;
     private Integer status;
+    private String topicEvent;
 
-    public SeckillBaseEvent(Long id, Integer status) {
+    public SeckillBaseEvent(Long id, Integer status, String topicEvent) {
         this.id = id;
         this.status = status;
+        this.topicEvent = topicEvent;
     }
 
     public Long getId() {
@@ -48,5 +50,13 @@ public class SeckillBaseEvent implements DomainEventI {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public String getTopicEvent() {
+        return topicEvent;
+    }
+
+    public void setTopicEvent(String topicEvent) {
+        this.topicEvent = topicEvent;
     }
 }

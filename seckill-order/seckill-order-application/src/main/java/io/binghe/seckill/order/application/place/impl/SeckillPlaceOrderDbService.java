@@ -16,6 +16,7 @@
 package io.binghe.seckill.order.application.place.impl;
 
 import cn.hutool.core.util.BooleanUtil;
+import cn.hutool.core.util.NumberUtil;
 import com.alibaba.fastjson.JSONObject;
 import io.binghe.seckill.common.cache.distribute.DistributedCacheService;
 import io.binghe.seckill.common.constants.SeckillConstants;
@@ -77,6 +78,7 @@ public class SeckillPlaceOrderDbService implements SeckillPlaceOrderService {
             if (availableStock == null || availableStock < seckillOrderCommand.getQuantity()){
                 throw new SeckillException(ErrorCode.STOCK_LT_ZERO);
             }
+            int i = 1 / 0;
         }catch (Exception e){
             exception = true;
             logger.error("SeckillPlaceOrderDbService|下单异常|参数:{}|异常信息:{}", JSONObject.toJSONString(seckillOrderCommand), e.getMessage());
@@ -109,4 +111,5 @@ public class SeckillPlaceOrderDbService implements SeckillPlaceOrderService {
             throw e;
         }
     }
+
 }

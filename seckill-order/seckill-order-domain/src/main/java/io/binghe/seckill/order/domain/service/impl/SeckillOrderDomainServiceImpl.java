@@ -16,6 +16,8 @@
 package io.binghe.seckill.order.domain.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import io.binghe.seckill.common.constants.SeckillConstants;
+import io.binghe.seckill.common.event.SeckillBaseEvent;
 import io.binghe.seckill.common.event.publisher.EventPublisher;
 import io.binghe.seckill.common.exception.ErrorCode;
 import io.binghe.seckill.common.exception.SeckillException;
@@ -27,6 +29,7 @@ import io.binghe.seckill.order.domain.service.SeckillOrderDomainService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -46,6 +49,8 @@ public class SeckillOrderDomainServiceImpl implements SeckillOrderDomainService 
     private SeckillOrderRepository seckillOrderRepository;
     @Autowired
     private EventPublisher eventPublisher;
+    @Value("${event.publish.type}")
+    private String eventType;
 
     @Override
     public boolean saveSeckillOrder(SeckillOrder seckillOrder) {
@@ -57,7 +62,7 @@ public class SeckillOrderDomainServiceImpl implements SeckillOrderDomainService 
         boolean saveSuccess = seckillOrderRepository.saveSeckillOrder(seckillOrder);
         if (saveSuccess){
             logger.info("saveSeckillOrder|创建订单成功|{}", JSON.toJSONString(seckillOrder));
-            SeckillOrderEvent seckillOrderEvent = new SeckillOrderEvent(seckillOrder.getId(), SeckillOrderStatus.CREATED.getCode());
+            SeckillOrderEvent seckillOrderEvent = new SeckillOrderEvent(seckillOrder.getId(), SeckillOrderStatus.CREATED.getCode(), getTopicEvent());
             eventPublisher.publish(seckillOrderEvent);
         }
         return saveSuccess;
@@ -82,5 +87,12 @@ public class SeckillOrderDomainServiceImpl implements SeckillOrderDomainService 
     @Override
     public void deleteOrder(Long orderId) {
         seckillOrderRepository.deleteOrder(orderId);
+    }
+
+    /**
+     * 获取主题事件
+     */
+    private String getTopicEvent(){
+        return SeckillConstants.EVENT_PUBLISH_TYPE_ROCKETMQ.equals(eventType) ? SeckillConstants.TOPIC_EVENT_ROCKETMQ_ORDER : SeckillConstants.TOPIC_EVENT_COLA;
     }
 }

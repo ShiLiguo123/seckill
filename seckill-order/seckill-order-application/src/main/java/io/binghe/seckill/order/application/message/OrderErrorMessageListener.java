@@ -35,7 +35,7 @@ import org.springframework.stereotype.Component;
  * @copyright 公众号: 冰河技术
  */
 @Component
-@RocketMQMessageListener(consumerGroup = SeckillConstants.TX_ORDER_CPNSUMER_GROUP, topic = SeckillConstants.TOPIC_ERROR_MSG)
+@RocketMQMessageListener(consumerGroup = SeckillConstants.TX_ORDER_CONSUMER_GROUP, topic = SeckillConstants.TOPIC_ERROR_MSG)
 public class OrderErrorMessageListener implements RocketMQListener<String> {
     private final Logger logger = LoggerFactory.getLogger(OrderErrorMessageListener.class);
     @Autowired

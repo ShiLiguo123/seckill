@@ -138,7 +138,6 @@ public class SeckillPlaceOrderLuaService implements SeckillPlaceOrderService {
             distributedCacheService.increment(key, txMessage.getQuantity());
         }
     }
-
     private void checkResult(Long result){
         if (result == SeckillConstants.LUA_RESULT_GOODS_STOCK_NOT_EXISTS) {
             throw new SeckillException(ErrorCode.STOCK_IS_NULL);

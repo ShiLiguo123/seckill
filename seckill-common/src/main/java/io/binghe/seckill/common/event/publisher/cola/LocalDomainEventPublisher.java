@@ -13,11 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.binghe.seckill.common.event.publisher;
+package io.binghe.seckill.common.event.publisher.cola;
 
 import com.alibaba.cola.event.DomainEventI;
 import com.alibaba.cola.event.EventBusI;
+import io.binghe.seckill.common.event.SeckillBaseEvent;
+import io.binghe.seckill.common.event.publisher.EventPublisher;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 /**
@@ -28,12 +31,13 @@ import org.springframework.stereotype.Component;
  * @copyright 公众号: 冰河技术
  */
 @Component
+@ConditionalOnProperty(name = "event.publish.type", havingValue = "cola")
 public class LocalDomainEventPublisher implements EventPublisher {
     @Autowired
     private EventBusI eventBus;
 
     @Override
-    public void publish(DomainEventI domainEvent) {
+    public void publish(SeckillBaseEvent domainEvent) {
         eventBus.fire(domainEvent);
     }
 }

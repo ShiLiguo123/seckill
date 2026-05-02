@@ -136,7 +136,6 @@ public class SeckillPlaceOrderLockService implements SeckillPlaceOrderService {
             seckillOrderDomainService.saveSeckillOrder(seckillOrder);
             //保存事务日志
             distributedCacheService.put(SeckillConstants.getKey(SeckillConstants.ORDER_TX_KEY, String.valueOf(txMessage.getTxNo())), txMessage.getTxNo(), SeckillConstants.TX_LOG_EXPIRE_DAY, TimeUnit.DAYS);
-            int i = 1 / 0;
         }catch (Exception e){
             logger.error("saveOrderInTransaction|异常|{}", e.getMessage());
             distributedCacheService.delete(SeckillConstants.getKey(SeckillConstants.ORDER_TX_KEY, String.valueOf(txMessage.getTxNo())));
@@ -163,5 +162,4 @@ public class SeckillPlaceOrderLockService implements SeckillPlaceOrderService {
             distributedCacheService.increment(key, txMessage.getQuantity());
         }
     }
-
 }
