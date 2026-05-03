@@ -36,8 +36,8 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
  */
 @EventHandler
 @ConditionalOnProperty(name = "event.publish.type", havingValue = "cola")
-public class SeckillGoodsEventHandler implements EventHandlerI<Response, SeckillGoodsEvent> {
-    private final Logger logger = LoggerFactory.getLogger(SeckillGoodsEventHandler.class);
+public class SeckillGoodsColaEventHandler implements EventHandlerI<Response, SeckillGoodsEvent> {
+    private final Logger logger = LoggerFactory.getLogger(SeckillGoodsColaEventHandler.class);
 
     @Autowired
     private SeckillGoodsCacheService seckillGoodsCacheService;
@@ -46,9 +46,9 @@ public class SeckillGoodsEventHandler implements EventHandlerI<Response, Seckill
 
     @Override
     public Response execute(SeckillGoodsEvent seckillGoodsEvent) {
-        logger.info("goodsEvent|接收秒杀品事件|{}", JSON.toJSON(seckillGoodsEvent));
+        logger.info("cola|goodsEvent|接收秒杀品事件|{}", JSON.toJSON(seckillGoodsEvent));
         if (seckillGoodsEvent.getId() == null){
-            logger.info("goodsEvent|接收秒杀品事件参数错误");
+            logger.info("cola|goodsEvent|接收秒杀品事件参数错误");
             return Response.buildSuccess();
         }
         seckillGoodsCacheService.tryUpdateSeckillGoodsCacheByLock(seckillGoodsEvent.getId(), false);
