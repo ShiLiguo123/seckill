@@ -102,7 +102,7 @@
 * [《Seckill秒杀系统》第53章：零侵入重构秒杀商品异步事件后置处理器](https://articles.zsxq.com/id_qf1qlhaahnba.html)
 
 ## 基础框架与中间件
-SpringBoot: 2.4.5  
+SpringBoot: 2.5.9 
 Dubbo: 3.0.7  
 Nacos: 2.0.3
 
