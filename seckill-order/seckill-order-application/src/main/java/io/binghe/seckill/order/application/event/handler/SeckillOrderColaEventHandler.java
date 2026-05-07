@@ -33,13 +33,13 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
  */
 @EventHandler
 @ConditionalOnProperty(name = "event.publish.type", havingValue = "cola")
-public class SeckillOrderEventHandler implements EventHandlerI<Response, SeckillOrderEvent> {
-    private final Logger logger = LoggerFactory.getLogger(SeckillOrderEventHandler.class);
+public class SeckillOrderColaEventHandler implements EventHandlerI<Response, SeckillOrderEvent> {
+    private final Logger logger = LoggerFactory.getLogger(SeckillOrderColaEventHandler.class);
     @Override
     public Response execute(SeckillOrderEvent seckillOrderEvent) {
-        logger.info("orderEvent|接收订单事件|{}", JSON.toJSON(seckillOrderEvent));
+        logger.info("cola|orderEvent|接收订单事件|{}", JSON.toJSON(seckillOrderEvent));
         if (seckillOrderEvent.getId() == null){
-            logger.info("orderEvent|订单参数错误");
+            logger.info("cola|orderEvent|订单参数错误");
             return Response.buildSuccess();
         }
         return Response.buildSuccess();
