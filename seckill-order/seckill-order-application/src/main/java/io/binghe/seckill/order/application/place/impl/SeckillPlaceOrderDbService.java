@@ -16,27 +16,25 @@
 package io.binghe.seckill.order.application.place.impl;
 
 import cn.hutool.core.util.BooleanUtil;
-import cn.hutool.core.util.NumberUtil;
 import com.alibaba.fastjson.JSONObject;
 import io.binghe.seckill.common.cache.distribute.DistributedCacheService;
 import io.binghe.seckill.common.constants.SeckillConstants;
 import io.binghe.seckill.common.exception.ErrorCode;
 import io.binghe.seckill.common.exception.SeckillException;
 import io.binghe.seckill.common.model.dto.SeckillGoodsDTO;
-import io.binghe.seckill.common.model.message.TxMessage;
 import io.binghe.seckill.common.utils.id.SnowFlakeFactory;
 import io.binghe.seckill.dubbo.interfaces.goods.SeckillGoodsDubboService;
+import io.binghe.seckill.mq.MessageSenderService;
+import io.binghe.seckill.common.model.message.TxMessage;
 import io.binghe.seckill.order.application.command.SeckillOrderCommand;
 import io.binghe.seckill.order.application.place.SeckillPlaceOrderService;
 import io.binghe.seckill.order.domain.model.entity.SeckillOrder;
 import io.binghe.seckill.order.domain.service.SeckillOrderDomainService;
 import org.apache.dubbo.config.annotation.DubboReference;
-import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.messaging.Message;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -58,7 +56,7 @@ public class SeckillPlaceOrderDbService implements SeckillPlaceOrderService {
     @Autowired
     private SeckillOrderDomainService seckillOrderDomainService;
     @Autowired
-    private RocketMQTemplate rocketMQTemplate;
+    private MessageSenderService messageSenderService;
     @Autowired
     private DistributedCacheService distributedCacheService;
 
@@ -84,9 +82,8 @@ public class SeckillPlaceOrderDbService implements SeckillPlaceOrderService {
             logger.error("SeckillPlaceOrderDbService|下单异常|参数:{}|异常信息:{}", JSONObject.toJSONString(seckillOrderCommand), e.getMessage());
         }
         //事务消息
-        Message<String> message = this.getTxMessage(txNo, userId, SeckillConstants.PLACE_ORDER_TYPE_DB, exception, seckillOrderCommand, seckillGoods);
         //发送事务消息
-        rocketMQTemplate.sendMessageInTransaction(SeckillConstants.TOPIC_TX_MSG, message, null);
+        messageSenderService.sendMessageInTransaction(this.getTxMessage(SeckillConstants.TOPIC_TX_MSG, txNo, userId, SeckillConstants.PLACE_ORDER_TYPE_DB, exception, seckillOrderCommand, seckillGoods), null);
         return txNo;
     }
 

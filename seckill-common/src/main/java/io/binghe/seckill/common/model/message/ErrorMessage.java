@@ -22,7 +22,7 @@ package io.binghe.seckill.common.model.message;
  * @github https://github.com/binghe001
  * @copyright 公众号: 冰河技术
  */
-public class ErrorMessage {
+public class ErrorMessage extends TopicMessage {
     //全局事务编号
     private Long txNo;
     //商品id
@@ -37,7 +37,8 @@ public class ErrorMessage {
     public ErrorMessage() {
     }
 
-    public ErrorMessage(Long txNo, Long goodsId, Integer quantity, String placeOrderType, Boolean exception) {
+    public ErrorMessage(String destination, Long txNo, Long goodsId, Integer quantity, String placeOrderType, Boolean exception) {
+        super(destination);
         this.txNo = txNo;
         this.goodsId = goodsId;
         this.quantity = quantity;

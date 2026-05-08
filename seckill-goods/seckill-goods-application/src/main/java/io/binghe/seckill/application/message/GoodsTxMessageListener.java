@@ -56,7 +56,7 @@ public class GoodsTxMessageListener implements RocketMQListener<String> {
 
     private TxMessage getTxMessage(String msg){
         JSONObject jsonObject = JSONObject.parseObject(msg);
-        String txStr = jsonObject.getString(SeckillConstants.TX_MSG_KEY);
+        String txStr = jsonObject.getString(SeckillConstants.MSG_KEY);
         return JSONObject.parseObject(txStr, TxMessage.class);
     }
 }

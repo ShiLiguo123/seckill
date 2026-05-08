@@ -13,21 +13,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.binghe.seckill.common.event.publisher;
+package io.binghe.seckill.common.model.event;
 
-
-import io.binghe.seckill.common.event.SeckillBaseEvent;
+import io.binghe.seckill.common.model.message.TopicMessage;
 
 /**
  * @author binghe(微信 : hacker_binghe)
  * @version 1.0.0
- * @description 事件发布器
+ * @description 事件基础模型
  * @github https://github.com/binghe001
  * @copyright 公众号: 冰河技术
  */
-public interface EventPublisher {
-    /**
-     * 发布事件
-     */
-    void publish(SeckillBaseEvent domainEvent);
+public class SeckillBaseEvent extends TopicMessage {
+
+    private Long id;
+    private Integer status;
+
+    public SeckillBaseEvent(Long id, Integer status, String topicEvent) {
+        super(topicEvent);
+        this.id = id;
+        this.status = status;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
 }

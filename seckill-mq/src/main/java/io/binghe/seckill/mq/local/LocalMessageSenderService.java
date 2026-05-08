@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.binghe.seckill.common.event.publisher.cola;
+package io.binghe.seckill.mq.local;
 
-import com.alibaba.cola.event.DomainEventI;
 import com.alibaba.cola.event.EventBusI;
-import io.binghe.seckill.common.event.SeckillBaseEvent;
-import io.binghe.seckill.common.event.publisher.EventPublisher;
+import io.binghe.seckill.common.model.message.TopicMessage;
+import io.binghe.seckill.mq.MessageSenderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
@@ -26,18 +25,18 @@ import org.springframework.stereotype.Component;
 /**
  * @author binghe(微信 : hacker_binghe)
  * @version 1.0.0
- * @description 本地事件发布
+ * @description 本地消息发送
  * @github https://github.com/binghe001
  * @copyright 公众号: 冰河技术
  */
 @Component
-@ConditionalOnProperty(name = "event.publish.type", havingValue = "cola")
-public class LocalDomainEventPublisher implements EventPublisher {
+@ConditionalOnProperty(name = "message.mq.type", havingValue = "cola")
+public class LocalMessageSenderService implements MessageSenderService {
     @Autowired
     private EventBusI eventBus;
 
     @Override
-    public void publish(SeckillBaseEvent domainEvent) {
-        eventBus.fire(domainEvent);
+    public void send(TopicMessage message) {
+        eventBus.fire(message);
     }
 }

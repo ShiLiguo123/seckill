@@ -52,7 +52,7 @@ public class OrderErrorMessageListener implements RocketMQListener<String> {
 
     private ErrorMessage getErrorMessage(String msg){
         JSONObject jsonObject = JSONObject.parseObject(msg);
-        String txStr = jsonObject.getString(SeckillConstants.ERROR_MSG_KEY);
+        String txStr = jsonObject.getString(SeckillConstants.MSG_KEY);
         return JSONObject.parseObject(txStr, ErrorMessage.class);
     }
 }

@@ -16,7 +16,6 @@
 package io.binghe.seckill.application.service.impl;
 
 import cn.hutool.core.util.BooleanUtil;
-import com.alibaba.fastjson.JSONObject;
 import io.binghe.seckill.application.builder.SeckillGoodsBuilder;
 import io.binghe.seckill.application.cache.service.SeckillGoodsCacheService;
 import io.binghe.seckill.application.cache.service.SeckillGoodsListCacheService;
@@ -38,13 +37,11 @@ import io.binghe.seckill.common.utils.id.SnowFlakeFactory;
 import io.binghe.seckill.dubbo.interfaces.activity.SeckillActivityDubboService;
 import io.binghe.seckill.goods.domain.model.entity.SeckillGoods;
 import io.binghe.seckill.goods.domain.service.SeckillGoodsDomainService;
+import io.binghe.seckill.mq.MessageSenderService;
 import org.apache.dubbo.config.annotation.DubboReference;
-import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.Message;
-import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -75,7 +72,7 @@ public class SeckillGoodsServiceImpl implements SeckillGoodsService {
     @Autowired
     private SeckillGoodsListCacheService seckillGoodsListCacheService;
     @Autowired
-    private RocketMQTemplate rocketMQTemplate;
+    private MessageSenderService messageSenderService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -227,13 +224,13 @@ public class SeckillGoodsServiceImpl implements SeckillGoodsService {
                 distributedCacheService.put(SeckillConstants.getKey(SeckillConstants.GOODS_TX_KEY, String.valueOf(txMessage.getTxNo())), txMessage.getTxNo(), SeckillConstants.TX_LOG_EXPIRE_DAY, TimeUnit.DAYS);
             }else{
                 //发送失败消息给订单微服务
-                rocketMQTemplate.send(SeckillConstants.TOPIC_ERROR_MSG, getErrorMessage(txMessage));
+                messageSenderService.send(getErrorMessage(txMessage));
             }
         }catch (Exception e){
             isUpdate = false;
             logger.error("updateAvailableStock|抛出异常|{}|{}",txMessage.getTxNo(), e.getMessage());
             //发送失败消息给订单微服务
-            rocketMQTemplate.send(SeckillConstants.TOPIC_ERROR_MSG, getErrorMessage(txMessage));
+            messageSenderService.send(getErrorMessage(txMessage));
         }
         return isUpdate;
     }
@@ -241,11 +238,8 @@ public class SeckillGoodsServiceImpl implements SeckillGoodsService {
     /**
      * 发送给订单微服务的错误消息
      */
-    private Message<String> getErrorMessage(TxMessage txMessage){
-        ErrorMessage errorMessage = new ErrorMessage(txMessage.getTxNo(), txMessage.getGoodsId(), txMessage.getQuantity(), txMessage.getPlaceOrderType(), txMessage.getException());
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put(SeckillConstants.ERROR_MSG_KEY, errorMessage);
-        return MessageBuilder.withPayload(jsonObject.toJSONString()).build();
+    private ErrorMessage getErrorMessage(TxMessage txMessage){
+        return new ErrorMessage(SeckillConstants.TOPIC_ERROR_MSG, txMessage.getTxNo(), txMessage.getGoodsId(), txMessage.getQuantity(), txMessage.getPlaceOrderType(), txMessage.getException());
     }
 
 }

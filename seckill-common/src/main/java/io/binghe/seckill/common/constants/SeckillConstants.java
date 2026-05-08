@@ -99,20 +99,25 @@ public class SeckillConstants {
      */
     public static final String PLACE_ORDER_TYPE_LUA = "lua";
 
-    /**
-     * 事务消息的key
-     */
-    public static final String TX_MSG_KEY = "txMessage";
+//    /**
+//     * 事务消息的key
+//     */
+//    public static final String TX_MSG_KEY = "txMessage";
+//
+//    /**
+//     * 错误消息的key
+//     */
+//    public static final String ERROR_MSG_KEY = "errorMessage";
+//
+//    /**
+//     * 事件消息Key
+//     */
+//    public static final String EVENT_MSG_KEY = "eventMessage";
 
     /**
-     * 错误消息的key
+     * 消息的key
      */
-    public static final String ERROR_MSG_KEY = "errorMessage";
-
-    /**
-     * 事件消息Key
-     */
-    public static final String EVENT_MSG_KEY = "eventMessage";
+    public static final String MSG_KEY = "message";
 
     /**
      * 活动事件消息topic

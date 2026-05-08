@@ -16,7 +16,6 @@
 package io.binghe.seckill.order.application.event.handler;
 
 import cn.hutool.core.util.StrUtil;
-import com.alibaba.cola.dto.Response;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import io.binghe.seckill.common.constants.SeckillConstants;
@@ -36,7 +35,7 @@ import org.springframework.stereotype.Component;
  * @copyright 公众号: 冰河技术
  */
 @Component
-@ConditionalOnProperty(name = "event.publish.type", havingValue = "rocketmq")
+@ConditionalOnProperty(name = "message.mq.type", havingValue = "rocketmq")
 @RocketMQMessageListener(consumerGroup = SeckillConstants.EVENT_ORDER_CONSUMER_GROUP, topic = SeckillConstants.TOPIC_EVENT_ROCKETMQ_ORDER)
 public class SeckillOrderRocketMQEventHandler implements RocketMQListener<String> {
     private final Logger logger = LoggerFactory.getLogger(SeckillOrderRocketMQEventHandler.class);
@@ -56,7 +55,7 @@ public class SeckillOrderRocketMQEventHandler implements RocketMQListener<String
 
     private SeckillOrderEvent getEventMessage(String msg){
         JSONObject jsonObject = JSONObject.parseObject(msg);
-        String eventStr = jsonObject.getString(SeckillConstants.EVENT_MSG_KEY);
+        String eventStr = jsonObject.getString(SeckillConstants.MSG_KEY);
         return JSONObject.parseObject(eventStr, SeckillOrderEvent.class);
     }
 }

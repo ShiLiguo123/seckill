@@ -13,50 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.binghe.seckill.common.event;
+package io.binghe.seckill.common.model.message;
 
 import com.alibaba.cola.event.DomainEventI;
 
 /**
  * @author binghe(微信 : hacker_binghe)
  * @version 1.0.0
- * @description 事件基础模型
+ * @description 基础消息
  * @github https://github.com/binghe001
  * @copyright 公众号: 冰河技术
  */
-public class SeckillBaseEvent implements DomainEventI {
+public class TopicMessage implements DomainEventI {
+    /**
+     * 消息目的地，可以是消息主题
+     */
+    private String destination;
 
-    private Long id;
-    private Integer status;
-    private String topicEvent;
-
-    public SeckillBaseEvent(Long id, Integer status, String topicEvent) {
-        this.id = id;
-        this.status = status;
-        this.topicEvent = topicEvent;
+    public TopicMessage(){
     }
 
-    public Long getId() {
-        return id;
+    public TopicMessage(String destination) {
+        this.destination = destination;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public String getDestination() {
+        return destination;
     }
 
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
-    public String getTopicEvent() {
-        return topicEvent;
-    }
-
-    public void setTopicEvent(String topicEvent) {
-        this.topicEvent = topicEvent;
+    public void setDestination(String destination) {
+        this.destination = destination;
     }
 }

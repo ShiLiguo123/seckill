@@ -24,7 +24,7 @@
     <dependencies>
         <dependency>
             <groupId>io.binghe.seckill</groupId>
-            <artifactId>seckill-common</artifactId>
+            <artifactId>seckill-mq</artifactId>
             <version>${project.version}</version>
         </dependency>
 

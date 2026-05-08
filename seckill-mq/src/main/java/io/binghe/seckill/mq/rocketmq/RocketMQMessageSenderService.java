@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.binghe.seckill.common.event.publisher.rocketmq;
+package io.binghe.seckill.mq.rocketmq;
 
 import com.alibaba.fastjson.JSONObject;
 import io.binghe.seckill.common.constants.SeckillConstants;
-import io.binghe.seckill.common.event.SeckillBaseEvent;
-import io.binghe.seckill.common.event.publisher.EventPublisher;
+import io.binghe.seckill.common.model.message.TopicMessage;
+import io.binghe.seckill.mq.MessageSenderService;
+import org.apache.rocketmq.client.producer.TransactionSendResult;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -29,24 +30,32 @@ import org.springframework.stereotype.Component;
 /**
  * @author binghe(微信 : hacker_binghe)
  * @version 1.0.0
- * @description 基于RocketMQ发布事件
+ * @description 基于RocketMQ的消息发送服务
  * @github https://github.com/binghe001
  * @copyright 公众号: 冰河技术
  */
 @Component
-@ConditionalOnProperty(name = "event.publish.type", havingValue = "rocketmq")
-public class RocketMQDomainEventPublisher implements EventPublisher {
+@ConditionalOnProperty(name = "message.mq.type", havingValue = "rocketmq")
+public class RocketMQMessageSenderService implements MessageSenderService {
+
     @Autowired
     private RocketMQTemplate rocketMQTemplate;
+
     @Override
-    public void publish(SeckillBaseEvent domainEvent) {
-        //发送失败消息给订单微服务
-        rocketMQTemplate.send(domainEvent.getTopicEvent(), getEventMessage(domainEvent));
+    public void send(TopicMessage message) {
+        rocketMQTemplate.send(message.getDestination(), this.getMessage(message));
     }
 
-    private Message<String> getEventMessage(SeckillBaseEvent domainEvent){
+    @Override
+    public TransactionSendResult sendMessageInTransaction(TopicMessage message, Object arg) {
+        return rocketMQTemplate.sendMessageInTransaction(message.getDestination(), this.getMessage(message), arg);
+    }
+
+
+    //构建ROcketMQ发送的消息
+    private Message<String> getMessage(TopicMessage message){
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put(SeckillConstants.EVENT_MSG_KEY, domainEvent);
+        jsonObject.put(SeckillConstants.MSG_KEY, message);
         return MessageBuilder.withPayload(jsonObject.toJSONString()).build();
     }
 }

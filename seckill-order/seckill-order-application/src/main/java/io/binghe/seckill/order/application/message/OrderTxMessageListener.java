@@ -76,7 +76,7 @@ public class OrderTxMessageListener implements RocketMQLocalTransactionListener{
     private TxMessage getTxMessage(Message msg){
         String messageString = new String((byte[]) msg.getPayload());
         JSONObject jsonObject = JSONObject.parseObject(messageString);
-        String txStr = jsonObject.getString(SeckillConstants.TX_MSG_KEY);
+        String txStr = jsonObject.getString(SeckillConstants.MSG_KEY);
         return JSONObject.parseObject(txStr, TxMessage.class);
     }
 }

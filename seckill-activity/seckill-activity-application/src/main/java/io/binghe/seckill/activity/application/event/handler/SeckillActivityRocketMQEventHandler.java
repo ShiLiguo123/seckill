@@ -37,7 +37,7 @@ import org.springframework.stereotype.Component;
  * @copyright 公众号: 冰河技术
  */
 @Component
-@ConditionalOnProperty(name = "event.publish.type", havingValue = "rocketmq")
+@ConditionalOnProperty(name = "message.mq.type", havingValue = "rocketmq")
 @RocketMQMessageListener(consumerGroup = SeckillConstants.EVENT_ACTIVITY_CONSUMER_GROUP, topic = SeckillConstants.TOPIC_EVENT_ROCKETMQ_ACTIVITY)
 public class SeckillActivityRocketMQEventHandler implements RocketMQListener<String> {
 
@@ -61,7 +61,7 @@ public class SeckillActivityRocketMQEventHandler implements RocketMQListener<Str
 
     private SeckillActivityEvent getEventMessage(String msg){
         JSONObject jsonObject = JSONObject.parseObject(msg);
-        String eventStr = jsonObject.getString(SeckillConstants.EVENT_MSG_KEY);
+        String eventStr = jsonObject.getString(SeckillConstants.MSG_KEY);
         return JSONObject.parseObject(eventStr, SeckillActivityEvent.class);
     }
 }

@@ -28,17 +28,16 @@ import io.binghe.seckill.common.model.dto.SeckillGoodsDTO;
 import io.binghe.seckill.common.model.message.TxMessage;
 import io.binghe.seckill.common.utils.id.SnowFlakeFactory;
 import io.binghe.seckill.dubbo.interfaces.goods.SeckillGoodsDubboService;
+import io.binghe.seckill.mq.MessageSenderService;
 import io.binghe.seckill.order.application.command.SeckillOrderCommand;
 import io.binghe.seckill.order.application.place.SeckillPlaceOrderService;
 import io.binghe.seckill.order.domain.model.entity.SeckillOrder;
 import io.binghe.seckill.order.domain.service.SeckillOrderDomainService;
 import org.apache.dubbo.config.annotation.DubboReference;
-import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.messaging.Message;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -64,7 +63,7 @@ public class SeckillPlaceOrderLockService implements SeckillPlaceOrderService {
     @Autowired
     private DistributedCacheService distributedCacheService;
     @Autowired
-    private RocketMQTemplate rocketMQTemplate;
+    private MessageSenderService messageSenderService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -114,10 +113,8 @@ public class SeckillPlaceOrderLockService implements SeckillPlaceOrderService {
         }finally {
             lock.unlock();
         }
-        //事务消息
-        Message<String> message = this.getTxMessage(txNo, userId,  SeckillConstants.PLACE_ORDER_TYPE_LOCK, exception, seckillOrderCommand, seckillGoods);
         //发送事务消息
-        rocketMQTemplate.sendMessageInTransaction(SeckillConstants.TOPIC_TX_MSG, message, null);
+        messageSenderService.sendMessageInTransaction(this.getTxMessage(SeckillConstants.TOPIC_TX_MSG, txNo, userId,  SeckillConstants.PLACE_ORDER_TYPE_LOCK, exception, seckillOrderCommand, seckillGoods), null);
         return txNo;
     }
 

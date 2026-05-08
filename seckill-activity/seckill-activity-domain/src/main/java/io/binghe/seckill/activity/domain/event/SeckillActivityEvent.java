@@ -16,7 +16,7 @@
 package io.binghe.seckill.activity.domain.event;
 
 
-import io.binghe.seckill.common.event.SeckillBaseEvent;
+import io.binghe.seckill.common.model.event.SeckillBaseEvent;
 
 /**
  * @author binghe(微信 : hacker_binghe)
