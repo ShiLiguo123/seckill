@@ -92,12 +92,16 @@ public interface SeckillPlaceOrderService {
         if (seckillGoods == null){
             throw new SeckillException(ErrorCode.GOODS_NOT_EXISTS);
         }
+        //已经超出活动时间范围
+        if (!seckillGoods.isInSeckilling()){
+            throw new SeckillException(ErrorCode.BEYOND_TIME);
+        }
         //商品未上线
-        if (seckillGoods.getStatus() == SeckillGoodsStatus.PUBLISHED.getCode()){
+        if (!seckillGoods.isOnline()){
             throw new SeckillException(ErrorCode.GOODS_PUBLISH);
         }
         //商品已下架
-        if (seckillGoods.getStatus() == SeckillGoodsStatus.OFFLINE.getCode()){
+        if (seckillGoods.isOffline()){
             throw new SeckillException(ErrorCode.GOODS_OFFLINE);
         }
         //触发限购

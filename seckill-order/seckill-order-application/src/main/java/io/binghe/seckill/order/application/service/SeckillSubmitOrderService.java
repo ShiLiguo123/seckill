@@ -15,40 +15,19 @@
  */
 package io.binghe.seckill.order.application.service;
 
-
-import io.binghe.seckill.common.model.message.ErrorMessage;
 import io.binghe.seckill.order.application.command.SeckillOrderCommand;
-import io.binghe.seckill.order.domain.model.entity.SeckillOrder;
-
-import java.util.List;
 
 /**
  * @author binghe(微信 : hacker_binghe)
  * @version 1.0.0
- * @description 订单
+ * @description 提交订单服务
  * @github https://github.com/binghe001
  * @copyright 公众号: 冰河技术
  */
-public interface SeckillOrderService {
-
-//    /**
-//     * 保存订单
-//     */
-//    Long saveSeckillOrder(Long userId, SeckillOrderCommand seckillOrderCommand);
+public interface SeckillSubmitOrderService {
 
     /**
-     * 根据用户id获取订单列表
+     * 保存订单
      */
-    List<SeckillOrder> getSeckillOrderByUserId(Long userId);
-
-    /**
-     * 根据活动id获取订单列表
-     */
-    List<SeckillOrder> getSeckillOrderByActivityId(Long activityId);
-
-    /**
-     * 删除订单
-     */
-    void deleteOrder(ErrorMessage errorMessage);
-
+    Long saveSeckillOrder(Long userId, SeckillOrderCommand seckillOrderCommand);
 }

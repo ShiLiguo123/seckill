@@ -16,6 +16,7 @@
 package io.binghe.seckill.goods.domain.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.binghe.seckill.common.model.enums.SeckillGoodsStatus;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -81,6 +82,15 @@ public class SeckillGoods implements Serializable {
             return false;
         }
         return true;
+    }
+
+    public boolean isOnline(){
+        return SeckillGoodsStatus.isOnline(status);
+    }
+
+    public boolean isInSeckilling(){
+        Date currentDate = new Date();
+        return startTime.before(currentDate) && endTime.after(currentDate);
     }
 
     public Long getId() {

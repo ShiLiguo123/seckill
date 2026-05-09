@@ -13,42 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.binghe.seckill.order.application.service;
+package io.binghe.seckill.order.application.service.impl;
 
-
-import io.binghe.seckill.common.model.message.ErrorMessage;
 import io.binghe.seckill.order.application.command.SeckillOrderCommand;
-import io.binghe.seckill.order.domain.model.entity.SeckillOrder;
-
-import java.util.List;
+import io.binghe.seckill.order.application.service.SeckillSubmitOrderService;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Service;
 
 /**
  * @author binghe(微信 : hacker_binghe)
  * @version 1.0.0
- * @description 订单
+ * @description 异步提交订单
  * @github https://github.com/binghe001
  * @copyright 公众号: 冰河技术
  */
-public interface SeckillOrderService {
+@Service
+@ConditionalOnProperty(name = "submit.order.type", havingValue = "async")
+public class SeckillAsyncSubmitOrderServiceImpl implements SeckillSubmitOrderService {
 
-//    /**
-//     * 保存订单
-//     */
-//    Long saveSeckillOrder(Long userId, SeckillOrderCommand seckillOrderCommand);
-
-    /**
-     * 根据用户id获取订单列表
-     */
-    List<SeckillOrder> getSeckillOrderByUserId(Long userId);
-
-    /**
-     * 根据活动id获取订单列表
-     */
-    List<SeckillOrder> getSeckillOrderByActivityId(Long activityId);
-
-    /**
-     * 删除订单
-     */
-    void deleteOrder(ErrorMessage errorMessage);
-
+    @Override
+    public Long saveSeckillOrder(Long userId, SeckillOrderCommand seckillOrderCommand) {
+        return null;
+    }
 }

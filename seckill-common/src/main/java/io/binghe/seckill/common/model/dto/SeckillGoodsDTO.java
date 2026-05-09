@@ -16,6 +16,7 @@
 package io.binghe.seckill.common.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.binghe.seckill.common.model.enums.SeckillGoodsStatus;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
@@ -64,6 +65,19 @@ public class SeckillGoodsDTO implements Serializable {
     private Integer status;
     //数据版本
     private Long version;
+
+    public boolean isOnline(){
+        return SeckillGoodsStatus.isOnline(status);
+    }
+
+    public boolean isOffline(){
+        return SeckillGoodsStatus.isOffline(status);
+    }
+
+    public boolean isInSeckilling(){
+        Date currentDate = new Date();
+        return startTime.before(currentDate) && endTime.after(currentDate);
+    }
 
     public Integer getLimitNum() {
         return limitNum;

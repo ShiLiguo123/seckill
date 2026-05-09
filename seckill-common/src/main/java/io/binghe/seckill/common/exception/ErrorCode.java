@@ -44,7 +44,8 @@ public enum ErrorCode {
     USER_INVALID(2017, "当前账户异常，不能参与秒杀"),
     GOODS_PUBLISH(2018, "商品未上线"),
     ORDER_FAILED(2019, "下单失败"),
-    STOCK_IS_NULL(2020, "商品库存不存在");
+    BEYOND_TIME(2020, "超出活动时间"),
+    STOCK_IS_NULL(2021, "商品库存不存在");
 
     private final Integer code;
     private final String mesaage;

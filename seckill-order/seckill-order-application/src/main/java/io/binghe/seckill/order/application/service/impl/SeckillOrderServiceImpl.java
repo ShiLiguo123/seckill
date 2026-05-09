@@ -50,24 +50,8 @@ public class SeckillOrderServiceImpl implements SeckillOrderService {
     @Autowired
     private SeckillOrderDomainService seckillOrderDomainService;
     @Autowired
-    private SeckillPlaceOrderService seckillPlaceOrderService;
-    @Autowired
-    private SecurityService securityService;
-    @Autowired
     private DistributedCacheService distributedCacheService;
 
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public Long saveSeckillOrder(Long userId, SeckillOrderCommand seckillOrderCommand) {
-        if (userId == null || seckillOrderCommand == null){
-            throw new SeckillException(ErrorCode.PARAMS_INVALID);
-        }
-        //模拟风控
-        if (!securityService.securityPolicy(userId)){
-            throw new SeckillException(ErrorCode.USER_INVALID);
-        }
-        return seckillPlaceOrderService.placeOrder(userId, seckillOrderCommand);
-    }
 
     @Override
     public List<SeckillOrder> getSeckillOrderByUserId(Long userId) {

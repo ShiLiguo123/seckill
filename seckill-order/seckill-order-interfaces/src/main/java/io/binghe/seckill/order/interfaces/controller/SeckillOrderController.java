@@ -20,6 +20,7 @@ import io.binghe.seckill.common.response.ResponseMessage;
 import io.binghe.seckill.common.response.ResponseMessageBuilder;
 import io.binghe.seckill.order.application.command.SeckillOrderCommand;
 import io.binghe.seckill.order.application.service.SeckillOrderService;
+import io.binghe.seckill.order.application.service.SeckillSubmitOrderService;
 import io.binghe.seckill.order.domain.model.entity.SeckillOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestAttribute;
@@ -42,13 +43,15 @@ import java.util.List;
 public class SeckillOrderController {
     @Autowired
     private SeckillOrderService seckillOrderService;
+    @Autowired
+    private SeckillSubmitOrderService seckillSubmitOrderService;
 
     /**
      * 保存秒杀订单
      */
     @RequestMapping(value = "/saveSeckillOrder", method = {RequestMethod.GET,RequestMethod.POST})
     public ResponseMessage<Long> saveSeckillOrder(@RequestAttribute Long userId, SeckillOrderCommand seckillOrderCommand){
-        Long orderId = seckillOrderService.saveSeckillOrder(userId, seckillOrderCommand);
+        Long orderId = seckillSubmitOrderService.saveSeckillOrder(userId, seckillOrderCommand);
         return ResponseMessageBuilder.build(ErrorCode.SUCCESS.getCode(), orderId);
     }
     /**
