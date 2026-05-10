@@ -15,8 +15,10 @@
  */
 package io.binghe.seckill.order.application.service.impl;
 
+import io.binghe.seckill.common.constants.SeckillConstants;
 import io.binghe.seckill.common.exception.ErrorCode;
 import io.binghe.seckill.common.exception.SeckillException;
+import io.binghe.seckill.common.model.dto.SeckillOrderSubmitDTO;
 import io.binghe.seckill.order.application.command.SeckillOrderCommand;
 import io.binghe.seckill.order.application.place.SeckillPlaceOrderService;
 import io.binghe.seckill.order.application.security.SecurityService;
@@ -44,7 +46,7 @@ public class SeckillSyncSubmitOrderServiceImpl implements SeckillSubmitOrderServ
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Long saveSeckillOrder(Long userId, SeckillOrderCommand seckillOrderCommand) {
+    public SeckillOrderSubmitDTO saveSeckillOrder(Long userId, SeckillOrderCommand seckillOrderCommand) {
         if (userId == null || seckillOrderCommand == null){
             throw new SeckillException(ErrorCode.PARAMS_INVALID);
         }
@@ -52,6 +54,6 @@ public class SeckillSyncSubmitOrderServiceImpl implements SeckillSubmitOrderServ
         if (!securityService.securityPolicy(userId)){
             throw new SeckillException(ErrorCode.USER_INVALID);
         }
-        return seckillPlaceOrderService.placeOrder(userId, seckillOrderCommand);
+        return new SeckillOrderSubmitDTO(String.valueOf(seckillPlaceOrderService.placeOrder(userId, seckillOrderCommand)), SeckillConstants.TYPE_ORDER);
     }
 }

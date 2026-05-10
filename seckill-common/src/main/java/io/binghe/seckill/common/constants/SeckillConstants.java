@@ -99,6 +99,17 @@ public class SeckillConstants {
      */
     public static final String PLACE_ORDER_TYPE_LUA = "lua";
 
+    /**
+     * 订单
+     */
+    public static final String TYPE_ORDER = "type_order";
+
+    /**
+     * 下单许可
+     */
+    public static final String TYPE_TASK = "type_task";
+
+
 //    /**
 //     * 事务消息的key
 //     */

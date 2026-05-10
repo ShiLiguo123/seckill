@@ -16,6 +16,7 @@
 package io.binghe.seckill.order.interfaces.controller;
 
 import io.binghe.seckill.common.exception.ErrorCode;
+import io.binghe.seckill.common.model.dto.SeckillOrderSubmitDTO;
 import io.binghe.seckill.common.response.ResponseMessage;
 import io.binghe.seckill.common.response.ResponseMessageBuilder;
 import io.binghe.seckill.order.application.command.SeckillOrderCommand;
@@ -50,9 +51,9 @@ public class SeckillOrderController {
      * 保存秒杀订单
      */
     @RequestMapping(value = "/saveSeckillOrder", method = {RequestMethod.GET,RequestMethod.POST})
-    public ResponseMessage<Long> saveSeckillOrder(@RequestAttribute Long userId, SeckillOrderCommand seckillOrderCommand){
-        Long orderId = seckillSubmitOrderService.saveSeckillOrder(userId, seckillOrderCommand);
-        return ResponseMessageBuilder.build(ErrorCode.SUCCESS.getCode(), orderId);
+    public ResponseMessage<SeckillOrderSubmitDTO> saveSeckillOrder(@RequestAttribute Long userId, SeckillOrderCommand seckillOrderCommand){
+        SeckillOrderSubmitDTO seckillOrderSubmitDTO = seckillSubmitOrderService.saveSeckillOrder(userId, seckillOrderCommand);
+        return ResponseMessageBuilder.build(ErrorCode.SUCCESS.getCode(), seckillOrderSubmitDTO);
     }
     /**
      * 获取用户维度的订单列表

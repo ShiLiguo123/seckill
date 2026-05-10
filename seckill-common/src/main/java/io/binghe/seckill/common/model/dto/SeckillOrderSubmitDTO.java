@@ -13,27 +13,51 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.binghe.seckill.order.application.service.impl;
-
-import io.binghe.seckill.common.model.dto.SeckillOrderSubmitDTO;
-import io.binghe.seckill.order.application.command.SeckillOrderCommand;
-import io.binghe.seckill.order.application.service.SeckillSubmitOrderService;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.stereotype.Service;
+package io.binghe.seckill.common.model.dto;
 
 /**
  * @author binghe(微信 : hacker_binghe)
  * @version 1.0.0
- * @description 异步提交订单
+ * @description 订单提交后返回的数据
  * @github https://github.com/binghe001
  * @copyright 公众号: 冰河技术
  */
-@Service
-@ConditionalOnProperty(name = "submit.order.type", havingValue = "async")
-public class SeckillAsyncSubmitOrderServiceImpl implements SeckillSubmitOrderService {
+public class SeckillOrderSubmitDTO {
 
-    @Override
-    public SeckillOrderSubmitDTO saveSeckillOrder(Long userId, SeckillOrderCommand seckillOrderCommand) {
-        return null;
+    /**
+     * 同步下单时，为订单id
+     * 异步下单时，为许可id
+     */
+    private String id;
+
+    /**
+     * 类型
+     * type_order：id为订单号
+     * type_task：id为下单许可号
+     */
+    private String type;
+
+    public SeckillOrderSubmitDTO() {
+    }
+
+    public SeckillOrderSubmitDTO(String id, String type) {
+        this.id = id;
+        this.type = type;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

@@ -15,6 +15,7 @@
  */
 package io.binghe.seckill.order.application.service;
 
+import io.binghe.seckill.common.model.dto.SeckillOrderSubmitDTO;
 import io.binghe.seckill.order.application.command.SeckillOrderCommand;
 
 /**
@@ -29,5 +30,5 @@ public interface SeckillSubmitOrderService {
     /**
      * 保存订单
      */
-    Long saveSeckillOrder(Long userId, SeckillOrderCommand seckillOrderCommand);
+    SeckillOrderSubmitDTO saveSeckillOrder(Long userId, SeckillOrderCommand seckillOrderCommand);
 }
