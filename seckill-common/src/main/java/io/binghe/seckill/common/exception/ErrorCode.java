@@ -45,7 +45,8 @@ public enum ErrorCode {
     GOODS_PUBLISH(2018, "商品未上线"),
     ORDER_FAILED(2019, "下单失败"),
     BEYOND_TIME(2020, "超出活动时间"),
-    STOCK_IS_NULL(2021, "商品库存不存在");
+    GOODS_FINISH(2021, "商品已售罄"),
+    STOCK_IS_NULL(2022, "商品库存不存在");
 
     private final Integer code;
     private final String mesaage;
