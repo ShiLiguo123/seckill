@@ -16,14 +16,9 @@
 package io.binghe.seckill.order.application.service.impl;
 
 import io.binghe.seckill.common.constants.SeckillConstants;
-import io.binghe.seckill.common.exception.ErrorCode;
-import io.binghe.seckill.common.exception.SeckillException;
 import io.binghe.seckill.common.model.dto.SeckillOrderSubmitDTO;
-import io.binghe.seckill.order.application.command.SeckillOrderCommand;
-import io.binghe.seckill.order.application.place.SeckillPlaceOrderService;
-import io.binghe.seckill.order.application.security.SecurityService;
+import io.binghe.seckill.order.application.model.command.SeckillOrderCommand;
 import io.binghe.seckill.order.application.service.SeckillSubmitOrderService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,23 +32,13 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @ConditionalOnProperty(name = "submit.order.type", havingValue = "sync")
-public class SeckillSyncSubmitOrderServiceImpl implements SeckillSubmitOrderService {
-
-    @Autowired
-    private SeckillPlaceOrderService seckillPlaceOrderService;
-    @Autowired
-    private SecurityService securityService;
+public class SeckillSyncSubmitOrderServiceImpl extends SeckillBaseSubmitOrderServiceImpl implements SeckillSubmitOrderService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public SeckillOrderSubmitDTO saveSeckillOrder(Long userId, SeckillOrderCommand seckillOrderCommand) {
-        if (userId == null || seckillOrderCommand == null){
-            throw new SeckillException(ErrorCode.PARAMS_INVALID);
-        }
-        //模拟风控
-        if (!securityService.securityPolicy(userId)){
-            throw new SeckillException(ErrorCode.USER_INVALID);
-        }
-        return new SeckillOrderSubmitDTO(String.valueOf(seckillPlaceOrderService.placeOrder(userId, seckillOrderCommand)), SeckillConstants.TYPE_ORDER);
+        //进行基本的检查
+        this.checkSeckillOrder(userId, seckillOrderCommand);
+        return new SeckillOrderSubmitDTO(String.valueOf(seckillPlaceOrderService.placeOrder(userId, seckillOrderCommand)), seckillOrderCommand.getGoodsId(), SeckillConstants.TYPE_ORDER);
     }
 }

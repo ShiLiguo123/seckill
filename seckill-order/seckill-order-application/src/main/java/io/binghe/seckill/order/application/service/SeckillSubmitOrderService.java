@@ -16,7 +16,8 @@
 package io.binghe.seckill.order.application.service;
 
 import io.binghe.seckill.common.model.dto.SeckillOrderSubmitDTO;
-import io.binghe.seckill.order.application.command.SeckillOrderCommand;
+import io.binghe.seckill.order.application.model.command.SeckillOrderCommand;
+import io.binghe.seckill.order.application.model.task.SeckillOrderTask;
 
 /**
  * @author binghe(微信 : hacker_binghe)
@@ -31,4 +32,18 @@ public interface SeckillSubmitOrderService {
      * 保存订单
      */
     SeckillOrderSubmitDTO saveSeckillOrder(Long userId, SeckillOrderCommand seckillOrderCommand);
+
+
+    /**
+     * 处理订单任务
+     */
+    default void handlePlaceOrderTask(SeckillOrderTask seckillOrderTask){
+
+    }
+
+    /**
+     * 实现基础校验功能
+     */
+    default void checkSeckillOrder(Long userId, SeckillOrderCommand seckillOrderCommand){
+    }
 }

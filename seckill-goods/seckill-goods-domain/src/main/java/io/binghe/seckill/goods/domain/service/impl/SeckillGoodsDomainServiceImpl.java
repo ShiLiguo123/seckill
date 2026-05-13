@@ -117,6 +117,7 @@ public class SeckillGoodsDomainServiceImpl implements SeckillGoodsDomainService 
         }
         return isUpdate;
     }
+
     @Override
     public boolean updateDbAvailableStock(Integer count, Long id) {
         logger.info("goodsPublish|更新秒杀商品库存|{}", id);

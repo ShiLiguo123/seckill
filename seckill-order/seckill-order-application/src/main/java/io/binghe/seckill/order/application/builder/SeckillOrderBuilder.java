@@ -17,7 +17,7 @@ package io.binghe.seckill.order.application.builder;
 
 import io.binghe.seckill.common.builder.SeckillCommonBuilder;
 import io.binghe.seckill.common.utils.beans.BeanUtil;
-import io.binghe.seckill.order.application.command.SeckillOrderCommand;
+import io.binghe.seckill.order.application.model.command.SeckillOrderCommand;
 import io.binghe.seckill.order.domain.model.entity.SeckillOrder;
 
 /**
@@ -37,4 +37,5 @@ public class SeckillOrderBuilder extends SeckillCommonBuilder {
         BeanUtil.copyProperties(seckillOrderCommand, seckillOrder);
         return seckillOrder;
     }
+
 }

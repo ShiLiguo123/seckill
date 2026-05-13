@@ -18,12 +18,11 @@ package io.binghe.seckill.order.application.place;
 import io.binghe.seckill.common.exception.ErrorCode;
 import io.binghe.seckill.common.exception.SeckillException;
 import io.binghe.seckill.common.model.dto.SeckillGoodsDTO;
-import io.binghe.seckill.common.model.enums.SeckillGoodsStatus;
 import io.binghe.seckill.common.model.enums.SeckillOrderStatus;
 import io.binghe.seckill.common.model.message.TxMessage;
 import io.binghe.seckill.common.utils.beans.BeanUtil;
 import io.binghe.seckill.common.utils.id.SnowFlakeFactory;
-import io.binghe.seckill.order.application.command.SeckillOrderCommand;
+import io.binghe.seckill.order.application.model.command.SeckillOrderCommand;
 import io.binghe.seckill.order.domain.model.entity.SeckillOrder;
 
 import java.math.BigDecimal;

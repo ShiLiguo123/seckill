@@ -31,6 +31,11 @@ public class SeckillOrderSubmitDTO {
     private String id;
 
     /**
+     * 商品id
+     */
+    private Long goodsId;
+
+    /**
      * 类型
      * type_order：id为订单号
      * type_task：id为下单许可号
@@ -40,9 +45,10 @@ public class SeckillOrderSubmitDTO {
     public SeckillOrderSubmitDTO() {
     }
 
-    public SeckillOrderSubmitDTO(String id, String type) {
+    public SeckillOrderSubmitDTO(String id, Long goodsId, String type) {
         this.id = id;
         this.type = type;
+        this.goodsId = goodsId;
     }
 
     public String getId() {
@@ -59,5 +65,13 @@ public class SeckillOrderSubmitDTO {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public Long getGoodsId() {
+        return goodsId;
+    }
+
+    public void setGoodsId(Long goodsId) {
+        this.goodsId = goodsId;
     }
 }

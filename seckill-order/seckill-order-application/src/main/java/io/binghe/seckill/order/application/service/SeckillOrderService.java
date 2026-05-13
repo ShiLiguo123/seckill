@@ -16,8 +16,8 @@
 package io.binghe.seckill.order.application.service;
 
 
+import io.binghe.seckill.common.model.dto.SeckillOrderSubmitDTO;
 import io.binghe.seckill.common.model.message.ErrorMessage;
-import io.binghe.seckill.order.application.command.SeckillOrderCommand;
 import io.binghe.seckill.order.domain.model.entity.SeckillOrder;
 
 import java.util.List;
@@ -51,4 +51,8 @@ public interface SeckillOrderService {
      */
     void deleteOrder(ErrorMessage errorMessage);
 
+    /**
+     * 根据任务id获取订单号
+     */
+    SeckillOrderSubmitDTO getSeckillOrderSubmitDTOByTaskId(String taskId, Long userId, Long goodsId);
 }

@@ -1,4 +1,4 @@
-package io.binghe.seckill.order.application.command;
+package io.binghe.seckill.order.application.model.command;
 
 import java.io.Serializable;
 

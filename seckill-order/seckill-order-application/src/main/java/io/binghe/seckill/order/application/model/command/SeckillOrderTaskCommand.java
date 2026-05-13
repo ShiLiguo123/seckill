@@ -13,33 +13,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.binghe.seckill.mq;
-
-import io.binghe.seckill.common.model.message.TopicMessage;
-import org.apache.rocketmq.client.producer.TransactionSendResult;
+package io.binghe.seckill.order.application.model.command;
 
 /**
  * @author binghe(微信 : hacker_binghe)
  * @version 1.0.0
- * @description 消息队列服务
+ * @description 订单任务参数
  * @github https://github.com/binghe001
  * @copyright 公众号: 冰河技术
  */
-public interface MessageSenderService {
+public class SeckillOrderTaskCommand {
 
     /**
-     * 发送消息
-     * @param message 发送的消息
+     * 订单任务id
      */
-    boolean send(TopicMessage message);
+    private String orderTaskId;
 
     /**
-     * 发送事务消息，主要是RocketMQ
-     * @param message 事务消息
-     * @param arg 其他参数
-     * @return 返回事务发送结果
+     * 商品id
      */
-    default TransactionSendResult sendMessageInTransaction(TopicMessage message, Object arg){
-        return null;
+    private Long goodsId;
+
+    public String getOrderTaskId() {
+        return orderTaskId;
+    }
+
+    public void setOrderTaskId(String orderTaskId) {
+        this.orderTaskId = orderTaskId;
+    }
+
+    public Long getGoodsId() {
+        return goodsId;
+    }
+
+    public void setGoodsId(Long goodsId) {
+        this.goodsId = goodsId;
     }
 }

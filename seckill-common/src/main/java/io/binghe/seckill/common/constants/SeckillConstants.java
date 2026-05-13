@@ -27,17 +27,27 @@ public class SeckillConstants {
     /**
      * LUA脚本商品库存不存在
      */
-    public static final int LUA_RESULT_GOODS_STOCK_NOT_EXISTS = -1;
+    public static final long LUA_RESULT_GOODS_STOCK_NOT_EXISTS = -1;
 
     /**
      * LUA脚本要扣减的商品数量小于等于0
      */
-    public static final int LUA_RESULT_GOODS_STOCK_PARAMS_LT_ZERO = -2;
+    public static final long LUA_RESULT_GOODS_STOCK_PARAMS_LT_ZERO = -2;
 
     /**
      * LUA脚本库存不足
      */
-    public static final int LUA_RESULT_GOODS_STOCK_LT_ZERO = -3;
+    public static final long LUA_RESULT_GOODS_STOCK_LT_ZERO = -3;
+
+    /**
+     * 未执行LUA脚本具体逻辑
+     */
+    public static final long LUA_RESULT_NOT_EXECUTE = -100;
+
+    /**
+     * LUA脚本执行下单许可成功
+     */
+    public static final long LUA_RESULT_EXECUTE_TOKEN_SUCCESS = 1;
 
     /**
      * 已经执行过恢复缓存库存的操作
@@ -60,9 +70,24 @@ public class SeckillConstants {
     public static final long TX_LOG_EXPIRE_SECONDS = 7 * 24 * 3600;
 
     /**
+     * 订单任务过期时间秒数
+     */
+    public static final long ORDER_TASK_EXPIRE_SECONDS = 24 * 3600;
+
+    /**
      * 商品key前缀
      */
     public static final String GOODS_ITEM_KEY_PREFIX = "item:";
+
+    /**
+     * 订单
+     */
+    public static final String TYPE_ORDER = "type_order";
+
+    /**
+     * 下单许可
+     */
+    public static final String TYPE_TASK = "type_task";
 
     /**
      * 商品事务列表
@@ -85,6 +110,11 @@ public class SeckillConstants {
     public static final String TOPIC_ERROR_MSG = "topic_error_msg";
 
     /**
+     * 提交订单任务的消息主题
+     */
+    public static final String TOPIC_ORDER_MSG = "topic_order_msg";
+
+    /**
      * 数据库方式
      */
     public static final String PLACE_ORDER_TYPE_DB = "db";
@@ -98,32 +128,6 @@ public class SeckillConstants {
      * lua脚本方式
      */
     public static final String PLACE_ORDER_TYPE_LUA = "lua";
-
-    /**
-     * 订单
-     */
-    public static final String TYPE_ORDER = "type_order";
-
-    /**
-     * 下单许可
-     */
-    public static final String TYPE_TASK = "type_task";
-
-
-//    /**
-//     * 事务消息的key
-//     */
-//    public static final String TX_MSG_KEY = "txMessage";
-//
-//    /**
-//     * 错误消息的key
-//     */
-//    public static final String ERROR_MSG_KEY = "errorMessage";
-//
-//    /**
-//     * 事件消息Key
-//     */
-//    public static final String EVENT_MSG_KEY = "eventMessage";
 
     /**
      * 消息的key
@@ -187,6 +191,11 @@ public class SeckillConstants {
     public static final String TX_ORDER_CONSUMER_GROUP = "tx_order_consumer_group";
 
     /**
+     * 提交订单分组
+     */
+    public static final String SUBMIT_ORDER_CONSUMER_GROUP = "submit_order_consumer_group";
+
+    /**
      * 商品事务分组
      */
     public static final String TX_GOODS_PRODUCER_GROUP = "tx_goods_producer_group";
@@ -211,6 +220,26 @@ public class SeckillConstants {
      * 订单锁
      */
     public static final String ORDER_LOCK_KEY_PREFIX = "order:lock:";
+
+    /**
+     * 订单任务id的key
+     */
+    public static final String ORDER_TASK_ID_KEY = "order:task:";
+
+    /**
+     * 通过任务id存储的订单id的key
+     */
+    public static final String ORDER_TASK_ORDER_ID_KEY = "order:task:id:";
+
+    /**
+     * 订单任务的Token Key
+     */
+    public static final String ORDER_TASK_AVAILABLE_TOKENS_KEY = "order:token:";
+
+    /**
+     * 加锁获取最新的下单许可
+     */
+    public static final String LOCK_REFRESH_LATEST_AVAILABLE_TOKENS_KEY = "order:refresh:";
 
     /**
      * 商品库存的Key
