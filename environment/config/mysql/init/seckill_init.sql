@@ -1,3 +1,5 @@
+create database if not exists seckill default charset = utf8mb4;
+
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
