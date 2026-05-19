@@ -49,7 +49,15 @@ public enum ErrorCode {
     REDUNDANT_SUBMIT(2022, "请勿重复下单"),
     ORDER_TOKENS_NOT_AVAILABLE(2023, "暂无可用库存"),
     ORDER_TASK_ID_INVALID(2024, "下单任务编号错误"),
-    STOCK_IS_NULL(2025, "商品库存不存在");
+    BUCKET_INIT_STOCK_ERROR(2025, "分桶总库存错误"),
+    BUCKET_AVAILABLE_STOCK_ERROR(2026, "分桶可用库存错误"),
+    BUCKET_INIT_AVAILABLE_STOCK_NOT_EQUALS(2027, "初始化分桶时，库存总数与可用库存数不匹配"),
+    BUCKET_GOODSID_ERROR(2028, "秒杀商品id错误"),
+    BUCKET_CREATE_FAILED(2029, "库存分桶失败"),
+    BUCKET_CLOSED_FAILED(2030, "关闭分桶失败"),
+    BUCKET_SOLD_BEYOND_TOTAL(2031, "已售商品数量大于要设置的总库存"),
+    FREQUENTLY_ERROR(2032, "操作频繁，稍后再试"),
+    STOCK_IS_NULL(2033, "商品库存不存在");
 
     private final Integer code;
     private final String mesaage;

@@ -76,7 +76,6 @@ public class SeckillPlaceOrderDbService implements SeckillPlaceOrderService {
             if (availableStock == null || availableStock < seckillOrderCommand.getQuantity()){
                 throw new SeckillException(ErrorCode.STOCK_LT_ZERO);
             }
-            int i = 1 / 0;
         }catch (Exception e){
             exception = true;
             logger.error("SeckillPlaceOrderDbService|下单异常|参数:{}|异常信息:{}", JSONObject.toJSONString(seckillOrderCommand), e.getMessage());

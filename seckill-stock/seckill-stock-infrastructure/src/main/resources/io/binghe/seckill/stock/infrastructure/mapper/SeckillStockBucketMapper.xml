@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.binghe.seckill.stock.infrastructure.mapper.SeckillStockBucketMapper">
+
+    <update id="increaseStock">
+        update seckill_stock_bucket
+        set available_stock = available_stock + #{quantity}
+        where goods_id = #{goodsId}
+          and serial_no = #{serialNo}
+          and (available_stock = available_stock + #{quantity}) <![CDATA[ <= ]]> initial_stock
+          and status = 1
+    </update>
+
+    <update id="decreaseStock">
+        update seckill_stock_bucket
+        set available_stock = available_stock - #{quantity}
+        where goods_id = #{goodsId}
+          and serial_no = #{serialNo}
+          and available_stock <![CDATA[ >= ]]> #{quantity}
+          and status = 1
+    </update>
+
+    <select id="getBucketsByGoodsId" resultType="io.binghe.seckill.stock.domain.model.entity.SeckillStockBucket">
+        select id as id, goods_id as goodsId, initial_stock as initialStock, available_stock as availableStock, status as status, serial_no as serialNo
+        from seckill_stock_bucket
+        where goods_id = #{goodsId}
+    </select>
+
+    <update id="updateStatusByGoodsId">
+        update seckill_stock_bucket set status = #{status} where goods_id = #{goodsId}
+    </update>
+
+    <update id="deleteByGoodsId">
+        delete from seckill_stock_bucket where goods_id = #{goodsId}
+    </update>
+
+    <insert id="insertBatch">
+        insert into seckill_stock_bucket(
+            id, goods_id, initial_stock, available_stock, status, serial_no
+        )
+        values
+        <foreach collection="buckets" item="bucket" separator=",">
+            (
+               #{bucket.id},
+               #{bucket.goodsId},
+               #{bucket.initialStock},
+               #{bucket.availableStock},
+               #{bucket.status},
+               #{bucket.serialNo}
+            )
+        </foreach>
+    </insert>
+</mapper>

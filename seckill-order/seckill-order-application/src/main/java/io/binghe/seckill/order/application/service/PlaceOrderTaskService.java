@@ -31,4 +31,5 @@ public interface PlaceOrderTaskService {
      * 提交订单任务
      */
     boolean submitOrderTask(SeckillOrderTask seckillOrderTask);
+
 }

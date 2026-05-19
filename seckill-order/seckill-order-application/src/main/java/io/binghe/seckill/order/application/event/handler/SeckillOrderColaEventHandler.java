@@ -38,7 +38,7 @@ public class SeckillOrderColaEventHandler implements EventHandlerI<Response, Sec
     @Override
     public Response execute(SeckillOrderEvent seckillOrderEvent) {
         logger.info("cola|orderEvent|接收订单事件|{}", JSON.toJSON(seckillOrderEvent));
-        if (seckillOrderEvent.getId() == null){
+        if (seckillOrderEvent == null || seckillOrderEvent.getId() == null){
             logger.info("cola|orderEvent|订单参数错误");
             return Response.buildSuccess();
         }

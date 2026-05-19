@@ -106,6 +106,7 @@
 * [《Seckill秒杀系统》第57章：异步化扣减商品库存流程设计](https://articles.zsxq.com/id_v7kkzg2w6awz.html)
 * [《Seckill秒杀系统》第58章：异步化扣减商品库存编码实现](https://articles.zsxq.com/id_4tvlwq3wgdh7.html)
 * [《Seckill秒杀系统》第59章：商品库存分库分表与分桶设计](https://articles.zsxq.com/id_ww038en11sou.html)
+* [《Seckill秒杀系统》第60章：商品库存分库分表与分桶编码实现](https://articles.zsxq.com/id_u23r14prl43c.html)
 
 ## 基础框架与中间件
 SpringBoot: 2.5.9  
