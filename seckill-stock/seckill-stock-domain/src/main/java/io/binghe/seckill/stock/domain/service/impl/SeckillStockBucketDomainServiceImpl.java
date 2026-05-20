@@ -124,8 +124,8 @@ public class SeckillStockBucketDomainServiceImpl implements SeckillStockBucketDo
             if (bucket.getAvailableStock() == null || bucket.getInitialStock() < 0){
                 throw new SeckillException(ErrorCode.BUCKET_AVAILABLE_STOCK_ERROR);
             }
-            if (!bucket.getInitialStock().equals(bucket.getAvailableStock())){
-                throw new SeckillException(ErrorCode.BUCKET_INIT_AVAILABLE_STOCK_NOT_EQUALS);
+            if (bucket.getInitialStock() < bucket.getAvailableStock()){
+                throw new SeckillException(ErrorCode.BUCKET_STOCK_ERROR);
             }
         });
     }

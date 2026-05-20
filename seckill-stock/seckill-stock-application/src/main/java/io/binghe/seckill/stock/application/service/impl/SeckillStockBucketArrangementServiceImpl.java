@@ -43,6 +43,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 
 /**
  * @author binghe(微信 : hacker_binghe)
@@ -208,9 +209,22 @@ public class SeckillStockBucketArrangementServiceImpl implements SeckillStockBuc
         int initRestStock = initAverageStocks + initPieceStocks;
         int availableRestStock = avaiableAverageStocks + avaiablePieceStocks;
 
-        SeckillStockBucket bucket = new SeckillStockBucket(goodsId, initRestStock, availableRestStock, SeckillStockBucketStatus.ENABLED.getCode(), bucketsQuantity - 1);
+        //计算差值
+        int subRestStock = availableRestStock - initRestStock;
+        SeckillStockBucket bucket = new SeckillStockBucket(goodsId, initRestStock, subRestStock > 0 ? initRestStock : availableRestStock, SeckillStockBucketStatus.ENABLED.getCode(), bucketsQuantity - 1);
         buckets.add(bucket);
+        return subRestStock > 0 ? this.buildBuckets(buckets, subRestStock) : buckets;
+    }
 
+    private List<SeckillStockBucket> buildBuckets(List<SeckillStockBucket> buckets, int subRestStock){
+        if (CollectionUtil.isEmpty(buckets)){
+            return buckets;
+        }
+        IntStream.range(0, subRestStock).forEach((i) -> {
+            SeckillStockBucket bucket = buckets.get(i);
+            bucket.setAvailableStock(bucket.getAvailableStock() + 1);
+            buckets.set(i, bucket);
+        });
         return buckets;
     }
 

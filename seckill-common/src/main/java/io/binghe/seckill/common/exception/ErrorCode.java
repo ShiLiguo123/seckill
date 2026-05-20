@@ -51,7 +51,7 @@ public enum ErrorCode {
     ORDER_TASK_ID_INVALID(2024, "下单任务编号错误"),
     BUCKET_INIT_STOCK_ERROR(2025, "分桶总库存错误"),
     BUCKET_AVAILABLE_STOCK_ERROR(2026, "分桶可用库存错误"),
-    BUCKET_INIT_AVAILABLE_STOCK_NOT_EQUALS(2027, "初始化分桶时，库存总数与可用库存数不匹配"),
+    BUCKET_STOCK_ERROR(2027, "分桶库存错误"),
     BUCKET_GOODSID_ERROR(2028, "秒杀商品id错误"),
     BUCKET_CREATE_FAILED(2029, "库存分桶失败"),
     BUCKET_CLOSED_FAILED(2030, "关闭分桶失败"),
