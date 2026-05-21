@@ -70,24 +70,27 @@ public class SeckillPlaceOrderLuaService implements SeckillPlaceOrderService {
         boolean exception = false;
         long txNo = SnowFlakeFactory.getSnowFlakeFromCache().nextId();
         String key = SeckillConstants.getKey(SeckillConstants.GOODS_ITEM_STOCK_KEY_PREFIX, String.valueOf(seckillOrderCommand.getGoodsId()));
+        Long decrementResult = 0L;
         try{
-        //获取商品限购信息
-        Object limitObj = distributedCacheService.getObject(SeckillConstants.getKey(SeckillConstants.GOODS_ITEM_LIMIT_KEY_PREFIX, String.valueOf(seckillOrderCommand.getGoodsId())));
-        //如果从Redis获取到的限购信息为null，则说明商品已经下线
-        if (limitObj == null){
-            throw new SeckillException(ErrorCode.GOODS_OFFLINE);
-        }
+            //获取商品限购信息
+            Object limitObj = distributedCacheService.getObject(SeckillConstants.getKey(SeckillConstants.GOODS_ITEM_LIMIT_KEY_PREFIX, String.valueOf(seckillOrderCommand.getGoodsId())));
+            //如果从Redis获取到的限购信息为null，则说明商品已经下线
+            if (limitObj == null){
+                throw new SeckillException(ErrorCode.GOODS_OFFLINE);
+            }
 
-        if (Integer.parseInt(String.valueOf(limitObj)) < seckillOrderCommand.getQuantity()){
-            throw new SeckillException(ErrorCode.BEYOND_LIMIT_NUM);
-        }
-        Long result = distributedCacheService.decrementByLua(key, seckillOrderCommand.getQuantity());
-        this.checkResult(result);
+            if (Integer.parseInt(String.valueOf(limitObj)) < seckillOrderCommand.getQuantity()){
+                throw new SeckillException(ErrorCode.BEYOND_LIMIT_NUM);
+            }
+            decrementResult = distributedCacheService.decrementByLua(key, seckillOrderCommand.getQuantity());
+            this.checkResult(decrementResult);
         }catch (Exception e){
             logger.error("SeckillPlaceOrderLuaService|下单异常|参数:{}|异常信息:{}", JSONObject.toJSONString(seckillOrderCommand), e.getMessage());
             exception = true;
-            //将内存中的库存增加回去
-            distributedCacheService.incrementByLua(key, seckillOrderCommand.getQuantity());
+            if (decrementResult == SeckillConstants.LUA_RESULT_EXECUTE_TOKEN_SUCCESS){
+                //将内存中的库存增加回去
+                distributedCacheService.incrementByLua(key, seckillOrderCommand.getQuantity());
+            }
         }
         //发送事务消息
         messageSenderService.sendMessageInTransaction(this.getTxMessage(SeckillConstants.TOPIC_TX_MSG, txNo, userId, SeckillConstants.PLACE_ORDER_TYPE_LUA, exception, seckillOrderCommand, seckillGoods), null);
