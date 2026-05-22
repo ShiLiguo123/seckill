@@ -15,8 +15,12 @@
  */
 package io.binghe.seckill.stock.application.service;
 
+import io.binghe.seckill.common.cache.model.SeckillBusinessCache;
+import io.binghe.seckill.common.model.message.TxMessage;
 import io.binghe.seckill.stock.application.model.command.SeckillStockBucketWrapperCommand;
 import io.binghe.seckill.stock.application.model.dto.SeckillStockBucketDTO;
+import io.binghe.seckill.common.model.dto.stock.SeckillStockDTO;
+import io.binghe.seckill.stock.domain.model.dto.SeckillStockBucketDeduction;
 
 /**
  * @author binghe(微信 : hacker_binghe)
@@ -36,4 +40,19 @@ public interface SeckillStockBucketService {
      * 获取库存分桶
      */
     SeckillStockBucketDTO getTotalStockBuckets(Long goodsId, Long version);
+
+    /**
+     * 获取商品可用库存
+     */
+    SeckillBusinessCache<Integer> getAvailableStock(Long goodsId, Long version);
+
+    /**
+     * 获取商品的库存信息
+     */
+    SeckillBusinessCache<SeckillStockDTO> getSeckillStock(Long goodsId, Long version);
+
+    /**
+     * 扣减商品库存
+     */
+    boolean decreaseStock(TxMessage txMessage);
 }

@@ -15,7 +15,8 @@
  */
 package io.binghe.seckill.dubbo.interfaces.goods;
 
-import io.binghe.seckill.common.model.dto.SeckillGoodsDTO;
+import io.binghe.seckill.common.cache.model.SeckillBusinessCache;
+import io.binghe.seckill.common.model.dto.goods.SeckillGoodsDTO;
 
 /**
  * @author binghe(微信 : hacker_binghe)
@@ -45,4 +46,9 @@ public interface SeckillGoodsDubboService {
      * 根据商品id获取可用库存
      */
     Integer getAvailableStockById(Long goodsId);
+
+    /**
+     * 获取商品的可用库存
+     */
+    SeckillBusinessCache<Integer> getAvailableStock(Long goodsId, Long version);
 }

@@ -57,7 +57,10 @@ public enum ErrorCode {
     BUCKET_CLOSED_FAILED(2030, "关闭分桶失败"),
     BUCKET_SOLD_BEYOND_TOTAL(2031, "已售商品数量大于要设置的总库存"),
     FREQUENTLY_ERROR(2032, "操作频繁，稍后再试"),
-    STOCK_IS_NULL(2033, "商品库存不存在");
+    BUCKET_STOCK_NOT_EXISTS(2033, "分桶库存不存在"),
+    BUCKET_STOCK_SUSPEND(2034, "库存维护中"),
+    BUCKET_STOCK_ALIGN(2035, "库存校准中"),
+    STOCK_IS_NULL(2036, "商品库存不存在");
 
     private final Integer code;
     private final String mesaage;

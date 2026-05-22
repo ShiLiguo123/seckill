@@ -17,7 +17,7 @@ package io.binghe.seckill.order.application.service.impl;
 
 import io.binghe.seckill.common.exception.ErrorCode;
 import io.binghe.seckill.common.exception.SeckillException;
-import io.binghe.seckill.common.model.dto.SeckillGoodsDTO;
+import io.binghe.seckill.common.model.dto.goods.SeckillGoodsDTO;
 import io.binghe.seckill.dubbo.interfaces.goods.SeckillGoodsDubboService;
 import io.binghe.seckill.order.application.model.command.SeckillOrderCommand;
 import io.binghe.seckill.order.application.place.SeckillPlaceOrderService;

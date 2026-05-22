@@ -15,20 +15,33 @@
  */
 package io.binghe.seckill.stock.application.service.impl;
 
+import cn.hutool.core.util.BooleanUtil;
 import com.alibaba.fastjson.JSON;
+import io.binghe.seckill.common.cache.distribute.DistributedCacheService;
+import io.binghe.seckill.common.cache.model.SeckillBusinessCache;
 import io.binghe.seckill.common.constants.SeckillConstants;
 import io.binghe.seckill.common.exception.ErrorCode;
 import io.binghe.seckill.common.exception.SeckillException;
 import io.binghe.seckill.common.lock.DistributedLock;
 import io.binghe.seckill.common.lock.factoty.DistributedLockFactory;
+import io.binghe.seckill.common.model.dto.stock.SeckillStockDTO;
+import io.binghe.seckill.common.model.message.ErrorMessage;
+import io.binghe.seckill.common.model.message.TxMessage;
+import io.binghe.seckill.mq.MessageSenderService;
+import io.binghe.seckill.stock.application.cache.SeckillStockBucketCacheService;
 import io.binghe.seckill.stock.application.model.command.SeckillStockBucketWrapperCommand;
 import io.binghe.seckill.stock.application.model.dto.SeckillStockBucketDTO;
 import io.binghe.seckill.stock.application.service.SeckillStockBucketArrangementService;
 import io.binghe.seckill.stock.application.service.SeckillStockBucketService;
+import io.binghe.seckill.stock.domain.model.dto.SeckillStockBucketDeduction;
+import io.binghe.seckill.stock.domain.service.SeckillStockBucketDomainService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author binghe(微信 : hacker_binghe)
@@ -45,6 +58,14 @@ public class SeckillStockBucketServiceImpl implements SeckillStockBucketService 
     private DistributedLockFactory distributedLockFactory;
     @Autowired
     private SeckillStockBucketArrangementService seckillStockBucketArrangementService;
+    @Autowired
+    private SeckillStockBucketCacheService seckillStockBucketCacheService;
+    @Autowired
+    private SeckillStockBucketDomainService seckillStockBucketDomainService;
+    @Autowired
+    private DistributedCacheService distributedCacheService;
+    @Autowired
+    private MessageSenderService messageSenderService;
 
     @Override
     public void arrangeStockBuckets(Long userId, SeckillStockBucketWrapperCommand stockBucketWrapperCommand) {
@@ -87,5 +108,55 @@ public class SeckillStockBucketServiceImpl implements SeckillStockBucketService 
         }
         logger.info("stockBucketsSummary|获取库存分桶数据|{}", goodsId);
         return seckillStockBucketArrangementService.getSeckillStockBucketDTO(goodsId, version);
+    }
+
+    @Override
+    public SeckillBusinessCache<Integer> getAvailableStock(Long goodsId, Long version) {
+        if (goodsId == null){
+            throw new SeckillException(ErrorCode.PARAMS_INVALID);
+        }
+        return seckillStockBucketCacheService.getAvailableStock(goodsId, version);
+    }
+
+    @Override
+    public SeckillBusinessCache<SeckillStockDTO> getSeckillStock(Long goodsId, Long version) {
+        if (goodsId == null){
+            throw new SeckillException(ErrorCode.PARAMS_INVALID);
+        }
+        return seckillStockBucketCacheService.getSeckillStock(goodsId, version);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean decreaseStock(TxMessage txMessage) {
+        Boolean decrementStock = distributedCacheService.hasKey(SeckillConstants.getKey(SeckillConstants.STOCK_TX_KEY, String.valueOf(txMessage.getTxNo())));
+        if (BooleanUtil.isTrue(decrementStock)){
+            logger.info("updateAvailableStock|秒杀商品微服务已经扣减过库存|{}", txMessage.getTxNo());
+            return true;
+        }
+        boolean isUpdate = false;
+        try{
+            isUpdate = seckillStockBucketDomainService.decreaseStock(new SeckillStockBucketDeduction(txMessage.getGoodsId(), txMessage.getQuantity(), txMessage.getUserId(), txMessage.getBucketSerialNo()));
+            //成功扣减库存成功
+            if (isUpdate){
+                distributedCacheService.put(SeckillConstants.getKey(SeckillConstants.STOCK_TX_KEY, String.valueOf(txMessage.getTxNo())), txMessage.getTxNo(), SeckillConstants.TX_LOG_EXPIRE_DAY, TimeUnit.DAYS);
+            }else{
+                //发送失败消息给订单微服务
+                messageSenderService.send(getErrorMessage(txMessage));
+            }
+        }catch (Exception e){
+            isUpdate = false;
+            logger.error("decreaseStock|抛出异常|{}|{}",txMessage.getTxNo(), e.getMessage());
+            //发送失败消息给订单微服务
+            messageSenderService.send(getErrorMessage(txMessage));
+        }
+        return isUpdate;
+    }
+
+    /**
+     * 发送给订单微服务的错误消息
+     */
+    private ErrorMessage getErrorMessage(TxMessage txMessage){
+        return new ErrorMessage(SeckillConstants.TOPIC_ERROR_MSG, txMessage.getTxNo(), txMessage.getGoodsId(), txMessage.getQuantity(), txMessage.getPlaceOrderType(), txMessage.getException(), txMessage.getBucketSerialNo());
     }
 }

@@ -15,7 +15,7 @@
  */
 package io.binghe.seckill.dubbo.interfaces.activity;
 
-import io.binghe.seckill.common.model.dto.SeckillActivityDTO;
+import io.binghe.seckill.common.model.dto.activity.SeckillActivityDTO;
 
 /**
  * @author binghe(微信 : hacker_binghe)

@@ -45,6 +45,31 @@ public class SeckillConstants {
     public static final long LUA_RESULT_NOT_EXECUTE = -100;
 
     /**
+     * 分桶库存不存在
+     */
+    public static final long LUA_BUCKET_STOCK_NOT_EXISTS = -1;
+
+    /**
+     * 暂停服务
+     */
+    public static final long LUA_BUCKET_STOCK_SUSPEND = -2;
+
+    /**
+     * 校准中
+     */
+    public static final long LUA_BUCKET_STOCK_CALIBRATION = -3;
+
+    /**
+     * 库存不足
+     */
+    public static final long LUA_BUCKET_STOCK_NOT_ENOUGH = -4;
+
+    /**
+     * 执行成功
+     */
+    public static final long LUA_BUCKET_STOCK_EXECUTE_SUCCESS = 1;
+
+    /**
      * LUA脚本执行下单许可成功
      */
     public static final long LUA_RESULT_EXECUTE_TOKEN_SUCCESS = 1;
@@ -95,6 +120,11 @@ public class SeckillConstants {
     public static final String GOODS_TX_KEY = "item_tx:";
 
     /**
+     * 库存事务列表
+     */
+    public static final String STOCK_TX_KEY = "stock_tx:";
+
+    /**
      * 订单事务列表
      */
     public static final String ORDER_TX_KEY = "order_tx:";
@@ -103,6 +133,11 @@ public class SeckillConstants {
      * 事务消息主题
      */
     public static final String TOPIC_TX_MSG = "topic_tx_msg";
+
+    /**
+     * 分桶事务消息主题
+     */
+    public static final String TOPIC_BUCKET_TX_MSG = "topic_bucket_tx_msg";
 
     /**
      * 异常消息主题
@@ -128,6 +163,16 @@ public class SeckillConstants {
      * lua脚本方式
      */
     public static final String PLACE_ORDER_TYPE_LUA = "lua";
+
+    /**
+     * 分桶模式
+     */
+    public static final String PLACE_ORDER_TYPE_BUCKET = "bucket";
+
+    /**
+     * 非分桶模式
+     */
+    public static final String PLACE_ORDER_TYPE_NORMAL = "normal";
 
     /**
      * 消息的key
@@ -215,6 +260,11 @@ public class SeckillConstants {
      */
     public static final String TX_GOODS_CONSUMER_GROUP = "tx_goods_condumer_group";
 
+    /**
+     * 库存消费分组
+     */
+    public static final String TX_STOCK_CONSUMER_GROUP = "tx_stock_condumer_group";
+
 
     /**
      * 订单Key前缀
@@ -262,6 +312,11 @@ public class SeckillConstants {
     public static final String GOODS_STOCK_BUCKETS_SUSPEND_KEY = "goods:buckets:suspend:";
 
     /**
+     * 库存校对
+     */
+    public static final String GOODS_STOCK_BUCKETS_ALIGN_KEY = "goods:buckets:align:";
+
+    /**
      * 分桶库存
      */
     public static final String GOODS_BUCKET_AVAILABLE_STOCKS_KEY = "goods:buckets:available:";
@@ -296,6 +351,10 @@ public class SeckillConstants {
      */
     public static String getKey(String prefix, String key){
         return prefix.concat(key);
+    }
+
+    public static String getType(String type){
+        return PLACE_ORDER_TYPE_BUCKET.equals(type) ? PLACE_ORDER_TYPE_BUCKET.concat(":") : PLACE_ORDER_TYPE_NORMAL.concat(":");
     }
 
     /**

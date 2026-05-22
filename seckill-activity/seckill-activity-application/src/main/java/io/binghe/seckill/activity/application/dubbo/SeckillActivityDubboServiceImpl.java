@@ -16,7 +16,7 @@
 package io.binghe.seckill.activity.application.dubbo;
 
 import io.binghe.seckill.activity.application.service.SeckillActivityService;
-import io.binghe.seckill.common.model.dto.SeckillActivityDTO;
+import io.binghe.seckill.common.model.dto.activity.SeckillActivityDTO;
 import io.binghe.seckill.dubbo.interfaces.activity.SeckillActivityDubboService;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.beans.factory.annotation.Autowired;

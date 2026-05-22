@@ -48,6 +48,8 @@ public interface DistributedCacheService {
 
     Boolean delete(String key);
 
+    Boolean deleteKeyPrefix(String prefix);
+
     Boolean hasKey(String key);
 
     Long addSet(String key, Object... values);
@@ -111,6 +113,20 @@ public interface DistributedCacheService {
      * 恢复下单许可
      */
     default Long recoverOrderToken(String key){
+        return null;
+    }
+
+    /**
+     * 扣减分桶库存
+     */
+    default Long decrementBucketStock(List<String> keys, Integer quantity){
+        return null;
+    }
+
+    /**
+     * 恢复分桶库存
+     */
+    default Long incrementBucketStock(List<String> keys, Integer quantity){
         return null;
     }
 }

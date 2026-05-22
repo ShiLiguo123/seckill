@@ -13,47 +13,45 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.binghe.seckill.common.cache.model.base;
+package io.binghe.seckill.common.model.dto.stock;
 
 import java.io.Serializable;
 
 /**
  * @author binghe(微信 : hacker_binghe)
  * @version 1.0.0
- * @description 通用缓存模型
+ * @description 库存DTO
  * @github https://github.com/binghe001
  * @copyright 公众号: 冰河技术
  */
-public class SeckillCommonCache implements Serializable {
-    private static final long serialVersionUID = 2448735813082442223L;
-    //缓存数据是否存在
-    protected boolean exist;
-    //缓存版本号
-    protected Long version;
-    //稍后再试
-    protected boolean retryLater;
+public class SeckillStockDTO implements Serializable {
+    private static final long serialVersionUID = 6707252274621460974L;
+    //库存总量
+    private Integer totalStock;
+    //可用库存量
+    private Integer availableStock;
 
-    public boolean isExist() {
-        return exist;
+    public SeckillStockDTO() {
     }
 
-    public void setExist(boolean exist) {
-        this.exist = exist;
+    public SeckillStockDTO(Integer totalStock, Integer availableStock) {
+        this.totalStock = totalStock;
+        this.availableStock = availableStock;
     }
 
-    public Long getVersion() {
-        return version;
+    public Integer getTotalStock() {
+        return totalStock;
     }
 
-    public void setVersion(Long version) {
-        this.version = version;
+    public void setTotalStock(Integer totalStock) {
+        this.totalStock = totalStock;
     }
 
-    public boolean isRetryLater() {
-        return retryLater;
+    public Integer getAvailableStock() {
+        return availableStock;
     }
 
-    public void setRetryLater(boolean retryLater) {
-        this.retryLater = retryLater;
+    public void setAvailableStock(Integer availableStock) {
+        this.availableStock = availableStock;
     }
 }

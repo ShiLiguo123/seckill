@@ -17,7 +17,7 @@ package io.binghe.seckill.goods.interfaces.controller;
 
 import io.binghe.seckill.application.command.SeckillGoodsCommond;
 import io.binghe.seckill.application.service.SeckillGoodsService;
-import io.binghe.seckill.common.model.dto.SeckillGoodsDTO;
+import io.binghe.seckill.common.model.dto.goods.SeckillGoodsDTO;
 import io.binghe.seckill.common.exception.ErrorCode;
 import io.binghe.seckill.common.response.ResponseMessage;
 import io.binghe.seckill.common.response.ResponseMessageBuilder;

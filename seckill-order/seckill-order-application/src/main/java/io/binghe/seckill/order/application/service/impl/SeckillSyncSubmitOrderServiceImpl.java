@@ -16,7 +16,7 @@
 package io.binghe.seckill.order.application.service.impl;
 
 import io.binghe.seckill.common.constants.SeckillConstants;
-import io.binghe.seckill.common.model.dto.SeckillOrderSubmitDTO;
+import io.binghe.seckill.common.model.dto.order.SeckillOrderSubmitDTO;
 import io.binghe.seckill.order.application.model.command.SeckillOrderCommand;
 import io.binghe.seckill.order.application.service.SeckillSubmitOrderService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;

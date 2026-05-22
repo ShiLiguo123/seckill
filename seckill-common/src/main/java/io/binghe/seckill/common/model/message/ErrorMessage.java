@@ -33,17 +33,20 @@ public class ErrorMessage extends TopicMessage {
     private String placeOrderType;
     //是否扣减了缓存库存
     private Boolean exception;
+    //库存分桶编号
+    private Integer bucketSerialNo;
 
     public ErrorMessage() {
     }
 
-    public ErrorMessage(String destination, Long txNo, Long goodsId, Integer quantity, String placeOrderType, Boolean exception) {
+    public ErrorMessage(String destination, Long txNo, Long goodsId, Integer quantity, String placeOrderType, Boolean exception, Integer bucketSerialNo) {
         super(destination);
         this.txNo = txNo;
         this.goodsId = goodsId;
         this.quantity = quantity;
         this.placeOrderType = placeOrderType;
         this.exception = exception;
+        this.bucketSerialNo = bucketSerialNo;
     }
 
     public Long getTxNo() {
@@ -84,5 +87,13 @@ public class ErrorMessage extends TopicMessage {
 
     public void setException(Boolean exception) {
         this.exception = exception;
+    }
+
+    public Integer getBucketSerialNo() {
+        return bucketSerialNo;
+    }
+
+    public void setBucketSerialNo(Integer bucketSerialNo) {
+        this.bucketSerialNo = bucketSerialNo;
     }
 }

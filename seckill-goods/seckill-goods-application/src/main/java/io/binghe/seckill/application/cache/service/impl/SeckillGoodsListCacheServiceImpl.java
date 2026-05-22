@@ -24,19 +24,24 @@ import io.binghe.seckill.common.cache.model.SeckillBusinessCache;
 import io.binghe.seckill.common.constants.SeckillConstants;
 import io.binghe.seckill.common.lock.DistributedLock;
 import io.binghe.seckill.common.lock.factoty.DistributedLockFactory;
+import io.binghe.seckill.common.model.dto.stock.SeckillStockDTO;
 import io.binghe.seckill.common.utils.string.StringUtil;
 import io.binghe.seckill.common.utils.time.SystemClock;
+import io.binghe.seckill.dubbo.interfaces.stock.SeckillStockDubboService;
 import io.binghe.seckill.goods.domain.model.entity.SeckillGoods;
 import io.binghe.seckill.goods.domain.service.SeckillGoodsDomainService;
+import org.apache.dubbo.config.annotation.DubboReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.stream.Collectors;
 
 /**
  * @author binghe(微信 : hacker_binghe)
@@ -60,6 +65,10 @@ public class SeckillGoodsListCacheServiceImpl implements SeckillGoodsListCacheSe
     private SeckillGoodsDomainService seckillGoodsDomainService;
     @Autowired
     private DistributedLockFactory distributedLockFactory;
+    @DubboReference(version = "1.0.0", check = false)
+    private SeckillStockDubboService seckillStockDubboService;
+    @Value("${place.order.type:lua}")
+    private String placeOrderType;
 
     @Override
     public String buildCacheKey(Object key) {
@@ -137,6 +146,7 @@ public class SeckillGoodsListCacheServiceImpl implements SeckillGoodsListCacheSe
             if (seckillGoodsList == null){
                 seckillGoodsListCache = new SeckillBusinessCache<List<SeckillGoods>>().notExist();
             }else {
+                seckillGoodsList = this.getSeckillGoodsList(seckillGoodsList);
                 seckillGoodsListCache = new SeckillBusinessCache<List<SeckillGoods>>().with(seckillGoodsList).withVersion(SystemClock.millisClock().now());
             }
             //更新到分布式缓存中
@@ -147,6 +157,30 @@ public class SeckillGoodsListCacheServiceImpl implements SeckillGoodsListCacheSe
             logger.info("SeckillGoodsListCache|更新分布式缓存失败|{}", activityId);
             return new SeckillBusinessCache<List<SeckillGoods>>().retryLater();
         }finally {
-            lock.unlock();        }
+            lock.unlock();
+        }
+    }
+
+    private List<SeckillGoods> getSeckillGoodsList(List<SeckillGoods> seckillGoodsList) {
+        if (!SeckillConstants.PLACE_ORDER_TYPE_BUCKET.equals(placeOrderType)){
+            return seckillGoodsList;
+        }
+        return seckillGoodsList.stream().map(this::getSeckillGoods).collect(Collectors.toList());
+    }
+
+    //兼容分桶库存
+    private SeckillGoods getSeckillGoods(SeckillGoods seckillGoods){
+        //不是分桶库存模式
+        if (!SeckillConstants.PLACE_ORDER_TYPE_BUCKET.equals(placeOrderType)){
+            return seckillGoods;
+        }
+        //是分桶库存模式，获取分桶库存
+        SeckillBusinessCache<SeckillStockDTO> seckillStockCache = seckillStockDubboService.getSeckillStock(seckillGoods.getId(), 1L);
+        if (seckillStockCache == null || !seckillStockCache.isExist() || seckillStockCache.isRetryLater() || seckillStockCache.getData() == null){
+            return seckillGoods;
+        }
+        seckillGoods.setInitialStock(seckillStockCache.getData().getTotalStock());
+        seckillGoods.setAvailableStock(seckillStockCache.getData().getAvailableStock());
+        return seckillGoods;
     }
 }

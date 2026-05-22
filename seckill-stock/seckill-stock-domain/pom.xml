@@ -15,7 +15,6 @@
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <sharding.jdbc.version>4.1.1</sharding.jdbc.version>
     </properties>
 
     <dependencies>
@@ -24,13 +23,6 @@
             <artifactId>seckill-dubbo-interfaces</artifactId>
             <version>${project.version}</version>
         </dependency>
-
-        <dependency>
-            <groupId>org.apache.shardingsphere</groupId>
-            <artifactId>sharding-jdbc-spring-boot-starter</artifactId>
-            <version>${sharding.jdbc.version}</version>
-        </dependency>
-
     </dependencies>
 
 </project>

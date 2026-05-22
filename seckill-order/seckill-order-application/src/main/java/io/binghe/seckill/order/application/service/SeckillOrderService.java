@@ -16,7 +16,7 @@
 package io.binghe.seckill.order.application.service;
 
 
-import io.binghe.seckill.common.model.dto.SeckillOrderSubmitDTO;
+import io.binghe.seckill.common.model.dto.order.SeckillOrderSubmitDTO;
 import io.binghe.seckill.common.model.message.ErrorMessage;
 import io.binghe.seckill.order.domain.model.entity.SeckillOrder;
 

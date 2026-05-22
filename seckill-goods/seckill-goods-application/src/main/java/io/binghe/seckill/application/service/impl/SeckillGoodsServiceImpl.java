@@ -15,6 +15,7 @@
  */
 package io.binghe.seckill.application.service.impl;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.BooleanUtil;
 import io.binghe.seckill.application.builder.SeckillGoodsBuilder;
 import io.binghe.seckill.application.cache.service.SeckillGoodsCacheService;
@@ -27,14 +28,16 @@ import io.binghe.seckill.common.cache.model.SeckillBusinessCache;
 import io.binghe.seckill.common.constants.SeckillConstants;
 import io.binghe.seckill.common.exception.ErrorCode;
 import io.binghe.seckill.common.exception.SeckillException;
-import io.binghe.seckill.common.model.dto.SeckillActivityDTO;
-import io.binghe.seckill.common.model.dto.SeckillGoodsDTO;
+import io.binghe.seckill.common.model.dto.activity.SeckillActivityDTO;
+import io.binghe.seckill.common.model.dto.goods.SeckillGoodsDTO;
+import io.binghe.seckill.common.model.dto.stock.SeckillStockDTO;
 import io.binghe.seckill.common.model.enums.SeckillGoodsStatus;
 import io.binghe.seckill.common.model.message.ErrorMessage;
 import io.binghe.seckill.common.model.message.TxMessage;
 import io.binghe.seckill.common.utils.beans.BeanUtil;
 import io.binghe.seckill.common.utils.id.SnowFlakeFactory;
 import io.binghe.seckill.dubbo.interfaces.activity.SeckillActivityDubboService;
+import io.binghe.seckill.dubbo.interfaces.stock.SeckillStockDubboService;
 import io.binghe.seckill.goods.domain.model.entity.SeckillGoods;
 import io.binghe.seckill.goods.domain.service.SeckillGoodsDomainService;
 import io.binghe.seckill.mq.MessageSenderService;
@@ -42,6 +45,7 @@ import org.apache.dubbo.config.annotation.DubboReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -61,8 +65,12 @@ public class SeckillGoodsServiceImpl implements SeckillGoodsService {
     private final Logger logger = LoggerFactory.getLogger(SeckillGoodsServiceImpl.class);
     @Autowired
     private SeckillGoodsDomainService seckillGoodsDomainService;
-    @DubboReference(version = "1.0.0")
+    @DubboReference(version = "1.0.0", check = false)
     private SeckillActivityDubboService seckillActivityDubboService;
+    @DubboReference(version = "1.0.0", check = false)
+    private SeckillStockDubboService seckillStockDubboService;
+    @Value("${place.order.type:lua}")
+    private String placeOrderType;
     @Autowired
     private LocalCacheService<String, SeckillGoods> localCacheService;
     @Autowired
@@ -112,6 +120,8 @@ public class SeckillGoodsServiceImpl implements SeckillGoodsService {
                 //数据库中获取数据
                 seckillGoods = seckillGoodsDomainService.getSeckillGoodsId(id);
                 if (seckillGoods != null){
+                    //处理分桶库存
+                    seckillGoods = this.getSeckillGoods(seckillGoods);
                     //将数据缓存到Redis
                     distributedCacheService.put(key, seckillGoods, 10, TimeUnit.MINUTES);
                 }
@@ -120,6 +130,22 @@ public class SeckillGoodsServiceImpl implements SeckillGoodsService {
                 localCacheService.put(key, seckillGoods);
             }
         }
+        return seckillGoods;
+    }
+
+    //兼容分桶库存
+    private SeckillGoods getSeckillGoods(SeckillGoods seckillGoods){
+        //不是分桶库存模式
+        if (!SeckillConstants.PLACE_ORDER_TYPE_BUCKET.equals(placeOrderType)){
+            return seckillGoods;
+        }
+        //是分桶库存模式，获取分桶库存
+        SeckillBusinessCache<SeckillStockDTO> seckillStockCache = seckillStockDubboService.getSeckillStock(seckillGoods.getId(), 1L);
+        if (seckillStockCache == null || !seckillStockCache.isExist() || seckillStockCache.isRetryLater() || seckillStockCache.getData() == null){
+            return seckillGoods;
+        }
+        seckillGoods.setInitialStock(seckillStockCache.getData().getTotalStock());
+        seckillGoods.setAvailableStock(seckillStockCache.getData().getAvailableStock());
         return seckillGoods;
     }
 
@@ -145,7 +171,11 @@ public class SeckillGoodsServiceImpl implements SeckillGoodsService {
 
     @Override
     public List<SeckillGoods> getSeckillGoodsByActivityId(Long activityId) {
-        return seckillGoodsDomainService.getSeckillGoodsByActivityId(activityId);
+        List<SeckillGoods> seckillGoodsList = seckillGoodsDomainService.getSeckillGoodsByActivityId(activityId);
+        if (CollectionUtil.isEmpty(seckillGoodsList)){
+           return seckillGoodsList;
+        }
+        return seckillGoodsList.stream().map(this::getSeckillGoods).collect(Collectors.toList());
     }
 
     @Override
@@ -235,11 +265,15 @@ public class SeckillGoodsServiceImpl implements SeckillGoodsService {
         return isUpdate;
     }
 
+    @Override
+    public SeckillBusinessCache<Integer> getAvailableStock(Long goodsId, Long version) {
+        return seckillGoodsCacheService.getAvailableStock(goodsId, version);
+    }
     /**
      * 发送给订单微服务的错误消息
      */
     private ErrorMessage getErrorMessage(TxMessage txMessage){
-        return new ErrorMessage(SeckillConstants.TOPIC_ERROR_MSG, txMessage.getTxNo(), txMessage.getGoodsId(), txMessage.getQuantity(), txMessage.getPlaceOrderType(), txMessage.getException());
+        return new ErrorMessage(SeckillConstants.TOPIC_ERROR_MSG, txMessage.getTxNo(), txMessage.getGoodsId(), txMessage.getQuantity(), txMessage.getPlaceOrderType(), txMessage.getException(), txMessage.getBucketSerialNo());
     }
 
 }

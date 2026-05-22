@@ -37,4 +37,9 @@ public interface SeckillGoodsCacheService extends SeckillCacheService {
      * 更新缓存
      */
     SeckillBusinessCache<SeckillGoods> tryUpdateSeckillGoodsCacheByLock(Long goodsId, boolean doubleCheck);
+
+    /**
+     * 获取商品的可用库存
+     */
+    SeckillBusinessCache<Integer> getAvailableStock(Long goodsId, Long version);
 }

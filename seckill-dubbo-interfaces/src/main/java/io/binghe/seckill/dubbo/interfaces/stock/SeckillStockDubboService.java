@@ -12,18 +12,27 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
- * @author binghe(微信 : hacker_binghe)
- * @description
- * @github https://github.com/binghe001
- * @version 1.0.0
- * @copyright 公众号: 冰河技术
  */
+package io.binghe.seckill.dubbo.interfaces.stock;
+
+import io.binghe.seckill.common.cache.model.SeckillBusinessCache;
+import io.binghe.seckill.common.model.dto.stock.SeckillStockDTO;
+
 /**
  * @author binghe(微信 : hacker_binghe)
- * @description
- * @github https://github.com/binghe001
  * @version 1.0.0
+ * @description 库存和商品都要实现的Dubbo接口
+ * @github https://github.com/binghe001
  * @copyright 公众号: 冰河技术
  */
-package io.binghe.seckill.dubbo.interfaces;
+public interface SeckillStockDubboService {
+    /**
+     * 获取商品的可用库存
+     */
+    SeckillBusinessCache<Integer> getAvailableStock(Long goodsId, Long version);
+
+    /**
+     * 获取商品的库存信息
+     */
+    SeckillBusinessCache<SeckillStockDTO> getSeckillStock(Long goodsId, Long version);
+}

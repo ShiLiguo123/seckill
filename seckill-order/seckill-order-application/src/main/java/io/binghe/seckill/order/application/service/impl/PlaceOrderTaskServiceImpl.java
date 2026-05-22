@@ -18,14 +18,18 @@ package io.binghe.seckill.order.application.service.impl;
 import cn.hutool.core.util.NumberUtil;
 import io.binghe.seckill.common.cache.distribute.DistributedCacheService;
 import io.binghe.seckill.common.cache.local.LocalCacheService;
+import io.binghe.seckill.common.cache.model.SeckillBusinessCache;
 import io.binghe.seckill.common.constants.SeckillConstants;
 import io.binghe.seckill.common.exception.ErrorCode;
 import io.binghe.seckill.common.exception.SeckillException;
 import io.binghe.seckill.common.lock.DistributedLock;
 import io.binghe.seckill.common.lock.factoty.DistributedLockFactory;
+import io.binghe.seckill.dubbo.interfaces.goods.SeckillGoodsDubboService;
+import io.binghe.seckill.dubbo.interfaces.stock.SeckillStockDubboService;
 import io.binghe.seckill.mq.MessageSenderService;
 import io.binghe.seckill.order.application.model.task.SeckillOrderTask;
 import io.binghe.seckill.order.application.service.PlaceOrderTaskService;
+import org.apache.dubbo.config.annotation.DubboReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,8 +60,15 @@ public class PlaceOrderTaskServiceImpl implements PlaceOrderTaskService {
     private DistributedCacheService distributedCacheService;
     @Autowired
     private DistributedLockFactory distributedLockFactory;
+    @DubboReference(version = "1.0.0", check = false)
+    private SeckillStockDubboService seckillStockDubboService;
+    @DubboReference(version = "1.0.0", check = false)
+    private SeckillGoodsDubboService seckillGoodsDubboService;
     @Value("${submit.order.token.multiple:1.5}")
     private Double multiple;
+    @Value("${place.order.type:lua}")
+    private String placeOrderType;
+
     //可重入锁
     private Lock lock = new ReentrantLock();
 
@@ -188,12 +199,23 @@ public class PlaceOrderTaskServiceImpl implements PlaceOrderTaskService {
                 return latestAvailableOrderTokens;
             }
             //本地缓存和分布式缓存都没有数据，获取商品的库存数据
-            String goodsKey = SeckillConstants.getKey(SeckillConstants.GOODS_ITEM_STOCK_KEY_PREFIX, String.valueOf(goodsId));
-            //获取商品库存
-            Integer availableStock = distributedCacheService.getObject(goodsKey, Integer.class);
-            if (availableStock == null || availableStock <= 0){
+//            String goodsKey = SeckillConstants.getKey(SeckillConstants.GOODS_ITEM_STOCK_KEY_PREFIX, String.valueOf(goodsId));
+//            //获取商品库存
+//            Integer availableStock = distributedCacheService.getObject(goodsKey, Integer.class);
+//            if (availableStock == null || availableStock <= 0){
+//                return null;
+//            }
+            SeckillBusinessCache<Integer> availableStockCache = null;
+            //分桶模式
+            if (SeckillConstants.PLACE_ORDER_TYPE_BUCKET.equals(placeOrderType)){
+                availableStockCache = seckillStockDubboService.getAvailableStock(goodsId, 1L);
+            }else{
+                availableStockCache = seckillGoodsDubboService.getAvailableStock(goodsId, 1L);
+            }
+            if (availableStockCache == null || !availableStockCache.isExist() || availableStockCache.isRetryLater() || availableStockCache.getData() == null){
                 return null;
             }
+            Integer availableStock = availableStockCache.getData();
             //根据配置的比例计算下单许可
             latestAvailableOrderTokens = (int) Math.ceil(availableStock * multiple);
             distributedCacheService.put(availableTokensKey, latestAvailableOrderTokens, SeckillConstants.ORDER_TASK_EXPIRE_SECONDS, TimeUnit.SECONDS);

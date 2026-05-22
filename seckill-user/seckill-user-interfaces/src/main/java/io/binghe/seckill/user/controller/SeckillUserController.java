@@ -15,7 +15,7 @@
  */
 package io.binghe.seckill.user.controller;
 
-import io.binghe.seckill.common.model.dto.SeckillUserDTO;
+import io.binghe.seckill.common.model.dto.user.SeckillUserDTO;
 import io.binghe.seckill.common.exception.ErrorCode;
 import io.binghe.seckill.common.response.ResponseMessage;
 import io.binghe.seckill.common.response.ResponseMessageBuilder;

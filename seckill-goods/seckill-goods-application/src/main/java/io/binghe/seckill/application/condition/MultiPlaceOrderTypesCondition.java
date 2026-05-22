@@ -13,30 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.binghe.seckill.stock.application.service;
+package io.binghe.seckill.application.condition;
 
-import io.binghe.seckill.stock.application.model.dto.SeckillStockBucketDTO;
+import org.springframework.boot.autoconfigure.condition.AnyNestedCondition;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 
 /**
  * @author binghe(微信 : hacker_binghe)
  * @version 1.0.0
- * @description 库存编排服务
+ * @description 多种下单类型
  * @github https://github.com/binghe001
  * @copyright 公众号: 冰河技术
  */
-public interface SeckillStockBucketArrangementService {
+public class MultiPlaceOrderTypesCondition extends AnyNestedCondition {
 
-    /**
-     * 编码分桶库存
-     * @param goodsId 商品id
-     * @param stock 库存数量
-     * @param bucketsQuantity 分桶数量
-     * @param assignmentMode 编排模式
-     */
-    void arrangeStockBuckets(Long goodsId, Integer stock, Integer bucketsQuantity, Integer assignmentMode);
+    public MultiPlaceOrderTypesCondition() {
+        super(ConfigurationPhase.PARSE_CONFIGURATION);
+    }
 
-    /**
-     * 通过商品id获取库存分桶信息
-     */
-    SeckillStockBucketDTO getSeckillStockBucketDTO(Long goodsId, Long version);
+    @ConditionalOnProperty(name = "place.order.type", havingValue = "db")
+    static class DbCondition{}
+
+    @ConditionalOnProperty(name = "place.order.type", havingValue = "lock")
+    static class LockCondition{}
+
+    @ConditionalOnProperty(name = "place.order.type", havingValue = "lua")
+    static class LuaCondition{}
 }

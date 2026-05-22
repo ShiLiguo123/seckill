@@ -18,7 +18,7 @@ package io.binghe.seckill.activity.application.builder;
 import io.binghe.seckill.activity.application.command.SeckillActivityCommand;
 import io.binghe.seckill.activity.domain.model.entity.SeckillActivity;
 import io.binghe.seckill.common.builder.SeckillCommonBuilder;
-import io.binghe.seckill.common.model.dto.SeckillActivityDTO;
+import io.binghe.seckill.common.model.dto.activity.SeckillActivityDTO;
 import io.binghe.seckill.common.utils.beans.BeanUtil;
 
 /**

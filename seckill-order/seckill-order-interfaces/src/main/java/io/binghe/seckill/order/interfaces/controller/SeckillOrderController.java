@@ -16,7 +16,7 @@
 package io.binghe.seckill.order.interfaces.controller;
 
 import io.binghe.seckill.common.exception.ErrorCode;
-import io.binghe.seckill.common.model.dto.SeckillOrderSubmitDTO;
+import io.binghe.seckill.common.model.dto.order.SeckillOrderSubmitDTO;
 import io.binghe.seckill.common.response.ResponseMessage;
 import io.binghe.seckill.common.response.ResponseMessageBuilder;
 import io.binghe.seckill.order.application.model.command.SeckillOrderCommand;

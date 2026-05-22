@@ -17,7 +17,7 @@ package io.binghe.seckill.order.application.place;
 
 import io.binghe.seckill.common.exception.ErrorCode;
 import io.binghe.seckill.common.exception.SeckillException;
-import io.binghe.seckill.common.model.dto.SeckillGoodsDTO;
+import io.binghe.seckill.common.model.dto.goods.SeckillGoodsDTO;
 import io.binghe.seckill.common.model.enums.SeckillOrderStatus;
 import io.binghe.seckill.common.model.message.TxMessage;
 import io.binghe.seckill.common.utils.beans.BeanUtil;
@@ -117,11 +117,11 @@ public interface SeckillPlaceOrderService {
      * 事务消息
      */
     default TxMessage getTxMessage(String destination, Long txNo, Long userId, String placeOrderType, Boolean exception,
-                                   SeckillOrderCommand seckillOrderCommand, SeckillGoodsDTO seckillGoods){
+                                   SeckillOrderCommand seckillOrderCommand, SeckillGoodsDTO seckillGoods, Integer bucketSerialNo){
         //构建事务消息
         return new TxMessage(destination, txNo, seckillOrderCommand.getGoodsId(), seckillOrderCommand.getQuantity(),
                 seckillOrderCommand.getActivityId(), seckillOrderCommand.getVersion(), userId, seckillGoods.getGoodsName(),
-                seckillGoods.getActivityPrice(), placeOrderType, exception);
+                seckillGoods.getActivityPrice(), placeOrderType, exception, bucketSerialNo);
     }
 
 }

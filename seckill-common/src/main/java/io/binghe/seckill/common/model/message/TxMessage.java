@@ -40,9 +40,9 @@ public class TxMessage extends ErrorMessage {
     }
 
     public TxMessage(String destination, Long txNo, Long goodsId, Integer quantity, Long activityId, Long version, Long userId, String goodsName,
-                     BigDecimal activityPrice, String placeOrderType, Boolean exception) {
+                     BigDecimal activityPrice, String placeOrderType, Boolean exception, Integer bucketSerialNo) {
 
-        super(destination, txNo, goodsId, quantity, placeOrderType, exception);
+        super(destination, txNo, goodsId, quantity, placeOrderType, exception, bucketSerialNo);
         this.activityId = activityId;
         this.version = version;
         this.userId = userId;

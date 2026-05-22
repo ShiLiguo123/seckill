@@ -15,7 +15,7 @@
  */
 package io.binghe.seckill.order.application.service;
 
-import io.binghe.seckill.common.model.dto.SeckillOrderSubmitDTO;
+import io.binghe.seckill.common.model.dto.order.SeckillOrderSubmitDTO;
 import io.binghe.seckill.order.application.model.command.SeckillOrderCommand;
 import io.binghe.seckill.order.application.model.task.SeckillOrderTask;
 

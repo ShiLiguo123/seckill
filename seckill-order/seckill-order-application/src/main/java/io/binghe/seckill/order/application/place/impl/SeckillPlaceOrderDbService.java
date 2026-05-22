@@ -21,7 +21,7 @@ import io.binghe.seckill.common.cache.distribute.DistributedCacheService;
 import io.binghe.seckill.common.constants.SeckillConstants;
 import io.binghe.seckill.common.exception.ErrorCode;
 import io.binghe.seckill.common.exception.SeckillException;
-import io.binghe.seckill.common.model.dto.SeckillGoodsDTO;
+import io.binghe.seckill.common.model.dto.goods.SeckillGoodsDTO;
 import io.binghe.seckill.common.utils.id.SnowFlakeFactory;
 import io.binghe.seckill.dubbo.interfaces.goods.SeckillGoodsDubboService;
 import io.binghe.seckill.mq.MessageSenderService;
@@ -63,6 +63,9 @@ public class SeckillPlaceOrderDbService implements SeckillPlaceOrderService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Long placeOrder(Long userId, SeckillOrderCommand seckillOrderCommand) {
+        if (userId == null || seckillOrderCommand == null){
+            throw new SeckillException(ErrorCode.PARAMS_INVALID);
+        }
         //获取商品
         SeckillGoodsDTO seckillGoods = seckillGoodsDubboService.getSeckillGoods(seckillOrderCommand.getGoodsId(), seckillOrderCommand.getVersion());
         //检测商品信息
@@ -82,7 +85,7 @@ public class SeckillPlaceOrderDbService implements SeckillPlaceOrderService {
         }
         //事务消息
         //发送事务消息
-        messageSenderService.sendMessageInTransaction(this.getTxMessage(SeckillConstants.TOPIC_TX_MSG, txNo, userId, SeckillConstants.PLACE_ORDER_TYPE_DB, exception, seckillOrderCommand, seckillGoods), null);
+        messageSenderService.sendMessageInTransaction(this.getTxMessage(SeckillConstants.TOPIC_TX_MSG, txNo, userId, SeckillConstants.PLACE_ORDER_TYPE_DB, exception, seckillOrderCommand, seckillGoods, 0), null);
         return txNo;
     }
 

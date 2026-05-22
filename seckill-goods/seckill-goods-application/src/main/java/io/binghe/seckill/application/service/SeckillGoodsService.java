@@ -16,7 +16,8 @@
 package io.binghe.seckill.application.service;
 
 import io.binghe.seckill.application.command.SeckillGoodsCommond;
-import io.binghe.seckill.common.model.dto.SeckillGoodsDTO;
+import io.binghe.seckill.common.cache.model.SeckillBusinessCache;
+import io.binghe.seckill.common.model.dto.goods.SeckillGoodsDTO;
 import io.binghe.seckill.common.model.message.TxMessage;
 import io.binghe.seckill.goods.domain.model.entity.SeckillGoods;
 
@@ -80,4 +81,9 @@ public interface SeckillGoodsService {
      * 扣减库存
      */
     boolean updateAvailableStock(TxMessage txMessage);
+
+    /**
+     * 获取商品可用库存
+     */
+    SeckillBusinessCache<Integer> getAvailableStock(Long goodsId, Long version);
 }

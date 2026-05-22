@@ -25,7 +25,7 @@ import io.binghe.seckill.activity.domain.service.SeckillActivityDomainService;
 import io.binghe.seckill.common.cache.model.SeckillBusinessCache;
 import io.binghe.seckill.common.exception.ErrorCode;
 import io.binghe.seckill.common.exception.SeckillException;
-import io.binghe.seckill.common.model.dto.SeckillActivityDTO;
+import io.binghe.seckill.common.model.dto.activity.SeckillActivityDTO;
 import io.binghe.seckill.common.model.enums.SeckillActivityStatus;
 import io.binghe.seckill.common.utils.beans.BeanUtil;
 import io.binghe.seckill.common.utils.id.SnowFlakeFactory;

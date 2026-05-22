@@ -15,9 +15,9 @@
  */
 package io.binghe.seckill.stock.application.model.dto;
 
+import io.binghe.seckill.common.model.dto.stock.SeckillStockDTO;
 import io.binghe.seckill.stock.domain.model.entity.SeckillStockBucket;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -27,12 +27,8 @@ import java.util.List;
  * @github https://github.com/binghe001
  * @copyright 公众号: 冰河技术
  */
-public class SeckillStockBucketDTO implements Serializable {
-    private static final long serialVersionUID = 6707252274621460974L;
-    //库存总量
-    private Integer totalStock;
-    //可用库存量
-    private Integer availableStock;
+public class SeckillStockBucketDTO extends SeckillStockDTO {
+    private static final long serialVersionUID = 2704697441525819036L;
     //分桶数量
     private Integer bucketsQuantity;
     //库存分桶信息
@@ -42,26 +38,9 @@ public class SeckillStockBucketDTO implements Serializable {
     }
 
     public SeckillStockBucketDTO(Integer totalStock, Integer availableStock, List<SeckillStockBucket> buckets) {
-        this.totalStock = totalStock;
-        this.availableStock = availableStock;
+        super(totalStock, availableStock);
         this.buckets = buckets;
         this.bucketsQuantity = buckets.size();
-    }
-
-    public Integer getTotalStock() {
-        return totalStock;
-    }
-
-    public void setTotalStock(Integer totalStock) {
-        this.totalStock = totalStock;
-    }
-
-    public Integer getAvailableStock() {
-        return availableStock;
-    }
-
-    public void setAvailableStock(Integer availableStock) {
-        this.availableStock = availableStock;
     }
 
     public List<SeckillStockBucket> getBuckets() {

@@ -17,7 +17,7 @@ package io.binghe.seckill.application.builder;
 
 import io.binghe.seckill.application.command.SeckillGoodsCommond;
 import io.binghe.seckill.common.builder.SeckillCommonBuilder;
-import io.binghe.seckill.common.model.dto.SeckillGoodsDTO;
+import io.binghe.seckill.common.model.dto.goods.SeckillGoodsDTO;
 import io.binghe.seckill.common.utils.beans.BeanUtil;
 import io.binghe.seckill.goods.domain.model.entity.SeckillGoods;
 

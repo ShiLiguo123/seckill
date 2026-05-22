@@ -17,14 +17,16 @@ package io.binghe.seckill.stock.application.cache.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import com.alibaba.fastjson.JSON;
+import com.google.common.cache.Cache;
 import io.binghe.seckill.common.cache.distribute.DistributedCacheService;
-import io.binghe.seckill.common.cache.local.LocalCacheService;
+import io.binghe.seckill.common.cache.local.guava.LocalCacheFactory;
 import io.binghe.seckill.common.cache.model.SeckillBusinessCache;
 import io.binghe.seckill.common.constants.SeckillConstants;
 import io.binghe.seckill.common.exception.ErrorCode;
 import io.binghe.seckill.common.exception.SeckillException;
 import io.binghe.seckill.common.lock.DistributedLock;
 import io.binghe.seckill.common.lock.factoty.DistributedLockFactory;
+import io.binghe.seckill.common.model.dto.stock.SeckillStockDTO;
 import io.binghe.seckill.common.utils.string.StringUtil;
 import io.binghe.seckill.common.utils.time.SystemClock;
 import io.binghe.seckill.stock.application.builder.SeckillStockBucketBuilder;
@@ -52,8 +54,7 @@ import java.util.concurrent.locks.ReentrantLock;
 @Service
 public class SeckillStockBucketCacheServiceImpl implements SeckillStockBucketCacheService {
     private final static Logger logger = LoggerFactory.getLogger(SeckillStockBucketCacheServiceImpl.class);
-    @Autowired
-    private LocalCacheService<Long, SeckillBusinessCache<SeckillStockBucketDTO>> localCacheService;
+    private static final Cache<Long, SeckillBusinessCache<SeckillStockBucketDTO>> localSeckillStockBucketCacheService = LocalCacheFactory.getLocalCache();
     //更新活动时获取分布式锁使用
     private static final String SECKILL_GOODS_STOCK_UPDATE_CACHE_LOCK_KEY = "SECKILL_GOODS_STOCK_UPDATE_CACHE_LOCK_KEY_";
     //本地可重入锁
@@ -73,7 +74,7 @@ public class SeckillStockBucketCacheServiceImpl implements SeckillStockBucketCac
     @Override
     public SeckillBusinessCache<SeckillStockBucketDTO> getTotalStockBuckets(Long goodsId, Long version) {
         //从本地缓存获取
-        SeckillBusinessCache<SeckillStockBucketDTO> seckillStockBucketCache = localCacheService.getIfPresent(goodsId);
+        SeckillBusinessCache<SeckillStockBucketDTO> seckillStockBucketCache = localSeckillStockBucketCacheService.getIfPresent(goodsId);
         if (seckillStockBucketCache != null){
             //版本号为空，则直接返回本地缓存中的数据
             if (seckillStockBucketCache.getVersion() == null){
@@ -107,7 +108,7 @@ public class SeckillStockBucketCacheServiceImpl implements SeckillStockBucketCac
             //获取本地锁，更新本地缓存
             if (localCacheUpdatelock.tryLock()){
                 try {
-                    localCacheService.put(goodsId, seckillStockBucketCache);
+                    localSeckillStockBucketCacheService.put(goodsId, seckillStockBucketCache);
                     logger.info("SeckillGoodsCache|本地缓存已经更新|{}", goodsId);
                 }finally {
                     localCacheUpdatelock.unlock();
@@ -153,6 +154,28 @@ public class SeckillStockBucketCacheServiceImpl implements SeckillStockBucketCac
         }finally {
             lock.unlock();
         }
+    }
+
+    @Override
+    public SeckillBusinessCache<Integer> getAvailableStock(Long goodsId, Long version) {
+        SeckillBusinessCache<SeckillStockBucketDTO> seckillBusinessCache = this.getTotalStockBuckets(goodsId, version);
+        if (seckillBusinessCache == null || !seckillBusinessCache.isExist() || seckillBusinessCache.isRetryLater() || seckillBusinessCache.getData() == null){
+            return new SeckillBusinessCache<Integer>().notExist();
+        }
+        return new SeckillBusinessCache<Integer>().with(seckillBusinessCache.getData().getAvailableStock()).withVersion(SystemClock.millisClock().now());
+    }
+
+    @Override
+    public SeckillBusinessCache<SeckillStockDTO> getSeckillStock(Long goodsId, Long version) {
+        SeckillBusinessCache<SeckillStockBucketDTO> seckillBusinessCache = this.getTotalStockBuckets(goodsId, version);
+        if (seckillBusinessCache == null || !seckillBusinessCache.isExist() || seckillBusinessCache.isRetryLater() || seckillBusinessCache.getData() == null){
+            return new SeckillBusinessCache<SeckillStockDTO>().notExist();
+        }
+        //总库存
+        Integer totalStock = seckillBusinessCache.getData().getTotalStock();
+        //可用库存
+        Integer availableStock = seckillBusinessCache.getData().getAvailableStock();
+        return new SeckillBusinessCache<SeckillStockDTO>().with(new SeckillStockDTO(totalStock, availableStock)).withVersion(SystemClock.millisClock().now());
     }
 
     private SeckillStockBucketDTO getSeckillStockBucketDTO(Long goodsId) {

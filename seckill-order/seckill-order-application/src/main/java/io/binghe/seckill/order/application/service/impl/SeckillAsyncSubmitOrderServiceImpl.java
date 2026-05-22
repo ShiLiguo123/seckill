@@ -19,7 +19,7 @@ import io.binghe.seckill.common.cache.distribute.DistributedCacheService;
 import io.binghe.seckill.common.constants.SeckillConstants;
 import io.binghe.seckill.common.exception.ErrorCode;
 import io.binghe.seckill.common.exception.SeckillException;
-import io.binghe.seckill.common.model.dto.SeckillOrderSubmitDTO;
+import io.binghe.seckill.common.model.dto.order.SeckillOrderSubmitDTO;
 import io.binghe.seckill.order.application.model.command.SeckillOrderCommand;
 import io.binghe.seckill.order.application.model.task.SeckillOrderTask;
 import io.binghe.seckill.order.application.service.OrderTaskGenerateService;

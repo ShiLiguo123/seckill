@@ -15,6 +15,9 @@
  */
 package io.binghe.seckill.common.cache.distribute.redis;
 
+import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.NumberUtil;
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import io.binghe.seckill.common.cache.distribute.DistributedCacheService;
 import io.binghe.seckill.common.utils.serializer.ProtoStuffSerializerUtils;
@@ -30,6 +33,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -52,6 +56,8 @@ public class RedisCacheService implements DistributedCacheService {
     private static final DefaultRedisScript<Long> CHECK_EXECUTE_SCRIPT;
     private static final DefaultRedisScript<Long> TAKE_ORDER_TOKEN_SCRIPT;
     private static final DefaultRedisScript<Long> RECOVER_ORDER_TOKEN_SCRIPT;
+    private static final DefaultRedisScript<Long> DECREMENT_BUCKET_STOCK_SCRIPT;
+    private static final DefaultRedisScript<Long> INCREMENT_BUCKET_STOCK_SCRIPT;
 
     static {
         //扣减库存
@@ -83,6 +89,16 @@ public class RedisCacheService implements DistributedCacheService {
         RECOVER_ORDER_TOKEN_SCRIPT = new DefaultRedisScript<>();
         RECOVER_ORDER_TOKEN_SCRIPT.setLocation(new ClassPathResource("lua/recover_order_token.lua"));
         RECOVER_ORDER_TOKEN_SCRIPT.setResultType(Long.class);
+
+        //扣减分桶库存
+        DECREMENT_BUCKET_STOCK_SCRIPT = new DefaultRedisScript<>();
+        DECREMENT_BUCKET_STOCK_SCRIPT.setLocation(new ClassPathResource("lua/decrement_bucket_stock.lua"));
+        DECREMENT_BUCKET_STOCK_SCRIPT.setResultType(Long.class);
+
+        //恢复分桶库存
+        INCREMENT_BUCKET_STOCK_SCRIPT = new DefaultRedisScript<>();
+        INCREMENT_BUCKET_STOCK_SCRIPT.setLocation(new ClassPathResource("lua/increment_bucket_stock.lua"));
+        INCREMENT_BUCKET_STOCK_SCRIPT.setResultType(Long.class);
     }
 
     @Override
@@ -163,6 +179,22 @@ public class RedisCacheService implements DistributedCacheService {
     }
 
     @Override
+    public Boolean deleteKeyPrefix(String prefix) {
+        if (StrUtil.isEmpty(prefix)){
+            return false;
+        }
+        if (!prefix.endsWith("*")){
+            prefix = prefix.concat("*");
+        }
+        Set<String> keys = redisTemplate.keys(prefix);
+        if (CollectionUtil.isEmpty(keys)){
+            return false;
+        }
+        Long deleteCount = redisTemplate.delete(keys);
+        return deleteCount != null && deleteCount > 0;
+    }
+
+    @Override
     public Boolean hasKey(String key) {
         return redisTemplate.hasKey(key);
     }
@@ -225,5 +257,15 @@ public class RedisCacheService implements DistributedCacheService {
     @Override
     public Long recoverOrderToken(String key) {
         return redisTemplate.execute(RECOVER_ORDER_TOKEN_SCRIPT, Collections.singletonList(key));
+    }
+
+    @Override
+    public Long decrementBucketStock(List<String> keys, Integer quantity) {
+        return redisTemplate.execute(DECREMENT_BUCKET_STOCK_SCRIPT, keys, quantity);
+    }
+
+    @Override
+    public Long incrementBucketStock(List<String> keys, Integer quantity) {
+        return redisTemplate.execute(INCREMENT_BUCKET_STOCK_SCRIPT, keys, quantity);
     }
 }
