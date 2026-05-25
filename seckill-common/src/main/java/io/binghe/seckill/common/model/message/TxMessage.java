@@ -29,8 +29,6 @@ public class TxMessage extends ErrorMessage {
     private Long activityId;
     //商品版本号
     private Long version;
-    //用户id
-    private Long userId;
     //商品名称
     private String goodsName;
     //秒杀活动价格
@@ -40,12 +38,11 @@ public class TxMessage extends ErrorMessage {
     }
 
     public TxMessage(String destination, Long txNo, Long goodsId, Integer quantity, Long activityId, Long version, Long userId, String goodsName,
-                     BigDecimal activityPrice, String placeOrderType, Boolean exception, Integer bucketSerialNo) {
+                     BigDecimal activityPrice, String placeOrderType, Boolean exception, Integer bucketSerialNo, String orderTaskId) {
 
-        super(destination, txNo, goodsId, quantity, placeOrderType, exception, bucketSerialNo);
+        super(destination, txNo, goodsId, quantity, placeOrderType, exception, bucketSerialNo, userId, orderTaskId);
         this.activityId = activityId;
         this.version = version;
-        this.userId = userId;
         this.goodsName = goodsName;
         this.activityPrice = activityPrice;
     }
@@ -64,14 +61,6 @@ public class TxMessage extends ErrorMessage {
 
     public void setVersion(Long version) {
         this.version = version;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
     }
 
     public String getGoodsName() {

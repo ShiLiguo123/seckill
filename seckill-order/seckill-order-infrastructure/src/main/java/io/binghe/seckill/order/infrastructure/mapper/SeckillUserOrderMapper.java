@@ -13,44 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.binghe.seckill.order.domain.service;
-
+package io.binghe.seckill.order.infrastructure.mapper;
 
 import io.binghe.seckill.order.domain.model.entity.SeckillOrder;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
 /**
  * @author binghe(微信 : hacker_binghe)
  * @version 1.0.0
- * @description 订单领域层接口
+ * @description 订单
  * @github https://github.com/binghe001
  * @copyright 公众号: 冰河技术
  */
-public interface SeckillOrderDomainService {
+public interface SeckillUserOrderMapper {
 
     /**
      * 保存订单
      */
-    boolean saveSeckillOrder(SeckillOrder seckillOrder);
+    int saveSeckillOrder(SeckillOrder seckillOrder);
 
     /**
      * 根据用户id获取订单列表
      */
-    List<SeckillOrder> getSeckillOrderByUserId(Long userId);
+    List<SeckillOrder> getSeckillOrderByUserId(@Param("userId") Long userId);
 
     /**
-     * 根据商品id获取订单列表
+     * 删除订单数据
      */
-    List<SeckillOrder> getSeckillOrderByGoodsId(Long goodsId);
-
-    /**
-     * 以userId作为分片键删除订单
-     */
-    void deleteOrderShardingUserId(Long orderId, Long userId);
-
-    /**
-     * 以goodsId作为分片键删除订单
-     */
-    void deleteOrderShardingGoodsId(Long orderId, Long goodsId);
+    void deleteOrder(@Param("userId") Long userId, @Param("orderId") Long orderId);
 }

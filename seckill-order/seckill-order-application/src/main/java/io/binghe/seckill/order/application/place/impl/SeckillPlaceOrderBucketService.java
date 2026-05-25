@@ -115,7 +115,7 @@ public class SeckillPlaceOrderBucketService implements SeckillPlaceOrderService 
             }
         }
         //发送事务消息
-        messageSenderService.sendMessageInTransaction(this.getTxMessage(SeckillConstants.TOPIC_BUCKET_TX_MSG, txNo, userId, SeckillConstants.PLACE_ORDER_TYPE_BUCKET, exception, seckillOrderCommand, seckillGoods, bucketSerialNo), null);
+        messageSenderService.sendMessageInTransaction(this.getTxMessage(SeckillConstants.TOPIC_BUCKET_TX_MSG, txNo, userId, SeckillConstants.PLACE_ORDER_TYPE_BUCKET, exception, seckillOrderCommand, seckillGoods, bucketSerialNo, seckillOrderCommand.getOrderTaskId()), null);
         return txNo;
     }
 
@@ -208,7 +208,7 @@ public class SeckillPlaceOrderBucketService implements SeckillPlaceOrderService 
             //保存事务日志
             distributedCacheService.put(SeckillConstants.getKey(SeckillConstants.ORDER_TX_KEY, String.valueOf(txMessage.getTxNo())), txMessage.getTxNo(), SeckillConstants.TX_LOG_EXPIRE_DAY, TimeUnit.DAYS);
         }catch (Exception e){
-            logger.error("saveOrderInTransaction|异常|{}", e.getMessage());
+            logger.error("saveOrderInTransaction|异常|{}", e);
             distributedCacheService.delete(SeckillConstants.getKey(SeckillConstants.ORDER_TX_KEY, String.valueOf(txMessage.getTxNo())));
             this.rollbackCacheStack(txMessage);
             throw e;

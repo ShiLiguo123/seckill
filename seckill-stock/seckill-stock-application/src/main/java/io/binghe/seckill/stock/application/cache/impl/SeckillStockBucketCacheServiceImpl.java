@@ -184,6 +184,7 @@ public class SeckillStockBucketCacheServiceImpl implements SeckillStockBucketCac
         }
         List<SeckillStockBucket> buckets = seckillStockBucketDomainService.getBucketsByGoodsId(goodsId);
         if (CollectionUtil.isEmpty(buckets)){
+            logger.error("getSeckillStockBucketDTO|暂无可用库存|{}", goodsId);
             throw new SeckillException(ErrorCode.ORDER_TOKENS_NOT_AVAILABLE);
         }
         int availableStock = buckets.stream().mapToInt(SeckillStockBucket::getAvailableStock).sum();

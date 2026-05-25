@@ -17,6 +17,7 @@ package io.binghe.seckill.order.application.service.impl;
 
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.NumberUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson.JSONObject;
 import io.binghe.seckill.common.cache.distribute.DistributedCacheService;
@@ -65,9 +66,10 @@ public class SeckillOrderServiceImpl implements SeckillOrderService {
     }
 
     @Override
-    public List<SeckillOrder> getSeckillOrderByActivityId(Long activityId) {
-        return seckillOrderDomainService.getSeckillOrderByActivityId(activityId);
+    public List<SeckillOrder> getSeckillOrderByGoodsId(Long goodsId) {
+        return seckillOrderDomainService.getSeckillOrderByGoodsId(goodsId);
     }
+
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -78,7 +80,13 @@ public class SeckillOrderServiceImpl implements SeckillOrderService {
             logger.info("deleteOrder|订单微服务未执行本地事务|{}",errorMessage.getTxNo());
             return;
         }
-        seckillOrderDomainService.deleteOrder(errorMessage.getTxNo());
+        seckillOrderDomainService.deleteOrderShardingUserId(errorMessage.getTxNo(), errorMessage.getUserId());
+        seckillOrderDomainService.deleteOrderShardingGoodsId(errorMessage.getTxNo(), errorMessage.getGoodsId());
+        //清除掉幂等数据
+        if (!StrUtil.isEmpty(errorMessage.getOrderTaskId())){
+            distributedCacheService.delete(SeckillConstants.getKey(SeckillConstants.ORDER_TASK_ORDER_ID_KEY, errorMessage.getOrderTaskId()));
+            distributedCacheService.delete(SeckillConstants.getKey(SeckillConstants.ORDER_TASK_ID_KEY, errorMessage.getOrderTaskId()));
+        }
         this.handlerCacheStock(errorMessage);
     }
 

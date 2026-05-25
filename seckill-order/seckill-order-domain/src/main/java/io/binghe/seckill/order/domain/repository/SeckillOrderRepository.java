@@ -40,12 +40,17 @@ public interface SeckillOrderRepository {
     List<SeckillOrder> getSeckillOrderByUserId(Long userId);
 
     /**
-     * 根据活动id获取订单列表
+     * 根据商品id获取订单列表
      */
-    List<SeckillOrder> getSeckillOrderByActivityId(Long activityId);
+    List<SeckillOrder> getSeckillOrderByGoodsId(Long goodsId);
 
     /**
-     * 删除订单
+     * 以userId作为分片键删除订单
      */
-    void deleteOrder(Long orderId);
+    void deleteOrderShardingUserId(Long orderId, Long userId);
+
+    /**
+     * 以goodsId作为分片键删除订单
+     */
+    void deleteOrderShardingGoodsId(Long orderId, Long goodsId);
 }

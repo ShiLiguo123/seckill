@@ -117,11 +117,11 @@ public interface SeckillPlaceOrderService {
      * 事务消息
      */
     default TxMessage getTxMessage(String destination, Long txNo, Long userId, String placeOrderType, Boolean exception,
-                                   SeckillOrderCommand seckillOrderCommand, SeckillGoodsDTO seckillGoods, Integer bucketSerialNo){
+                                   SeckillOrderCommand seckillOrderCommand, SeckillGoodsDTO seckillGoods, Integer bucketSerialNo, String orderTaskId){
         //构建事务消息
         return new TxMessage(destination, txNo, seckillOrderCommand.getGoodsId(), seckillOrderCommand.getQuantity(),
                 seckillOrderCommand.getActivityId(), seckillOrderCommand.getVersion(), userId, seckillGoods.getGoodsName(),
-                seckillGoods.getActivityPrice(), placeOrderType, exception, bucketSerialNo);
+                seckillGoods.getActivityPrice(), placeOrderType, exception, bucketSerialNo, orderTaskId);
     }
 
 }

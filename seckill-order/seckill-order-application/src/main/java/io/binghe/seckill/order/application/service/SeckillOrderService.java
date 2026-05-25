@@ -42,9 +42,9 @@ public interface SeckillOrderService {
     List<SeckillOrder> getSeckillOrderByUserId(Long userId);
 
     /**
-     * 根据活动id获取订单列表
+     * 根据用户id获取订单列表
      */
-    List<SeckillOrder> getSeckillOrderByActivityId(Long activityId);
+    List<SeckillOrder> getSeckillOrderByGoodsId(Long goodsId);
 
     /**
      * 删除订单

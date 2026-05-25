@@ -157,6 +157,6 @@ public class SeckillStockBucketServiceImpl implements SeckillStockBucketService 
      * 发送给订单微服务的错误消息
      */
     private ErrorMessage getErrorMessage(TxMessage txMessage){
-        return new ErrorMessage(SeckillConstants.TOPIC_ERROR_MSG, txMessage.getTxNo(), txMessage.getGoodsId(), txMessage.getQuantity(), txMessage.getPlaceOrderType(), txMessage.getException(), txMessage.getBucketSerialNo());
+        return new ErrorMessage(SeckillConstants.TOPIC_ERROR_MSG, txMessage.getTxNo(), txMessage.getGoodsId(), txMessage.getQuantity(), txMessage.getPlaceOrderType(), txMessage.getException(), txMessage.getBucketSerialNo(), txMessage.getUserId(), txMessage.getOrderTaskId());
     }
 }

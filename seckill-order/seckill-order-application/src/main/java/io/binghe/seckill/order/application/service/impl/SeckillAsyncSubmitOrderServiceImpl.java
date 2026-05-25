@@ -56,6 +56,8 @@ public class SeckillAsyncSubmitOrderServiceImpl extends SeckillBaseSubmitOrderSe
         this.checkSeckillOrder(userId, seckillOrderCommand);
         //生成订单任务id
         String orderTaskId = orderTaskGenerateService.generatePlaceOrderTaskId(userId, seckillOrderCommand.getGoodsId());
+        //将taskId存入seckillOrderCommand
+        seckillOrderCommand.setOrderTaskId(orderTaskId);
         //构造下单任务
         SeckillOrderTask seckillOrderTask = new SeckillOrderTask(SeckillConstants.TOPIC_ORDER_MSG, orderTaskId, userId, seckillOrderCommand);
         //提交订单

@@ -19,7 +19,8 @@ import io.binghe.seckill.common.exception.ErrorCode;
 import io.binghe.seckill.common.exception.SeckillException;
 import io.binghe.seckill.order.domain.model.entity.SeckillOrder;
 import io.binghe.seckill.order.domain.repository.SeckillOrderRepository;
-import io.binghe.seckill.order.infrastructure.mapper.SeckillOrderMapper;
+import io.binghe.seckill.order.infrastructure.mapper.SeckillGoodsOrderMapper;
+import io.binghe.seckill.order.infrastructure.mapper.SeckillUserOrderMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -35,28 +36,51 @@ import java.util.List;
 @Component
 public class SeckillOrderRepositoryImpl implements SeckillOrderRepository {
     @Autowired
-    private SeckillOrderMapper seckillOrderMapper;
+    private SeckillUserOrderMapper seckillUserOrderMapper;
+    @Autowired
+    private SeckillGoodsOrderMapper seckillGoodsOrderMapper;
 
     @Override
     public boolean saveSeckillOrder(SeckillOrder seckillOrder) {
         if (seckillOrder == null){
             throw new SeckillException(ErrorCode.PARAMS_INVALID);
         }
-        return seckillOrderMapper.saveSeckillOrder(seckillOrder) == 1;
+        int userResult = seckillUserOrderMapper.saveSeckillOrder(seckillOrder);
+        int goodsResult = seckillGoodsOrderMapper.saveSeckillOrder(seckillOrder);
+        return userResult == 1 && goodsResult == 1;
     }
 
     @Override
     public List<SeckillOrder> getSeckillOrderByUserId(Long userId) {
-        return seckillOrderMapper.getSeckillOrderByUserId(userId);
+        if (userId == null){
+            throw new SeckillException(ErrorCode.PARAMS_INVALID);
+        }
+        return seckillUserOrderMapper.getSeckillOrderByUserId(userId);
     }
 
     @Override
-    public List<SeckillOrder> getSeckillOrderByActivityId(Long activityId) {
-        return seckillOrderMapper.getSeckillOrderByActivityId(activityId);
+    public List<SeckillOrder> getSeckillOrderByGoodsId(Long goodsId) {
+        if (goodsId == null){
+            throw new SeckillException(ErrorCode.PARAMS_INVALID);
+        }
+        return seckillGoodsOrderMapper.getSeckillOrderByGoodsId(goodsId);
     }
 
     @Override
-    public void deleteOrder(Long orderId) {
-        seckillOrderMapper.deleteOrder(orderId);
+    public void deleteOrderShardingUserId(Long orderId, Long userId) {
+        if (orderId == null || userId == null){
+            throw new SeckillException(ErrorCode.PARAMS_INVALID);
+        }
+        seckillUserOrderMapper.deleteOrder(userId, orderId);
     }
+
+    @Override
+    public void deleteOrderShardingGoodsId(Long orderId, Long goodsId) {
+        if (goodsId == null || orderId == null){
+            throw new SeckillException(ErrorCode.PARAMS_INVALID);
+        }
+        seckillGoodsOrderMapper.deleteOrder(goodsId, orderId);
+    }
+
+
 }

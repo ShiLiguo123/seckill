@@ -76,17 +76,29 @@ public class SeckillOrderDomainServiceImpl implements SeckillOrderDomainService 
     }
 
     @Override
-    public List<SeckillOrder> getSeckillOrderByActivityId(Long activityId) {
-        if (activityId == null){
-            throw new SeckillException(ErrorCode.PARAMS_INVALID);
+    public List<SeckillOrder> getSeckillOrderByGoodsId(Long goodsId) {
+        if (goodsId == null){
+            throw  new SeckillException(ErrorCode.PARAMS_INVALID);
         }
-        return seckillOrderRepository.getSeckillOrderByActivityId(activityId);
+        return seckillOrderRepository.getSeckillOrderByGoodsId(goodsId);
     }
 
     @Override
-    public void deleteOrder(Long orderId) {
-        seckillOrderRepository.deleteOrder(orderId);
+    public void deleteOrderShardingUserId(Long orderId, Long userId) {
+        if (orderId == null || userId == null){
+            throw new SeckillException(ErrorCode.PARAMS_INVALID);
+        }
+        seckillOrderRepository.deleteOrderShardingUserId(orderId, userId);
     }
+
+    @Override
+    public void deleteOrderShardingGoodsId(Long orderId, Long goodsId) {
+        if (orderId == null || goodsId == null){
+            throw new SeckillException(ErrorCode.PARAMS_INVALID);
+        }
+        seckillOrderRepository.deleteOrderShardingGoodsId(orderId, goodsId);
+    }
+
 
     /**
      * 获取主题事件
