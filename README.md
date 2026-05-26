@@ -111,6 +111,7 @@
 * [《Seckill秒杀系统》第62章：订单分库分表设计](https://articles.zsxq.com/id_8e4hbh4rxzd7.html)
 * [《Seckill秒杀系统》第63章：订单分库分表编码实现](https://articles.zsxq.com/id_oz5hg1m3drww.html)
 * [《Seckill秒杀系统》第64章：下单流程整合订单分库分表](https://articles.zsxq.com/id_b3c0udkhuzkx.html)
+* [《Seckill秒杀系统》第65章：秒杀系统流量隔离策略与实现](https://articles.zsxq.com/id_pbddoqgimhun.html)
 
 
 ## 基础框架与中间件
