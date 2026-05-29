@@ -1,7 +1,6 @@
 create database if not exists seckill_goods default charset = utf8mb4;
 
-SET NAMES utf8mb4;
-SET FOREIGN_KEY_CHECKS = 0;
+use seckill_goods;
 
 -- ----------------------------
 -- Table structure for seckill_goods
@@ -22,6 +21,4 @@ CREATE TABLE `seckill_goods`  (
   `status` int(2) NULL DEFAULT 0 COMMENT '状态，0：已发布； 1：上线； 2：下线',
   `limit_num` int(11) NULL DEFAULT 1 COMMENT '限购个数',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '秒杀商品表' ROW_FORMAT = Dynamic;
-
-SET FOREIGN_KEY_CHECKS = 1;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '秒杀商品表';

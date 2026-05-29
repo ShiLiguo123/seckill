@@ -114,6 +114,7 @@
 * [《Seckill秒杀系统》第65章：秒杀系统流量隔离策略与实现](https://articles.zsxq.com/id_pbddoqgimhun.html)
 * [《Seckill秒杀系统》第66章：秒杀系统规模限制策略](https://articles.zsxq.com/id_md0gzi4esxdt.html)
 * [《Seckill秒杀系统》第67章：预约系统需求梳理与架构设计](https://articles.zsxq.com/id_hwk8hpcndk2a.html)
+* [《Seckill秒杀系统》第68章：预约系统数据模型设计](https://articles.zsxq.com/id_pw4mgl1acvzc.html)
 
 
 ## 基础框架与中间件

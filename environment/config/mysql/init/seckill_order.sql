@@ -1,7 +1,6 @@
 create database if not exists seckill_order default charset = utf8mb4;
 
-SET NAMES utf8mb4;
-SET FOREIGN_KEY_CHECKS = 0;
+use seckill_order;
 
 -- ----------------------------
 -- Table structure for seckill_order
@@ -19,6 +18,5 @@ CREATE TABLE `seckill_order`  (
   `status` int(2) NULL DEFAULT 0 COMMENT '订单状态 1：已创建 2：已支付 0：已取消； -1：已删除',
   `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '秒杀订单表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '秒杀订单表';
 
-SET FOREIGN_KEY_CHECKS = 1;
