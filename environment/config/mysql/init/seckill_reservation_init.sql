@@ -18,7 +18,7 @@ CREATE TABLE `seckill_reservation_config`  (
    `status` int(2) NULL DEFAULT 1 COMMENT '状态，1：正常；0：删除',
    PRIMARY KEY (`id`) USING BTREE,
    UNIQUE INDEX `goods_id_index`(`goods_id`) USING BTREE COMMENT '一个秒杀商品存在一条预约规则信息'
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '针对商品配置的预约配置表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '针对商品配置的预约配置表';
 
 -- ----------------------------
 -- Records of seckill_reservation_config
@@ -38,7 +38,7 @@ CREATE TABLE `seckill_reservation_user`  (
  PRIMARY KEY (`id`) USING BTREE,
  INDEX `user_id_index`(`user_id`) USING BTREE COMMENT '用户id索引',
  INDEX `goods_id_index`(`goods_id`) USING BTREE COMMENT '商品id索引'
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户预约商品的记录表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户预约商品的记录表';
 
 -- ----------------------------
 -- Records of seckill_reservation_user
