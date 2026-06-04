@@ -29,6 +29,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class SeckillStockStarter {
 
     public static void main(String[] args) {
+        System.setProperty("user.home", "/home/binghe/stock");
         SpringApplication.run(SeckillStockStarter.class, args);
     }
 }

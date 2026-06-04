@@ -40,7 +40,7 @@ public enum ErrorCode {
     TOKEN_EXPIRE(2013, "Token失效"),
     GOODS_OFFLINE(2014, "商品已下线"),
     DATA_PARSE_FAILED(2015, "数据解析失败"),
-    RETRY_LATER(2016, "稍后再试"),
+    RETRY_LATER(2016, "操作过于频繁，稍后再试"),
     USER_INVALID(2017, "当前账户异常，不能参与秒杀"),
     GOODS_PUBLISH(2018, "商品未上线"),
     ORDER_FAILED(2019, "下单失败"),
@@ -60,7 +60,15 @@ public enum ErrorCode {
     BUCKET_STOCK_NOT_EXISTS(2033, "分桶库存不存在"),
     BUCKET_STOCK_SUSPEND(2034, "库存维护中"),
     BUCKET_STOCK_ALIGN(2035, "库存校准中"),
-    STOCK_IS_NULL(2036, "商品库存不存在");
+    GOODS_RESERVATION_CONFIG_NOT_EXISTS(2036, "商品预约配置不存在"),
+    GOODS_RESERVATION_CONFIG_EXISTS(2037, "商品预约配置已存在"),
+    GOODS_RESERVATION_USER_NOT_EXISTS(2038, "商品预约信息不存在"),
+    GOODS_RESERVATION_USER_EXISTS(2039, "已经预约过，不可重复预约"),
+    GOODS_RESERVATION_COUNT_INVALIDATE(2040, "重置预约配置时最大人数上限不能小于当前已预约人数"),
+    GOODS_RESERVATION_CONFIG_NOT_ONLINE(2041, "当前商品未开通预约通道"),
+    GOODS_RESERVATION_NOT_TIME(2042, "不在预约时间范围内，不能预约商品"),
+    GOODS_RESERVATION_TIME_NOT_INVALIDATE(2043, "商品预约配置时间错误"),
+    STOCK_IS_NULL(2044, "商品库存不存在");
 
     private final Integer code;
     private final String mesaage;

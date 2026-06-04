@@ -53,10 +53,10 @@ public class SeckillOrderDomainServiceImpl implements SeckillOrderDomainService 
 
     @Override
     public boolean saveSeckillOrder(SeckillOrder seckillOrder) {
-        logger.info("saveSeckillOrder|下单|{}", JSON.toJSONString(seckillOrder));
         if (seckillOrder == null){
             throw new SeckillException(ErrorCode.PARAMS_INVALID);
         }
+        logger.info("saveSeckillOrder|下单|{}", JSON.toJSONString(seckillOrder));
         seckillOrder.setStatus(SeckillOrderStatus.CREATED.getCode());
         boolean saveSuccess = seckillOrderRepository.saveSeckillOrder(seckillOrder);
         if (saveSuccess){

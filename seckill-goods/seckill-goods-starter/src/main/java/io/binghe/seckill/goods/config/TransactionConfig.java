@@ -22,6 +22,9 @@ import org.springframework.context.annotation.*;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.TransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import io.binghe.seckill.common.config.JdbcConfig;
+import io.binghe.seckill.common.config.RedisConfig;
+import io.binghe.seckill.common.config.MyBatisConfig;
 
 /**
  * @author binghe(微信 : hacker_binghe)

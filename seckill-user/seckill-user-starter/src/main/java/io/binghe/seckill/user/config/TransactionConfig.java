@@ -16,12 +16,15 @@
 package io.binghe.seckill.user.config;
 
 import com.alibaba.druid.pool.DruidDataSource;
+import io.binghe.seckill.common.config.MyBatisConfig;
+import io.binghe.seckill.common.config.RedisConfig;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.annotation.*;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.TransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import io.binghe.seckill.common.config.JdbcConfig;
 
 /**
  * @author binghe(微信 : hacker_binghe)

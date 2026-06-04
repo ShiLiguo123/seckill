@@ -54,18 +54,20 @@ public class SeckillGoodsDomainServiceImpl implements SeckillGoodsDomainService 
     private String eventType;
 
     @Override
-    public void saveSeckillGoods(SeckillGoods seckillGoods) {
+    public boolean saveSeckillGoods(SeckillGoods seckillGoods) {
         logger.info("goodsPublish|发布秒杀商品|{}", JSON.toJSON(seckillGoods));
         if (seckillGoods == null || !seckillGoods.validateParams()){
             throw new SeckillException(ErrorCode.PARAMS_INVALID);
         }
         seckillGoods.setStatus(SeckillGoodsStatus.PUBLISHED.getCode());
-        seckillGoodsRepository.saveSeckillGoods(seckillGoods);
-        logger.info("goodsPublish|秒杀商品已经发布|{}", seckillGoods.getId());
-
-        SeckillGoodsEvent seckillGoodsEvent = new SeckillGoodsEvent(seckillGoods.getId(), seckillGoods.getActivityId(), SeckillGoodsStatus.PUBLISHED.getCode(), this.getTopicEvent());
-        messageSenderService.send(seckillGoodsEvent);
-        logger.info("goodsPublish|秒杀商品事件已经发布|{}", seckillGoods.getId());
+        boolean success = seckillGoodsRepository.saveSeckillGoods(seckillGoods) == 1;
+        if (success){
+            logger.info("goodsPublish|秒杀商品已经发布|{}", seckillGoods.getId());
+            SeckillGoodsEvent seckillGoodsEvent = new SeckillGoodsEvent(seckillGoods.getId(), seckillGoods.getActivityId(), SeckillGoodsStatus.PUBLISHED.getCode(), this.getTopicEvent());
+            messageSenderService.send(seckillGoodsEvent);
+            logger.info("goodsPublish|秒杀商品事件已经发布|{}", seckillGoods.getId());
+        }
+        return success;
     }
 
     @Override

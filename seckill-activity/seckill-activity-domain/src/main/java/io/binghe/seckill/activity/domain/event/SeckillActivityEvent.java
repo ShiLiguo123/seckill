@@ -16,6 +16,7 @@
 package io.binghe.seckill.activity.domain.event;
 
 
+import com.alibaba.fastjson.annotation.JSONField;
 import io.binghe.seckill.common.model.event.SeckillBaseEvent;
 
 /**
@@ -27,7 +28,7 @@ import io.binghe.seckill.common.model.event.SeckillBaseEvent;
  */
 public class SeckillActivityEvent extends SeckillBaseEvent {
 
-    public SeckillActivityEvent(Long id, Integer status, String topicEvent) {
-        super(id, status, topicEvent);
+    public SeckillActivityEvent(Long id, Integer status,  @JSONField(name = "destination") String destination) {
+        super(id, status, destination);
     }
 }

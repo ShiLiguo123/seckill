@@ -21,6 +21,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import io.binghe.seckill.common.config.RedisConfig;
 
 /**
  * @author binghe(微信 : hacker_binghe)

@@ -95,6 +95,11 @@ public class SeckillConstants {
     public static final long TX_LOG_EXPIRE_SECONDS = 7 * 24 * 3600;
 
     /**
+     * 重复提交时间间隔
+     */
+    public static final long SUBMIT_DATA_EXECUTE_EXPIRE_SECONDS = 60;
+
+    /**
      * 订单任务过期时间秒数
      */
     public static final long ORDER_TASK_EXPIRE_SECONDS = 24 * 3600;
@@ -103,6 +108,16 @@ public class SeckillConstants {
      * 商品key前缀
      */
     public static final String GOODS_ITEM_KEY_PREFIX = "item:";
+
+    /**
+     * 预约记录前缀
+     */
+    public static final String RESERVATION_USER = "reservation_user";
+
+    /**
+     * 预约配置前缀
+     */
+    public static final String RESERVATION_CONFIG = "reservation_config";
 
     /**
      * 订单
@@ -190,6 +205,16 @@ public class SeckillConstants {
     public static final String TOPIC_EVENT_ROCKETMQ_GOODS = "topic_event_rocketmq_goods";
 
     /**
+     * 预约配置事件消息topic
+     */
+    public static final String TOPIC_EVENT_ROCKETMQ_RESERVATION_CONFIG = "topic_event_rocketmq_reservation_config";
+
+    /**
+     * 预约记录事件消息Topic
+     */
+    public static final String TOPIC_EVENT_ROCKETMQ_RESERVATION_USER = "topic_event_rocketmq_reservation_user";
+
+    /**
      * 订单事件消息topic
      */
     public static final String TOPIC_EVENT_ROCKETMQ_ORDER = "topic_event_rocketmq_order";
@@ -208,6 +233,16 @@ public class SeckillConstants {
      * 商品消费分组
      */
     public static final String EVENT_GOODS_CONSUMER_GROUP = "event_goods_consumer_group";
+
+    /**
+     * 商品预约配置消费分组
+     */
+    public static final String EVENT_RESERVATION_CONFIG_CONSUMER_GROUP = "event_reservation_config_consumer_group";
+
+    /**
+     * 预约商品消费分组
+     */
+    public static final String EVENT_RESERVATION_USER_CONSUMER_GROUP = "event_reservation_user_consumer_group";
 
     /**
      * 库存消费分组
@@ -389,4 +424,8 @@ public class SeckillConstants {
     public static final String SECKILL_GOODS_CACHE_KEY = "SECKILL_GOODS_CACHE_KEY";
     public static final String SECKILL_STOCK_CACHE_KEY = "SECKILL_STOCK_CACHE_KEY";
     public static final String SECKILL_GOODSES_CACHE_KEY = "SECKILL_GOODSES_CACHE_KEY";
+    public static final String SECKILL_RESERVATION_CONFIG_CACHE_KEY = "SECKILL_RESERVATION_CONFIG_CACHE_KEY";
+    public static final String SECKILL_RESERVATION_CONFIG_LIST_CACHE_KEY = "SECKILL_RESERVATION_CONFIG_LIST_CACHE_KEY";
+    public static final String SECKILL_RESERVATION_USER_CACHE_KEY = "SECKILL_RESERVATION_USER_CACHE_KEY";
+    public static final String SECKILL_RESERVATION_USER_LIST_CACHE_KEY = "SECKILL_RESERVATION_USER_LIST_CACHE_KEY";
 }

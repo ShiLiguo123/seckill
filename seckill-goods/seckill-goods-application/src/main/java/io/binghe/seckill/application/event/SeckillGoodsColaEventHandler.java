@@ -46,11 +46,11 @@ public class SeckillGoodsColaEventHandler implements EventHandlerI<Response, Sec
 
     @Override
     public Response execute(SeckillGoodsEvent seckillGoodsEvent) {
-        logger.info("cola|goodsEvent|接收秒杀品事件|{}", JSON.toJSON(seckillGoodsEvent));
         if (seckillGoodsEvent.getId() == null){
             logger.info("cola|goodsEvent|接收秒杀品事件参数错误");
             return Response.buildSuccess();
         }
+        logger.info("cola|goodsEvent|接收秒杀品事件|{}", JSON.toJSON(seckillGoodsEvent));
         seckillGoodsCacheService.tryUpdateSeckillGoodsCacheByLock(seckillGoodsEvent.getId(), false);
         seckillGoodsListCacheService.tryUpdateSeckillGoodsCacheByLock(seckillGoodsEvent.getActivityId(), false);
         return Response.buildSuccess();

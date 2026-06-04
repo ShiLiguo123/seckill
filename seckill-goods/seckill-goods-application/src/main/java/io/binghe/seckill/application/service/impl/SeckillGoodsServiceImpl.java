@@ -98,11 +98,13 @@ public class SeckillGoodsServiceImpl implements SeckillGoodsService {
         seckillGoods.setAvailableStock(seckillGoodsCommond.getInitialStock());
         seckillGoods.setId(SnowFlakeFactory.getSnowFlakeFromCache().nextId());
         seckillGoods.setStatus(SeckillGoodsStatus.PUBLISHED.getCode());
-        //将商品的库存同步到Redis
-        distributedCacheService.put(SeckillConstants.getKey(SeckillConstants.GOODS_ITEM_STOCK_KEY_PREFIX, String.valueOf(seckillGoods.getId())), seckillGoods.getAvailableStock());
-        //商品限购同步到Redis
-        distributedCacheService.put(SeckillConstants.getKey(SeckillConstants.GOODS_ITEM_LIMIT_KEY_PREFIX, String.valueOf(seckillGoods.getId())), seckillGoods.getLimitNum());
-        seckillGoodsDomainService.saveSeckillGoods(seckillGoods);
+        boolean success = seckillGoodsDomainService.saveSeckillGoods(seckillGoods);
+        if (success){
+            //将商品的库存同步到Redis
+            distributedCacheService.put(SeckillConstants.getKey(SeckillConstants.GOODS_ITEM_STOCK_KEY_PREFIX, String.valueOf(seckillGoods.getId())), seckillGoods.getAvailableStock());
+            //商品限购同步到Redis
+            distributedCacheService.put(SeckillConstants.getKey(SeckillConstants.GOODS_ITEM_LIMIT_KEY_PREFIX, String.valueOf(seckillGoods.getId())), seckillGoods.getLimitNum());
+        }
     }
 
     @Override

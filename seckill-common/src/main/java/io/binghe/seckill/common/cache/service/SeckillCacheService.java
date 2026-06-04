@@ -26,5 +26,7 @@ public interface SeckillCacheService {
     /**
      * 构建缓存的key
      */
-    String buildCacheKey(Object key);
+    default String buildCacheKey(Object key){
+        return key == null ? "" : key.toString();
+    }
 }

@@ -40,7 +40,7 @@ public interface SeckillOrderDomainService {
     List<SeckillOrder> getSeckillOrderByUserId(Long userId);
 
     /**
-     * 根据商品id获取订单列表
+     * 根据用户id获取订单列表
      */
     List<SeckillOrder> getSeckillOrderByGoodsId(Long goodsId);
 
