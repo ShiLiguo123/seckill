@@ -16,7 +16,9 @@
 package io.binghe.seckill.reservation.application.service;
 
 import io.binghe.seckill.reservation.application.command.SeckillReservationConfigCommand;
+import io.binghe.seckill.reservation.application.command.SeckillReservationUserCommand;
 import io.binghe.seckill.reservation.domain.model.entity.SeckillReservationConfig;
+import io.binghe.seckill.reservation.domain.model.entity.SeckillReservationUser;
 
 import java.util.List;
 
@@ -53,4 +55,29 @@ public interface SeckillReservationService {
      * 获取配置详情
      */
     SeckillReservationConfig getConfigDetail(Long goodsId, Long version);
+
+    /**
+     * 根据商品id查看预约用户列表
+     */
+    List<SeckillReservationUser> getUserListByGoodsId(Long goodsId, Long version);
+
+    /**
+     * 根据用户id查看预约的商品列表
+     */
+    List<SeckillReservationUser> getGoodsListByUserId(Long userId, Long version);
+
+    /**
+     * 预约秒杀商品
+     */
+    boolean reserveGoods(SeckillReservationUserCommand seckillReservationUserCommand);
+
+    /**
+     * 取消预约秒杀商品
+     */
+    boolean cancelReserveGoods(SeckillReservationUserCommand seckillReservationUserCommand);
+
+    /**
+     * 获取用户预约的某个商品信息
+     */
+    SeckillReservationUser getSeckillReservationUser(SeckillReservationUserCommand seckillReservationUserCommand);
 }

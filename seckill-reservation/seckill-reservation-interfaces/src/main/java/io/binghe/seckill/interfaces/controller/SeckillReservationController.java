@@ -19,8 +19,10 @@ import io.binghe.seckill.common.exception.ErrorCode;
 import io.binghe.seckill.common.response.ResponseMessage;
 import io.binghe.seckill.common.response.ResponseMessageBuilder;
 import io.binghe.seckill.reservation.application.command.SeckillReservationConfigCommand;
+import io.binghe.seckill.reservation.application.command.SeckillReservationUserCommand;
 import io.binghe.seckill.reservation.application.service.SeckillReservationService;
 import io.binghe.seckill.reservation.domain.model.entity.SeckillReservationConfig;
+import io.binghe.seckill.reservation.domain.model.entity.SeckillReservationUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -87,5 +89,49 @@ public class SeckillReservationController {
     public ResponseMessage<SeckillReservationConfig> getConfigDetail(Long goodsId, Long version){
         SeckillReservationConfig serviceConfigDetail = seckillReservationService.getConfigDetail(goodsId, version);
         return ResponseMessageBuilder.build(ErrorCode.SUCCESS.getCode(), serviceConfigDetail);
+    }
+
+    /**
+     * 根据商品id查看预约用户列表
+     */
+    @RequestMapping(value = "/user/getUserListByGoodsId", method = {RequestMethod.GET,RequestMethod.POST})
+    public ResponseMessage<List<SeckillReservationUser>> getUserListByGoodsId(Long goodsId, Long version){
+        List<SeckillReservationUser> serviceUserList = seckillReservationService.getUserListByGoodsId(goodsId, version);
+        return ResponseMessageBuilder.build(ErrorCode.SUCCESS.getCode(), serviceUserList);
+    }
+
+    /**
+     * 根据用户id查看预约的商品列表
+     */
+    @RequestMapping(value = "/user/getGoodsListByUserId", method = {RequestMethod.GET,RequestMethod.POST})
+    public ResponseMessage<List<SeckillReservationUser>> getGoodsListByUserId(Long userId, Long version){
+        List<SeckillReservationUser> serviceUserList = seckillReservationService.getGoodsListByUserId(userId, version);
+        return ResponseMessageBuilder.build(ErrorCode.SUCCESS.getCode(), serviceUserList);
+    }
+
+    /**
+     * 预约秒杀商品
+     */
+    @RequestMapping(value = "/user/reserveGoods", method = {RequestMethod.GET,RequestMethod.POST})
+    public ResponseMessage<String> reserveGoods(@RequestBody SeckillReservationUserCommand seckillReservationUserCommand){
+        seckillReservationService.reserveGoods(seckillReservationUserCommand);
+        return ResponseMessageBuilder.build(ErrorCode.SUCCESS.getCode());
+    }
+    /**
+     * 取消预约秒杀商品
+     */
+    @RequestMapping(value = "/user/cancelReserveGoods", method = {RequestMethod.GET,RequestMethod.POST})
+    public ResponseMessage<String> cancelReserveGoods(@RequestBody SeckillReservationUserCommand seckillReservationUserCommand){
+        seckillReservationService.cancelReserveGoods(seckillReservationUserCommand);
+        return ResponseMessageBuilder.build(ErrorCode.SUCCESS.getCode());
+    }
+
+    /**
+     * 获取用户预约的某个商品信息
+     */
+    @RequestMapping(value = "/user/getSeckillReservationUser", method = {RequestMethod.GET,RequestMethod.POST})
+    public ResponseMessage<SeckillReservationUser> getSeckillReservationUser(@RequestBody SeckillReservationUserCommand seckillReservationUserCommand){
+        SeckillReservationUser seckillReservationUser = seckillReservationService.getSeckillReservationUser(seckillReservationUserCommand);
+        return ResponseMessageBuilder.build(ErrorCode.SUCCESS.getCode(), seckillReservationUser);
     }
 }

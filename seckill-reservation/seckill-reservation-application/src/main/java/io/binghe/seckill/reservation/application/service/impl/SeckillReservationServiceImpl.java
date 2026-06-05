@@ -25,15 +25,20 @@ import io.binghe.seckill.common.exception.ErrorCode;
 import io.binghe.seckill.common.exception.SeckillException;
 import io.binghe.seckill.common.model.dto.goods.SeckillGoodsDTO;
 import io.binghe.seckill.common.model.enums.SeckillReservationConfigStatus;
+import io.binghe.seckill.common.model.enums.SeckillReservationUserStatus;
 import io.binghe.seckill.common.utils.beans.BeanUtil;
 import io.binghe.seckill.common.utils.id.SnowFlakeFactory;
 import io.binghe.seckill.common.utils.string.StringUtil;
 import io.binghe.seckill.dubbo.interfaces.goods.SeckillGoodsDubboService;
 import io.binghe.seckill.reservation.application.builder.SeckillReservationConfigBuilder;
+import io.binghe.seckill.reservation.application.builder.SeckillReservationUserBuilder;
 import io.binghe.seckill.reservation.application.cache.SeckillReservationConfigCacheService;
+import io.binghe.seckill.reservation.application.cache.SeckillReservationUserCacheService;
 import io.binghe.seckill.reservation.application.command.SeckillReservationConfigCommand;
+import io.binghe.seckill.reservation.application.command.SeckillReservationUserCommand;
 import io.binghe.seckill.reservation.application.service.SeckillReservationService;
 import io.binghe.seckill.reservation.domain.model.entity.SeckillReservationConfig;
+import io.binghe.seckill.reservation.domain.model.entity.SeckillReservationUser;
 import io.binghe.seckill.reservation.domain.service.SeckillReservationDomainService;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.slf4j.Logger;
@@ -57,6 +62,8 @@ public class SeckillReservationServiceImpl implements SeckillReservationService 
     private final Logger logger = LoggerFactory.getLogger(SeckillReservationServiceImpl.class);
     @Autowired
     private SeckillReservationConfigCacheService seckillReservationConfigCacheService;
+    @Autowired
+    private SeckillReservationUserCacheService seckillReservationUserCacheService;
     @Autowired
     private SeckillReservationDomainService seckillReservationDomainService;
     @Autowired
@@ -168,4 +175,122 @@ public class SeckillReservationServiceImpl implements SeckillReservationService 
         return seckillReservationConfigCache.getData();
     }
 
+    @Override
+    public List<SeckillReservationUser> getUserListByGoodsId(Long goodsId, Long version) {
+        if (goodsId == null){
+            throw new SeckillException(ErrorCode.PARAMS_INVALID);
+        }
+        SeckillBusinessCache<List<SeckillReservationUser>> seckillReservationUserListCache = seckillReservationUserCacheService.getUserListCacheByGoodsId(goodsId, version);
+        //稍后再试，前端需要对这个状态做特殊处理，即不去刷新数据，静默稍后再试
+        if (seckillReservationUserListCache.isRetryLater()){
+            throw new SeckillException(ErrorCode.RETRY_LATER);
+        }
+        //缓存中不存在预约数据
+        if (!seckillReservationUserListCache.isExist()){
+            throw new SeckillException(ErrorCode.GOODS_RESERVATION_USER_NOT_EXISTS);
+        }
+        return seckillReservationUserListCache.getData();
+    }
+
+    @Override
+    public List<SeckillReservationUser> getGoodsListByUserId(Long userId, Long version) {
+        if (userId == null){
+            throw new SeckillException(ErrorCode.PARAMS_INVALID);
+        }
+        SeckillBusinessCache<List<SeckillReservationUser>> seckillReservationUserListCache = seckillReservationUserCacheService.getGoodsListCacheByUserId(userId, version);
+        //稍后再试，前端需要对这个状态做特殊处理，即不去刷新数据，静默稍后再试
+        if (seckillReservationUserListCache.isRetryLater()){
+            throw new SeckillException(ErrorCode.RETRY_LATER);
+        }
+        //缓存中不存在预约数据
+        if (!seckillReservationUserListCache.isExist()){
+            throw new SeckillException(ErrorCode.GOODS_RESERVATION_USER_NOT_EXISTS);
+        }
+        return seckillReservationUserListCache.getData();
+    }
+
+    @Override
+    public boolean reserveGoods(SeckillReservationUserCommand seckillReservationUserCommand) {
+        if (seckillReservationUserCommand == null || seckillReservationUserCommand.isEmpty()){
+            throw new SeckillException(ErrorCode.PARAMS_INVALID);
+        }
+        SeckillReservationConfig seckillReservationConfig = null;
+        SeckillBusinessCache<SeckillReservationConfig> seckillReservationConfigCache = seckillReservationConfigCacheService.getSeckillReservationConfig(seckillReservationUserCommand.getGoodsId(), 0L);
+        if (seckillReservationConfigCache.isExist() && seckillReservationConfigCache.getData() != null){
+            seckillReservationConfig = seckillReservationConfigCache.getData();
+        }
+        if (seckillReservationConfig == null){
+            throw new SeckillException(ErrorCode.GOODS_RESERVATION_CONFIG_NOT_EXISTS);
+        }
+        if (!SeckillReservationConfigStatus.isOnline(seckillReservationConfig.getStatus())){
+            throw new SeckillException(ErrorCode.GOODS_RESERVATION_CONFIG_NOT_ONLINE);
+        }
+        Date date = new Date();
+        if (date.before(seckillReservationConfig.getReserveStartTime()) || date.after(seckillReservationConfig.getReserveEndTime())){
+            throw new SeckillException(ErrorCode.GOODS_RESERVATION_NOT_TIME);
+        }
+        SeckillReservationUser seckillReservationUser = null;
+        SeckillBusinessCache<SeckillReservationUser> seckillReservationUserCache = seckillReservationUserCacheService.getSeckillReservationUserCacheByUserIdAndGoodsId(seckillReservationUserCommand.getUserId(), seckillReservationUserCommand.getGoodsId(), 0L);
+        logger.info(JSON.toJSONString(seckillReservationUserCache));
+        //重试场景
+        if (seckillReservationUserCache.isRetryLater()){
+            return reserveGoods(seckillReservationUserCommand);
+        }
+        if (seckillReservationUserCache.isExist() && seckillReservationUserCache.getData() != null){
+            seckillReservationUser = seckillReservationUserCache.getData();
+        }
+        if (seckillReservationUser != null && SeckillReservationUserStatus.isNormal(seckillReservationUser.getStatus())){
+            throw new SeckillException(ErrorCode.GOODS_RESERVATION_USER_EXISTS);
+        }
+        String luaKey = StringUtil.append(SeckillConstants.RESERVATION_USER, seckillReservationUserCommand.getUserId(), seckillReservationUserCommand.getGoodsId());
+        Long result = distributedCacheService.checkExecute(luaKey, SeckillConstants.SUBMIT_DATA_EXECUTE_EXPIRE_SECONDS);
+        //已经预约过，操作过于频繁，处理幂等性问题
+        if (NumberUtil.equals(result, SeckillConstants.CHECK_RECOVER_STOCK_HAS_EXECUTE)){
+            logger.info("reserveGoods|已经执行过预约方法|{}", JSONObject.toJSONString(seckillReservationUserCommand));
+            throw new SeckillException(ErrorCode.RETRY_LATER);
+        }
+        seckillReservationUser = SeckillReservationUserBuilder.toSeckillReservationUser(seckillReservationUserCommand);
+        seckillReservationUser.setId(SnowFlakeFactory.getSnowFlakeFromCache().nextId());
+        seckillReservationUser.setReserveConfigId(seckillReservationConfig.getId());
+        seckillReservationUser.setGoodsName(seckillReservationConfig.getGoodsName());
+        seckillReservationUser.setReserveTime(new Date());
+        seckillReservationUser.setStatus(SeckillReservationUserStatus.NORMAL.getCode());
+        return seckillReservationDomainService.reserveGoods(seckillReservationUser);
+    }
+
+    @Override
+    public boolean cancelReserveGoods(SeckillReservationUserCommand seckillReservationUserCommand) {
+        if (seckillReservationUserCommand == null || seckillReservationUserCommand.isEmpty()){
+            throw new SeckillException(ErrorCode.PARAMS_INVALID);
+        }
+        SeckillReservationUser seckillReservationUser = this.getSeckillReservationUser(seckillReservationUserCommand);
+        if (seckillReservationUser == null || SeckillReservationUserStatus.isDeleted(seckillReservationUser.getStatus())){
+            throw new SeckillException(ErrorCode.GOODS_RESERVATION_USER_NOT_EXISTS);
+        }
+        boolean success = seckillReservationDomainService.cancelReserveGoods(seckillReservationUserCommand.getGoodsId(), seckillReservationUserCommand.getUserId());
+        if (success){
+            String luaKey = StringUtil.append(SeckillConstants.RESERVATION_USER, seckillReservationUserCommand.getUserId(), seckillReservationUserCommand.getGoodsId());
+            if (distributedCacheService.hasKey(luaKey)){
+                distributedCacheService.delete(luaKey);
+            }
+        }
+        return success;
+    }
+
+    @Override
+    public SeckillReservationUser getSeckillReservationUser(SeckillReservationUserCommand seckillReservationUserCommand) {
+        if (seckillReservationUserCommand == null || seckillReservationUserCommand.isEmpty()){
+            throw new SeckillException(ErrorCode.PARAMS_INVALID);
+        }
+        SeckillBusinessCache<SeckillReservationUser> seckillReservationUserCache = seckillReservationUserCacheService.getSeckillReservationUserCacheByUserIdAndGoodsId(seckillReservationUserCommand.getUserId(), seckillReservationUserCommand.getGoodsId(), 0L);
+        //稍后再试，前端需要对这个状态做特殊处理，即不去刷新数据，静默稍后再试
+        if (seckillReservationUserCache.isRetryLater()){
+            throw new SeckillException(ErrorCode.RETRY_LATER);
+        }
+        //缓存中不存在预约数据
+        if (!seckillReservationUserCache.isExist()){
+            throw new SeckillException(ErrorCode.GOODS_RESERVATION_USER_NOT_EXISTS);
+        }
+        return seckillReservationUserCache.getData();
+    }
 }
