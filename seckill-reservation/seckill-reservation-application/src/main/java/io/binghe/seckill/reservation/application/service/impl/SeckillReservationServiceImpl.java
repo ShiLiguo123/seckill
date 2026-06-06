@@ -231,7 +231,7 @@ public class SeckillReservationServiceImpl implements SeckillReservationService 
         }
         SeckillReservationUser seckillReservationUser = null;
         SeckillBusinessCache<SeckillReservationUser> seckillReservationUserCache = seckillReservationUserCacheService.getSeckillReservationUserCacheByUserIdAndGoodsId(seckillReservationUserCommand.getUserId(), seckillReservationUserCommand.getGoodsId(), 0L);
-        logger.info(JSON.toJSONString(seckillReservationUserCache));
+        //logger.info(JSON.toJSONString(seckillReservationUserCache));
         //重试场景
         if (seckillReservationUserCache.isRetryLater()){
             return reserveGoods(seckillReservationUserCommand);

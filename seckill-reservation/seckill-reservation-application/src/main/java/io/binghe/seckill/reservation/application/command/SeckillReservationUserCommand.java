@@ -30,6 +30,14 @@ public class SeckillReservationUserCommand implements Serializable {
     //商品id
     private Long goodsId;
 
+    public SeckillReservationUserCommand() {
+    }
+
+    public SeckillReservationUserCommand(Long userId, Long goodsId) {
+        this.userId = userId;
+        this.goodsId = goodsId;
+    }
+
     public boolean isEmpty(){
         return this.userId == null
                 || this.goodsId == null;

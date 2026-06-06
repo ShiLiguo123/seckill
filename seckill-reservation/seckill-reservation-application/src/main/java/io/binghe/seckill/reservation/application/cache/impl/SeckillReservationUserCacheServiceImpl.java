@@ -157,7 +157,7 @@ public class SeckillReservationUserCacheServiceImpl implements SeckillReservatio
                 seckillReservationUserCache = new SeckillBusinessCache<SeckillReservationUser>().with(seckillReservationUser).withVersion(SystemClock.millisClock().now());
             }
             //将数据保存到分布式缓存
-            distributedCacheService.put(distributeKey, JSON.toJSONString(seckillReservationUserCache), SeckillConstants.FIVE_MINUTES);
+            distributedCacheService.put(distributeKey, JSON.toJSONString(seckillReservationUserCache), SeckillConstants.HOURS_24);
             logger.info("SeckillReservationUserCache|分布式缓存已经更新|{}|{}", userId, goodsId);
             return seckillReservationUserCache;
         } catch (InterruptedException e) {
@@ -246,7 +246,7 @@ public class SeckillReservationUserCacheServiceImpl implements SeckillReservatio
                 seckillReservationUserListCache = new SeckillBusinessCache<List<SeckillReservationUser>>().with(seckillReservationUserList).withVersion(SystemClock.millisClock().now());
             }
             //将数据保存到分布式缓存
-            distributedCacheService.put(distributeKey, JSON.toJSONString(seckillReservationUserListCache), SeckillConstants.FIVE_MINUTES);
+            distributedCacheService.put(distributeKey, JSON.toJSONString(seckillReservationUserListCache), SeckillConstants.HOURS_24);
             logger.info("SeckillReservationUserListCache|分布式缓存已经更新|{}", goodsId);
             return seckillReservationUserListCache;
         } catch (InterruptedException e) {
@@ -335,7 +335,7 @@ public class SeckillReservationUserCacheServiceImpl implements SeckillReservatio
                 seckillReservationUserListCache = new SeckillBusinessCache<List<SeckillReservationUser>>().with(seckillReservationUserList).withVersion(SystemClock.millisClock().now());
             }
             //将数据保存到分布式缓存
-            distributedCacheService.put(distributeKey, JSON.toJSONString(seckillReservationUserListCache), SeckillConstants.FIVE_MINUTES);
+            distributedCacheService.put(distributeKey, JSON.toJSONString(seckillReservationUserListCache), SeckillConstants.HOURS_24);
             logger.info("SeckillReservationGoodsListCache|分布式缓存已经更新|{}", userId);
             return seckillReservationUserListCache;
         } catch (InterruptedException e) {

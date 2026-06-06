@@ -17,6 +17,7 @@ package io.binghe.seckill.reservation.domain.model.entity;
 
 import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.binghe.seckill.common.model.enums.SeckillReservationConfigStatus;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;

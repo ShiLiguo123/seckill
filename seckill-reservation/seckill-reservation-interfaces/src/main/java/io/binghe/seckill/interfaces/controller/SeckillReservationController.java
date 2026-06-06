@@ -83,7 +83,7 @@ public class SeckillReservationController {
     }
 
     /**
-     * 获取预约配置详情
+     * 获取预约配置详情，此接口可在商详页也不调用，如果正常展示数据，则说明商品开通了预约通道，需要提前预约再进行秒杀抢购下单，如果数据为空，则说明商品未开通预约通道，无需提前预约即可下单
      */
     @RequestMapping(value = "/config/getConfigDetail", method = {RequestMethod.GET,RequestMethod.POST})
     public ResponseMessage<SeckillReservationConfig> getConfigDetail(Long goodsId, Long version){

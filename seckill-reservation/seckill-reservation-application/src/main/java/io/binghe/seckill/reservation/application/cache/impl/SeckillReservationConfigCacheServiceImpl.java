@@ -146,7 +146,7 @@ public class SeckillReservationConfigCacheServiceImpl implements SeckillReservat
                 seckillReservationConfigCache = new SeckillBusinessCache<SeckillReservationConfig>().with(seckillReservationConfig).withVersion(SystemClock.millisClock().now());
             }
             //将数据保存到分布式缓存
-            distributedCacheService.put(this.getKey(SeckillConstants.SECKILL_RESERVATION_CONFIG_CACHE_KEY, goodsId), JSON.toJSONString(seckillReservationConfigCache), SeckillConstants.FIVE_MINUTES);
+            distributedCacheService.put(this.getKey(SeckillConstants.SECKILL_RESERVATION_CONFIG_CACHE_KEY, goodsId), JSON.toJSONString(seckillReservationConfigCache), SeckillConstants.HOURS_24);
             logger.info("SeckillReservationConfigCache|分布式缓存已经更新|{}", goodsId);
             return seckillReservationConfigCache;
         } catch (InterruptedException e) {
@@ -233,7 +233,7 @@ public class SeckillReservationConfigCacheServiceImpl implements SeckillReservat
                 seckillReservationConfigListCache = new SeckillBusinessCache<List<SeckillReservationConfig>>().with(seckillReservationConfigList).withVersion(SystemClock.millisClock().now());
             }
             //将数据保存到分布式缓存
-            distributedCacheService.put(SeckillConstants.SECKILL_RESERVATION_CONFIG_LIST_CACHE_KEY, JSON.toJSONString(seckillReservationConfigListCache), SeckillConstants.FIVE_MINUTES);
+            distributedCacheService.put(SeckillConstants.SECKILL_RESERVATION_CONFIG_LIST_CACHE_KEY, JSON.toJSONString(seckillReservationConfigListCache), SeckillConstants.HOURS_24);
             logger.info("SeckillReservationConfigListCache|分布式缓存已经更新");
             return seckillReservationConfigListCache;
         } catch (InterruptedException e) {
