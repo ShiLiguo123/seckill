@@ -23,6 +23,7 @@ import io.binghe.seckill.common.cache.model.SeckillBusinessCache;
 import io.binghe.seckill.common.constants.SeckillConstants;
 import io.binghe.seckill.common.lock.DistributedLock;
 import io.binghe.seckill.common.lock.factoty.DistributedLockFactory;
+import io.binghe.seckill.common.model.enums.SeckillReservationUserStatus;
 import io.binghe.seckill.common.utils.string.StringUtil;
 import io.binghe.seckill.common.utils.time.SystemClock;
 import io.binghe.seckill.reservation.application.builder.SeckillReservationConfigBuilder;
@@ -91,6 +92,34 @@ public class SeckillReservationConfigCacheServiceImpl implements SeckillReservat
         }
         return getSeckillReservationConfigDistributedCache(goodsId);
     }
+
+    @Override
+    public SeckillBusinessCache<SeckillReservationConfig> updateSeckillReservationConfigCurrentUserCount(Long goodsId, Integer status, Long version) {
+        logger.info("SeckillReservationConfigCache|更新分布式缓存当前预约人数|{}|{}", goodsId, status);
+        SeckillBusinessCache<SeckillReservationConfig> seckillReservationConfigCache = this.getSeckillReservationConfig(goodsId, version);
+        if (seckillReservationConfigCache.isRetryLater() || !seckillReservationConfigCache.isExist()){
+            return seckillReservationConfigCache;
+        }
+        SeckillReservationConfig seckillReservationConfig = seckillReservationConfigCache.getData();
+        if (seckillReservationConfig == null){
+            return seckillReservationConfigCache;
+        }
+        int userCount = 0;
+        if (SeckillReservationUserStatus.isNormal(status)){
+            userCount = seckillReservationConfig.getReserveCurrentUserCount() + 1;
+            userCount = Math.min(userCount, seckillReservationConfig.getReserveMaxUserCount());
+        }else{
+            userCount = seckillReservationConfig.getReserveCurrentUserCount() - 1;
+            userCount = Math.max(userCount, 0);
+        }
+        seckillReservationConfig.setReserveCurrentUserCount(userCount);
+        seckillReservationConfigCache = new SeckillBusinessCache<SeckillReservationConfig>().with(seckillReservationConfig).withVersion(SystemClock.millisClock().now());
+        //将数据保存到分布式缓存
+        distributedCacheService.put(this.getKey(SeckillConstants.SECKILL_RESERVATION_CONFIG_CACHE_KEY, goodsId), JSON.toJSONString(seckillReservationConfigCache), SeckillConstants.HOURS_24);
+        logger.info("SeckillReservationConfigCache|分布式缓存已经更新|{}|{}", goodsId, status);
+        return seckillReservationConfigCache;
+    }
+
 
     /**
      * 从分布式缓存获取数据

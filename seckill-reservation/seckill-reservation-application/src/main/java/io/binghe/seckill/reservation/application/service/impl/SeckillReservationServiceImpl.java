@@ -210,6 +210,7 @@ public class SeckillReservationServiceImpl implements SeckillReservationService 
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public boolean reserveGoods(SeckillReservationUserCommand seckillReservationUserCommand) {
         if (seckillReservationUserCommand == null || seckillReservationUserCommand.isEmpty()){
             throw new SeckillException(ErrorCode.PARAMS_INVALID);
@@ -224,6 +225,9 @@ public class SeckillReservationServiceImpl implements SeckillReservationService 
         }
         if (!SeckillReservationConfigStatus.isOnline(seckillReservationConfig.getStatus())){
             throw new SeckillException(ErrorCode.GOODS_RESERVATION_CONFIG_NOT_ONLINE);
+        }
+        if (seckillReservationConfig.getReserveMaxUserCount() <= seckillReservationConfig.getReserveCurrentUserCount()){
+            throw new SeckillException(ErrorCode.GOODS_RESERVATION_USER);
         }
         Date date = new Date();
         if (date.before(seckillReservationConfig.getReserveStartTime()) || date.after(seckillReservationConfig.getReserveEndTime())){
@@ -259,6 +263,7 @@ public class SeckillReservationServiceImpl implements SeckillReservationService 
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public boolean cancelReserveGoods(SeckillReservationUserCommand seckillReservationUserCommand) {
         if (seckillReservationUserCommand == null || seckillReservationUserCommand.isEmpty()){
             throw new SeckillException(ErrorCode.PARAMS_INVALID);

@@ -69,7 +69,8 @@ public enum ErrorCode {
     GOODS_RESERVATION_NOT_TIME(2042, "不在预约时间范围内，不能预约商品"),
     GOODS_RESERVATION_TIME_NOT_INVALIDATE(2043, "商品预约配置时间错误"),
     GOODS_RESERVATION_NOT_RESERVE(2044, "未预约商品不能直接下单"),
-    STOCK_IS_NULL(2045, "商品库存不存在");
+    GOODS_RESERVATION_USER(2045, "预约人数已满"),
+    STOCK_IS_NULL(2046, "商品库存不存在");
 
     private final Integer code;
     private final String mesaage;

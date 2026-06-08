@@ -20,6 +20,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import io.binghe.seckill.common.constants.SeckillConstants;
 import io.binghe.seckill.common.model.enums.SeckillReservationUserStatus;
+import io.binghe.seckill.reservation.application.cache.SeckillReservationConfigCacheService;
 import io.binghe.seckill.reservation.application.cache.SeckillReservationUserCacheService;
 import io.binghe.seckill.reservation.domain.event.SeckillReservationUserEvent;
 import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
@@ -44,6 +45,8 @@ public class SeckillReservationUserRocketMQEventHandler implements RocketMQListe
     private final Logger logger = LoggerFactory.getLogger(SeckillReservationUserRocketMQEventHandler.class);
     @Autowired
     private SeckillReservationUserCacheService seckillReservationUserCacheService;
+    @Autowired
+    private SeckillReservationConfigCacheService seckillReservationConfigCacheService;
     @Override
     public void onMessage(String message) {
         logger.info("rocketmq|reservationUserEvent|接收秒杀品预约事件|{}", message);
@@ -67,6 +70,7 @@ public class SeckillReservationUserRocketMQEventHandler implements RocketMQListe
             seckillReservationUserCacheService.tryUpdateGoodsListCacheByUserId(seckillReservationUserEvent.getId(), false);
             seckillReservationUserCacheService.tryUpdatetUserListCacheByGoodsId(seckillReservationUserEvent.getGoodsId(), false);
         }
+        seckillReservationConfigCacheService.updateSeckillReservationConfigCurrentUserCount(seckillReservationUserEvent.getGoodsId(), seckillReservationUserEvent.getStatus(), 0L);
     }
 
     private SeckillReservationUserEvent getEventMessage(String msg){
