@@ -253,13 +253,20 @@ public class SeckillReservationServiceImpl implements SeckillReservationService 
             logger.info("reserveGoods|已经执行过预约方法|{}", JSONObject.toJSONString(seckillReservationUserCommand));
             throw new SeckillException(ErrorCode.RETRY_LATER);
         }
-        seckillReservationUser = SeckillReservationUserBuilder.toSeckillReservationUser(seckillReservationUserCommand);
-        seckillReservationUser.setId(SnowFlakeFactory.getSnowFlakeFromCache().nextId());
-        seckillReservationUser.setReserveConfigId(seckillReservationConfig.getId());
-        seckillReservationUser.setGoodsName(seckillReservationConfig.getGoodsName());
-        seckillReservationUser.setReserveTime(new Date());
-        seckillReservationUser.setStatus(SeckillReservationUserStatus.NORMAL.getCode());
-        return seckillReservationDomainService.reserveGoods(seckillReservationUser);
+        boolean success = false;
+        try{
+            seckillReservationUser = SeckillReservationUserBuilder.toSeckillReservationUser(seckillReservationUserCommand);
+            seckillReservationUser.setId(SnowFlakeFactory.getSnowFlakeFromCache().nextId());
+            seckillReservationUser.setReserveConfigId(seckillReservationConfig.getId());
+            seckillReservationUser.setGoodsName(seckillReservationConfig.getGoodsName());
+            seckillReservationUser.setReserveTime(new Date());
+            seckillReservationUser.setStatus(SeckillReservationUserStatus.NORMAL.getCode());
+            success = seckillReservationDomainService.reserveGoods(seckillReservationUser);
+        }catch (Exception e){
+            distributedCacheService.delete(luaKey);
+            throw e;
+        }
+        return success;
     }
 
     @Override
