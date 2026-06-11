@@ -15,16 +15,13 @@
  */
 package io.binghe.seckill.reservation.config;
 
-import com.alibaba.druid.pool.DruidDataSource;
+import io.binghe.seckill.common.config.RedisConfig;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.web.servlet.ServletComponentScan;
-import org.springframework.context.annotation.*;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.transaction.TransactionManager;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import io.binghe.seckill.common.config.RedisConfig;
-import io.binghe.seckill.common.config.JdbcConfig;
-import io.binghe.seckill.common.config.MyBatisConfig;
 
 /**
  * @author binghe(微信 : hacker_binghe)
@@ -36,14 +33,8 @@ import io.binghe.seckill.common.config.MyBatisConfig;
 @Configuration
 @MapperScan(value = {"io.binghe.seckill.reservation.infrastructure.mapper"})
 @ComponentScan(value = {"io.binghe.seckill", "com.alibaba.cola"})
-@PropertySource(value = {"classpath:properties/mysql.properties", "classpath:properties/mybatis.properties"})
-@Import({JdbcConfig.class, RedisConfig.class, MyBatisConfig.class})
+@Import({RedisConfig.class})
 @EnableTransactionManagement(proxyTargetClass = true)
 @ServletComponentScan(basePackages = {"io.binghe.seckill"})
 public class TransactionConfig {
-
-    @Bean
-    public TransactionManager transactionManager(DruidDataSource dataSource){
-        return new DataSourceTransactionManager(dataSource);
-    }
 }
