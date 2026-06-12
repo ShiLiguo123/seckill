@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="io.binghe.seckill.reservation.infrastructure.mapper.SeckillReservationUserMapper">
+<mapper namespace="io.binghe.seckill.reservation.infrastructure.mapper.SeckillReservationGoodsMapper">
     <resultMap id="baseResultMap" type="io.binghe.seckill.reservation.domain.model.entity.SeckillReservationUser">
         <id column="id" property="id" jdbcType="INTEGER"/>
         <result column="reserve_config_id" property="reserveConfigId" jdbcType="INTEGER"/>
@@ -15,18 +15,18 @@
         id, reserve_config_id, goods_id, goods_name, user_id, reserve_time, status
     </sql>
 
-    <select id="getGoodsListByUserId" resultMap="baseResultMap">
-        select <include refid="Base_Column_List"/> from seckill_reservation_user where user_id = #{userId} and status = #{status}
+    <select id="getUserListByGoodsId" resultMap="baseResultMap">
+        select <include refid="Base_Column_List"/> from seckill_reservation_goods where goods_id = #{goodsId} and status = #{status}
     </select>
 
     <insert id="reserveGoods" parameterType="io.binghe.seckill.reservation.domain.model.entity.SeckillReservationUser">
-        insert into seckill_reservation_user ( <include refid="Base_Column_List"/> )
+        insert into seckill_reservation_goods ( <include refid="Base_Column_List"/> )
         values (#{id}, #{reserveConfigId}, #{goodsId}, #{goodsName}, #{userId}, #{reserveTime}, #{status})
     </insert>
 
     <update id="cancelReserveGoods">
         update
-            seckill_reservation_user
+            seckill_reservation_goods
         set
             status = 0
         where
@@ -36,17 +36,4 @@
         and
             status = 1
     </update>
-
-    <select id="getSeckillReservationUser" resultMap="baseResultMap">
-        select
-           <include refid="Base_Column_List"/>
-        from
-            seckill_reservation_user
-        where
-            user_id = #{userId}
-        and
-            goods_id = #{goodsId}
-        and
-            status = #{status}
-    </select>
 </mapper>

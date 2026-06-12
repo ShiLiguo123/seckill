@@ -45,6 +45,11 @@ public interface SeckillReservationRepository {
     boolean updateConfigStatus(Integer status, Long goodsId);
 
     /**
+     * 更新当前预约人数
+     */
+    int updateReserveCurrentUserCount(Integer reserveCurrentUserCount, Long goodsId);
+
+    /**
      * 获取配置列表
      */
     List<SeckillReservationConfig> getConfigList();

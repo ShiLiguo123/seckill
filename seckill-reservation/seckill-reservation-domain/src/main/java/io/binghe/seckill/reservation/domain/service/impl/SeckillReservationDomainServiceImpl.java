@@ -98,6 +98,14 @@ public class SeckillReservationDomainServiceImpl implements SeckillReservationDo
     }
 
     @Override
+    public int updateReserveCurrentUserCount(Integer reserveCurrentUserCount, Long goodsId) {
+        if (reserveCurrentUserCount == null || goodsId == null){
+            throw new SeckillException(ErrorCode.PARAMS_INVALID);
+        }
+        return seckillReservationRepository.updateReserveCurrentUserCount(reserveCurrentUserCount, goodsId);
+    }
+
+    @Override
     public List<SeckillReservationConfig> getConfigList() {
         return seckillReservationRepository.getConfigList();
     }

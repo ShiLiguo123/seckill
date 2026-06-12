@@ -49,6 +49,15 @@
             goods_id = #{goodsId}
     </update>
 
+    <update id="updateReserveCurrentUserCount">
+        update
+            seckill_reservation_config
+        set
+            reserve_current_user_count = #{reserveCurrentUserCount}
+        where
+            goods_id = #{goodsId}
+    </update>
+
     <select id="getConfigList" resultMap="baseResultMap">
         select <include refid="Base_Column_List"/> from seckill_reservation_config
     </select>

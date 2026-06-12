@@ -226,7 +226,7 @@ public class SeckillReservationServiceImpl implements SeckillReservationService 
         if (!SeckillReservationConfigStatus.isOnline(seckillReservationConfig.getStatus())){
             throw new SeckillException(ErrorCode.GOODS_RESERVATION_CONFIG_NOT_ONLINE);
         }
-        if (seckillReservationConfig.getReserveMaxUserCount() <= seckillReservationConfig.getReserveCurrentUserCount()){
+        if (seckillReservationConfig.getReserveCurrentUserCount() >= seckillReservationConfig.getReserveMaxUserCount()){
             throw new SeckillException(ErrorCode.GOODS_RESERVATION_USER);
         }
         Date date = new Date();

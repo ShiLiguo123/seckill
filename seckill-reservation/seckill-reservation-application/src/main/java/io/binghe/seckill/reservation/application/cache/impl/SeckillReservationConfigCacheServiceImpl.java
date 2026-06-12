@@ -120,7 +120,6 @@ public class SeckillReservationConfigCacheServiceImpl implements SeckillReservat
         return seckillReservationConfigCache;
     }
 
-
     /**
      * 从分布式缓存获取数据
      */

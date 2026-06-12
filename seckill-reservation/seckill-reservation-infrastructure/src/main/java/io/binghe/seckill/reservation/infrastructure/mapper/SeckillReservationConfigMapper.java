@@ -45,6 +45,11 @@ public interface SeckillReservationConfigMapper {
     int updateStatus(@Param("status") Integer status, @Param("goodsId") Long goodsId);
 
     /**
+     * 更新当前预约人数
+     */
+    int updateReserveCurrentUserCount(@Param("reserveCurrentUserCount") Integer reserveCurrentUserCount, @Param("goodsId") Long goodsId);
+
+    /**
      * 获取配置列表
      */
     List<SeckillReservationConfig> getConfigList();

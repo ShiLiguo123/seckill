@@ -21,6 +21,7 @@ import io.binghe.seckill.reservation.domain.model.entity.SeckillReservationConfi
 import io.binghe.seckill.reservation.domain.model.entity.SeckillReservationUser;
 import io.binghe.seckill.reservation.domain.repository.SeckillReservationRepository;
 import io.binghe.seckill.reservation.infrastructure.mapper.SeckillReservationConfigMapper;
+import io.binghe.seckill.reservation.infrastructure.mapper.SeckillReservationGoodsMapper;
 import io.binghe.seckill.reservation.infrastructure.mapper.SeckillReservationUserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -41,6 +42,8 @@ public class SeckillReservationRepositoryImpl implements SeckillReservationRepos
     private SeckillReservationConfigMapper seckillReservationConfigMapper;
     @Autowired
     private SeckillReservationUserMapper seckillReservationUserMapper;
+    @Autowired
+    private SeckillReservationGoodsMapper seckillReservationGoodsMapper;
 
     @Override
     public boolean saveSeckillReservationConfig(SeckillReservationConfig seckillReservationConfig) {
@@ -67,6 +70,14 @@ public class SeckillReservationRepositoryImpl implements SeckillReservationRepos
     }
 
     @Override
+    public int updateReserveCurrentUserCount(Integer reserveCurrentUserCount, Long goodsId) {
+        if (reserveCurrentUserCount == null || goodsId == null){
+            throw new SeckillException(ErrorCode.PARAMS_INVALID);
+        }
+        return seckillReservationConfigMapper.updateReserveCurrentUserCount(reserveCurrentUserCount, goodsId);
+    }
+
+    @Override
     public List<SeckillReservationConfig> getConfigList() {
         return seckillReservationConfigMapper.getConfigList();
     }
@@ -84,7 +95,7 @@ public class SeckillReservationRepositoryImpl implements SeckillReservationRepos
         if (goodsId == null || status == null){
             throw new SeckillException(ErrorCode.PARAMS_INVALID);
         }
-        return seckillReservationUserMapper.getUserListByGoodsId(goodsId, status);
+        return seckillReservationGoodsMapper.getUserListByGoodsId(goodsId, status);
     }
 
     @Override
@@ -100,7 +111,9 @@ public class SeckillReservationRepositoryImpl implements SeckillReservationRepos
         if (seckillReservationUser == null || seckillReservationUser.isEmpty()){
             throw new SeckillException(ErrorCode.PARAMS_INVALID);
         }
-        return seckillReservationUserMapper.reserveGoods(seckillReservationUser) == 1;
+        boolean userResult = seckillReservationUserMapper.reserveGoods(seckillReservationUser) == 1;
+        boolean goodsResult = seckillReservationGoodsMapper.reserveGoods(seckillReservationUser) == 1;
+        return userResult && goodsResult;
     }
 
     @Override
@@ -108,7 +121,9 @@ public class SeckillReservationRepositoryImpl implements SeckillReservationRepos
         if (goodsId == null || userId == null){
             throw new SeckillException(ErrorCode.PARAMS_INVALID);
         }
-        return seckillReservationUserMapper.cancelReserveGoods(goodsId, userId) == 1;
+        boolean userResult = seckillReservationUserMapper.cancelReserveGoods(goodsId, userId) == 1;
+        boolean goodsResult = seckillReservationGoodsMapper.cancelReserveGoods(goodsId, userId) == 1;
+        return userResult && goodsResult;
     }
 
     @Override

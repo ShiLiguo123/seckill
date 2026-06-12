@@ -40,7 +40,6 @@ public interface SeckillReservationConfigCacheService extends SeckillCacheServic
      */
     SeckillBusinessCache<SeckillReservationConfig> updateSeckillReservationConfigCurrentUserCount(Long goodsId, Integer status, Long version);
 
-
     /**
      * 更新商品预约配置缓存
      */

@@ -23,6 +23,7 @@ import io.binghe.seckill.common.model.enums.SeckillReservationUserStatus;
 import io.binghe.seckill.reservation.application.cache.SeckillReservationConfigCacheService;
 import io.binghe.seckill.reservation.application.cache.SeckillReservationUserCacheService;
 import io.binghe.seckill.reservation.domain.event.SeckillReservationUserEvent;
+import io.binghe.seckill.reservation.domain.model.entity.SeckillReservationConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
