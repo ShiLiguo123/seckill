@@ -122,6 +122,7 @@
 * [《Seckill秒杀系统》第73章：预约系统分库分表设计](https://articles.zsxq.com/id_jxv1umew3qva.html)
 * [《Seckill秒杀系统》第74章：预约系统分库分表编码实现](https://articles.zsxq.com/id_4qm51glv343t.html)
 * [《Seckill秒杀系统》第75章：预约系统整合分库分表](https://articles.zsxq.com/id_lca80cou1s4m.html)
+* [《Seckill秒杀系统》第76章：秒杀系统限流总体概述](https://articles.zsxq.com/id_a515brw13w1w.html)
 
 ## 基础框架与中间件
 SpringBoot: 2.5.9  
