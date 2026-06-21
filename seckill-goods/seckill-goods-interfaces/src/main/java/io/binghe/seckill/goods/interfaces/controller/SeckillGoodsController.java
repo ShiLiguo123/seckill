@@ -15,10 +15,11 @@
  */
 package io.binghe.seckill.goods.interfaces.controller;
 
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import io.binghe.seckill.application.command.SeckillGoodsCommond;
 import io.binghe.seckill.application.service.SeckillGoodsService;
-import io.binghe.seckill.common.model.dto.goods.SeckillGoodsDTO;
 import io.binghe.seckill.common.exception.ErrorCode;
+import io.binghe.seckill.common.model.dto.goods.SeckillGoodsDTO;
 import io.binghe.seckill.common.response.ResponseMessage;
 import io.binghe.seckill.common.response.ResponseMessageBuilder;
 import io.binghe.seckill.goods.domain.model.entity.SeckillGoods;
@@ -63,6 +64,7 @@ public class SeckillGoodsController /*extends BaseController*/ {
      * 获取商品详情（带缓存）
      */
     @RequestMapping(value = "/getSeckillGoods", method = {RequestMethod.GET,RequestMethod.POST})
+    @SentinelResource(value = "QUEUE-DATA-FLOW")
     public ResponseMessage<SeckillGoodsDTO> getSeckillGoods(Long id, Long version){
         return ResponseMessageBuilder.build(ErrorCode.SUCCESS.getCode(), seckillGoodsService.getSeckillGoods(id, version));
     }
@@ -78,6 +80,7 @@ public class SeckillGoodsController /*extends BaseController*/ {
      * 获取商品列表(带缓存)
      */
     @RequestMapping(value = "/getSeckillGoodsList", method = {RequestMethod.GET,RequestMethod.POST})
+    @SentinelResource(value = "QUEUE-DATA-DEGRADE")
     public ResponseMessage<List<SeckillGoodsDTO>> getSeckillGoodsByActivityId(Long activityId, Long version){
         return ResponseMessageBuilder.build(ErrorCode.SUCCESS.getCode(), seckillGoodsService.getSeckillGoodsList(activityId, version));
     }

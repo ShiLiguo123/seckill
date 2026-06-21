@@ -15,6 +15,7 @@
  */
 package io.binghe.seckill.order.interfaces.controller;
 
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import io.binghe.seckill.common.exception.ErrorCode;
 import io.binghe.seckill.common.model.dto.order.SeckillOrderSubmitDTO;
 import io.binghe.seckill.common.response.ResponseMessage;
@@ -52,6 +53,7 @@ public class SeckillOrderController {
      * 保存秒杀订单
      */
     @RequestMapping(value = "/saveSeckillOrder", method = {RequestMethod.GET,RequestMethod.POST})
+    @SentinelResource(value = "SAVE-DATA-FLOW")
     public ResponseMessage<SeckillOrderSubmitDTO> saveSeckillOrder(@RequestAttribute Long userId, SeckillOrderCommand seckillOrderCommand){
         SeckillOrderSubmitDTO seckillOrderSubmitDTO = seckillSubmitOrderService.saveSeckillOrder(userId, seckillOrderCommand);
         return ResponseMessageBuilder.build(ErrorCode.SUCCESS.getCode(), seckillOrderSubmitDTO);

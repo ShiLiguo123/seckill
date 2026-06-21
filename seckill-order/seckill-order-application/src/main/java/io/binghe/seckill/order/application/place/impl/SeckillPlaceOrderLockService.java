@@ -104,7 +104,7 @@ public class SeckillPlaceOrderLockService implements SeckillPlaceOrderService {
             isDecrementCacheStock = true;
 
         } catch (Exception e) {
-            //已经扣减了缓存中的库存，或者扣减存库存后，结果为负数，则需要增加回来
+            //已经扣减了缓存中的库存，或者扣减缓存库存后小于0，则需要增加回来
             if (isDecrementCacheStock || result < 0){
                 distributedCacheService.increment(key, seckillOrderCommand.getQuantity());
             }

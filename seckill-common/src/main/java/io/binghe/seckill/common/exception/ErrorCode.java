@@ -70,7 +70,12 @@ public enum ErrorCode {
     GOODS_RESERVATION_TIME_NOT_INVALIDATE(2043, "商品预约配置时间错误"),
     GOODS_RESERVATION_NOT_RESERVE(2044, "未预约商品不能直接下单"),
     GOODS_RESERVATION_USER(2045, "预约人数已满"),
-    STOCK_IS_NULL(2046, "商品库存不存在");
+    SENTINEL_FLOW(2046, "您访问过快-限流中"),
+    SENTINEL_DEGRADE(2047, "您访问过快-降级中"),
+    SENTINEL_PARAMAS(2048, "热点参数限流"),
+    SENTINEL_SYSTEM(2049, "系统规则（负载/...不满足要求）"),
+    SENTINEL_AUTHORITY(2050, "授权规则不通过"),
+    STOCK_IS_NULL(2051, "商品库存不存在");
 
     private final Integer code;
     private final String mesaage;

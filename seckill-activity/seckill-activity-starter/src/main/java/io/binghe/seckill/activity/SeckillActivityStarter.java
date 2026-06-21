@@ -18,6 +18,7 @@ package io.binghe.seckill.activity;
 import org.apache.dubbo.config.spring.context.annotation.EnableDubbo;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 /**
  * @author binghe(微信 : hacker_binghe)
@@ -27,6 +28,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @copyright 公众号: 冰河技术
  */
 @EnableDubbo
+@EnableDiscoveryClient
 @SpringBootApplication
 public class SeckillActivityStarter {
 
