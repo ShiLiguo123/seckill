@@ -128,6 +128,7 @@
 * [《Seckill秒杀系统》第79章：限流削峰](https://articles.zsxq.com/id_ktkdpqp8u1bm.html)
 * [《Seckill秒杀系统》第80章：Sentinel概述与本地搭建环境](https://articles.zsxq.com/id_ofdkbfo5ptww.html)
 * [《Seckill秒杀系统》第81章：秒杀系统整合Sentinel实现流控](https://articles.zsxq.com/id_88wejhb2hgzg.html)
+* [《Seckill秒杀系统》第82章：Sentinel核心技术与配置规则（加餐）](https://articles.zsxq.com/id_kt44xk81wbd8.html)
 
 ## 基础框架与中间件
 SpringBoot: 2.5.9  
