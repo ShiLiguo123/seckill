@@ -66,4 +66,13 @@ public class SeckillUserServiceImpl implements SeckillUserService {
         return token;
     }
 
+    @Override
+    public SeckillUser getSeckillUserByUserName(String userName) {
+        SeckillUser seckillUser = seckillUserRepository.getSeckillUserByUserName(userName);
+        if (seckillUser != null){
+            seckillUser.setPassword("");
+        }
+        return seckillUser;
+    }
+
 }

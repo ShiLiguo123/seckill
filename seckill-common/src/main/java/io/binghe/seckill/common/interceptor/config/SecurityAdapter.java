@@ -15,7 +15,7 @@
  */
 package io.binghe.seckill.common.interceptor.config;
 
-import io.binghe.seckill.common.interceptor.AuthInterceptor;
+import io.binghe.seckill.common.interceptor.auth.AuthInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;

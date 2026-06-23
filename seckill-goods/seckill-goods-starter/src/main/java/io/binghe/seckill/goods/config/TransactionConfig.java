@@ -40,6 +40,7 @@ import io.binghe.seckill.common.config.MyBatisConfig;
 @Import({JdbcConfig.class, RedisConfig.class, MyBatisConfig.class})
 @EnableTransactionManagement(proxyTargetClass = true)
 @ServletComponentScan(basePackages = {"io.binghe.seckill"})
+@EnableAspectJAutoProxy(proxyTargetClass = true)
 public class TransactionConfig {
 
     @Bean

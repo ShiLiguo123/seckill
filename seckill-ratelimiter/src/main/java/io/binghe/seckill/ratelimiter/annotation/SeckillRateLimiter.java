@@ -13,26 +13,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.binghe.seckill.user.application.service;
+package io.binghe.seckill.ratelimiter.annotation;
 
-import io.binghe.seckill.user.domain.model.entity.SeckillUser;
+import java.lang.annotation.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author binghe(微信 : hacker_binghe)
  * @version 1.0.0
- * @description 用户
+ * @description 自定义限流注解
  * @github https://github.com/binghe001
  * @copyright 公众号: 冰河技术
  */
-public interface SeckillUserService {
+@Inherited
+@Documented
+@Target({ElementType.METHOD, ElementType.FIELD, ElementType.TYPE})
+@Retention(RetentionPolicy.RUNTIME)
+public @interface SeckillRateLimiter {
 
     /**
-     * 登录
+     * 限流器名称，如果不设置，默认是类名加方法名。如果多个接口设置了同一个名称，则使用同一个限流器
      */
-    String login(String userName, String password);
+    String name() default "";
 
     /**
-     * 根据用户名获取用户信息
+     * 一秒内允许通过的请求数QPS
      */
-    SeckillUser getSeckillUserByUserName(String userName);
+    int permitsPerSecond() default 0;
+
+    /**
+     * 获取令牌超时时间
+     */
+    long timeout() default 0;
+
+    /**
+     * 获取令牌超时时间单位
+     */
+    TimeUnit timeUnit() default TimeUnit.SECONDS;
 }

@@ -15,16 +15,15 @@
  */
 package io.binghe.seckill.user.controller;
 
-import io.binghe.seckill.common.model.dto.user.SeckillUserDTO;
 import io.binghe.seckill.common.exception.ErrorCode;
+import io.binghe.seckill.common.model.dto.user.SeckillUserDTO;
 import io.binghe.seckill.common.response.ResponseMessage;
 import io.binghe.seckill.common.response.ResponseMessageBuilder;
+import io.binghe.seckill.ratelimiter.annotation.SeckillRateLimiter;
 import io.binghe.seckill.user.application.service.SeckillUserService;
+import io.binghe.seckill.user.domain.model.entity.SeckillUser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author binghe(微信 : hacker_binghe)
@@ -45,5 +44,13 @@ public class SeckillUserController {
     @RequestMapping(value = "/login", method = {RequestMethod.GET, RequestMethod.POST})
     public ResponseMessage<String> login(@RequestBody SeckillUserDTO seckillUserDTO){
        return ResponseMessageBuilder.build(ErrorCode.SUCCESS.getCode(), seckillUserService.login(seckillUserDTO.getUserName(), seckillUserDTO.getPassword()));
+    }
+    /**
+     * 获取用户信息
+     */
+    @RequestMapping(value = "/get", method = {RequestMethod.GET, RequestMethod.POST})
+    @SeckillRateLimiter(permitsPerSecond = 1, timeout = 0)
+    public ResponseMessage<SeckillUser> get(@RequestParam String username){
+       return ResponseMessageBuilder.build(ErrorCode.SUCCESS.getCode(), seckillUserService.getSeckillUserByUserName(username));
     }
 }

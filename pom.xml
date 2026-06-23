@@ -28,6 +28,7 @@
         <module>seckill-mq</module>
         <module>seckill-stock</module>
         <module>seckill-reservation</module>
+        <module>seckill-ratelimiter</module>
     </modules>
 
     <properties>
