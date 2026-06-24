@@ -19,7 +19,7 @@ import io.binghe.seckill.common.exception.ErrorCode;
 import io.binghe.seckill.common.model.dto.user.SeckillUserDTO;
 import io.binghe.seckill.common.response.ResponseMessage;
 import io.binghe.seckill.common.response.ResponseMessageBuilder;
-import io.binghe.seckill.ratelimiter.annotation.SeckillRateLimiter;
+import io.binghe.seckill.ratelimiter.concurrent.annotation.ConcurrentRateLimiter;
 import io.binghe.seckill.user.application.service.SeckillUserService;
 import io.binghe.seckill.user.domain.model.entity.SeckillUser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +49,8 @@ public class SeckillUserController {
      * 获取用户信息
      */
     @RequestMapping(value = "/get", method = {RequestMethod.GET, RequestMethod.POST})
-    @SeckillRateLimiter(permitsPerSecond = 1, timeout = 0)
+//    @SeckillRateLimiter(permitsPerSecond = 1, timeout = 0)
+    @ConcurrentRateLimiter(name = "bhRateLimiter", queueCapacity = 0)
     public ResponseMessage<SeckillUser> get(@RequestParam String username){
        return ResponseMessageBuilder.build(ErrorCode.SUCCESS.getCode(), seckillUserService.getSeckillUserByUserName(username));
     }

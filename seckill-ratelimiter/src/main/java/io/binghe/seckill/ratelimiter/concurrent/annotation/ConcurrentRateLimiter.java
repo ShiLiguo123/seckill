@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.binghe.seckill.ratelimiter.annotation;
+package io.binghe.seckill.ratelimiter.concurrent.annotation;
 
 import java.lang.annotation.*;
 import java.util.concurrent.TimeUnit;
@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author binghe(微信 : hacker_binghe)
  * @version 1.0.0
- * @description 自定义限流注解
+ * @description 并发数限流注解
  * @github https://github.com/binghe001
  * @copyright 公众号: 冰河技术
  */
@@ -29,25 +29,46 @@ import java.util.concurrent.TimeUnit;
 @Documented
 @Target({ElementType.METHOD, ElementType.FIELD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface SeckillRateLimiter {
+public @interface ConcurrentRateLimiter {
 
     /**
      * 限流器名称，如果不设置，默认是类名加方法名。如果多个接口设置了同一个名称，则使用同一个限流器
      */
-    String name() default "";
+
+    String name();
 
     /**
-     * 一秒内允许通过的请求数QPS
+     * 核心线程数
      */
-    int permitsPerSecond() default 0;
+    int corePoolSize() default 1;
 
     /**
-     * 获取令牌超时时间
+     * 最大线程数
      */
-    long timeout() default 0;
+    int maximumPoolSize() default 1;
 
     /**
-     * 获取令牌超时时间单位
+     * 队列容量
      */
-    TimeUnit timeUnit() default TimeUnit.SECONDS;
+    int queueCapacity() default 1;
+
+    /**
+     * 空闲线程存活时间
+     */
+    long keepAliveTime() default 30;
+
+    /**
+     * 空闲线程存活时间单位
+     */
+    TimeUnit keepAliveTimeUnit() default TimeUnit.SECONDS;
+
+    /**
+     * 超时时间
+     */
+    long timeout() default 1;
+
+    /**
+     * 超时时间单位
+     */
+    TimeUnit timeoutUnit() default TimeUnit.SECONDS;
 }

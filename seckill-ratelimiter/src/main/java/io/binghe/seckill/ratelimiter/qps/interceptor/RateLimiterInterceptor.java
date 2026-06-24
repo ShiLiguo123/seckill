@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.binghe.seckill.ratelimiter.interceptor;
+package io.binghe.seckill.ratelimiter.qps.interceptor;
 
 import cn.hutool.core.util.StrUtil;
 import com.google.common.util.concurrent.RateLimiter;
 import io.binghe.seckill.common.exception.ErrorCode;
 import io.binghe.seckill.common.exception.SeckillException;
-import io.binghe.seckill.ratelimiter.annotation.SeckillRateLimiter;
-import io.binghe.seckill.ratelimiter.bean.BHRateLimiter;
+import io.binghe.seckill.ratelimiter.qps.annotation.SeckillRateLimiter;
+import io.binghe.seckill.ratelimiter.qps.bean.BHRateLimiter;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -47,16 +47,16 @@ import java.util.concurrent.TimeUnit;
  */
 @Aspect
 @Component
-@ConditionalOnProperty(prefix = "rate.limit.local", name = "enabled", havingValue = "true")
+@ConditionalOnProperty(prefix = "rate.limit.local.qps", name = "enabled", havingValue = "true")
 public class RateLimiterInterceptor implements EnvironmentAware {
     private final Logger logger = LoggerFactory.getLogger(RateLimiterInterceptor.class);
     private static final Map<String, BHRateLimiter> BH_RATE_LIMITER_MAP = new ConcurrentHashMap<>();
     private Environment environment;
 
-    @Value("${rate.limit.local.default.permitsPerSecond:1000}")
+    @Value("${rate.limit.local.qps.default.permitsPerSecond:1000}")
     private double defaultPermitsPerSecond;
 
-    @Value("${rate.limit.local.default.timeout:1}")
+    @Value("${rate.limit.local.qps.default.timeout:1}")
     private long defaultTimeout;
 
     @Pointcut("@annotation(seckillRateLimiter)")

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.binghe.seckill.ratelimiter.bean;
+package io.binghe.seckill.ratelimiter.qps.bean;
 
 import com.google.common.util.concurrent.RateLimiter;
 
