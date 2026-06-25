@@ -131,6 +131,7 @@
 * [《Seckill秒杀系统》第82章：Sentinel核心技术与配置规则（加餐）](https://articles.zsxq.com/id_kt44xk81wbd8.html)
 * [《Seckill秒杀系统》第83章：基于QPS实现本地API限流](https://articles.zsxq.com/id_ww7xdag29t94.html)
 * [《Seckill秒杀系统》第84章：基于线程池实现单机并发数限流](https://articles.zsxq.com/id_qkvxkxpomv3n.html)
+* [《Seckill秒杀系统》第85章：业务网关概述与核心架构](https://articles.zsxq.com/id_1lwdvarhwn3m.html)
 
 ## 基础框架与中间件
 SpringBoot: 2.5.9  
