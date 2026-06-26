@@ -41,7 +41,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializer;
-import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
@@ -56,7 +55,6 @@ import java.time.format.DateTimeFormatter;
  * @github https://github.com/binghe001
  * @copyright 公众号: 冰河技术
  */
-@Component
 public class RedisConfig {
 
     private static final String DEFAULT_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";

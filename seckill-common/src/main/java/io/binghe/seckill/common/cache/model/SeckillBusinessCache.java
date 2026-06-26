@@ -47,6 +47,7 @@ public class SeckillBusinessCache<T> extends SeckillCommonCache {
 
     public SeckillBusinessCache<T> notExist(){
         this.exist = false;
+        this.version = -1L;
         return this;
     }
 
