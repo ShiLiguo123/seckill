@@ -132,6 +132,7 @@
 * [《Seckill秒杀系统》第83章：基于QPS实现本地API限流](https://articles.zsxq.com/id_ww7xdag29t94.html)
 * [《Seckill秒杀系统》第84章：基于线程池实现单机并发数限流](https://articles.zsxq.com/id_qkvxkxpomv3n.html)
 * [《Seckill秒杀系统》第85章：业务网关概述与核心架构](https://articles.zsxq.com/id_1lwdvarhwn3m.html)
+* [《Seckill秒杀系统》第86章：秒杀系统整合业务网关](https://articles.zsxq.com/id_dopd3zuw0363.html)
 
 ## 基础框架与中间件
 SpringBoot: 2.5.9  
