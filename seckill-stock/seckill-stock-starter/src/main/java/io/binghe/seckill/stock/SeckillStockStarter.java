@@ -17,6 +17,7 @@ package io.binghe.seckill.stock;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 /**
  * @author binghe(微信 : hacker_binghe)
@@ -26,6 +27,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @copyright 公众号: 冰河技术
  */
 @SpringBootApplication
+@EnableDiscoveryClient
 public class SeckillStockStarter {
 
     public static void main(String[] args) {

@@ -133,6 +133,7 @@
 * [《Seckill秒杀系统》第84章：基于线程池实现单机并发数限流](https://articles.zsxq.com/id_qkvxkxpomv3n.html)
 * [《Seckill秒杀系统》第85章：业务网关概述与核心架构](https://articles.zsxq.com/id_1lwdvarhwn3m.html)
 * [《Seckill秒杀系统》第86章：秒杀系统整合业务网关](https://articles.zsxq.com/id_dopd3zuw0363.html)
+* [《Seckill秒杀系统》第87章：业务网关整合Nacos配置](https://articles.zsxq.com/id_k3v3cwv7ogmd.html)
 
 ## 基础框架与中间件
 SpringBoot: 2.5.9  
