@@ -22,6 +22,8 @@ import io.binghe.seckill.common.response.ResponseMessageBuilder;
 import io.binghe.seckill.ratelimiter.concurrent.annotation.ConcurrentRateLimiter;
 import io.binghe.seckill.user.application.service.SeckillUserService;
 import io.binghe.seckill.user.domain.model.entity.SeckillUser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,6 +37,8 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping(value = "/user")
 public class SeckillUserController {
+
+    private final Logger logger = LoggerFactory.getLogger(SeckillUserController.class);
 
     @Autowired
     private SeckillUserService seckillUserService;
@@ -53,5 +57,27 @@ public class SeckillUserController {
     @ConcurrentRateLimiter(name = "bhRateLimiter", queueCapacity = 0)
     public ResponseMessage<SeckillUser> get(@RequestParam String username){
        return ResponseMessageBuilder.build(ErrorCode.SUCCESS.getCode(), seckillUserService.getSeckillUserByUserName(username));
+    }
+
+    @GetMapping(value = "/api1/demo1")
+    public ResponseMessage<String> api1Demo1(){
+        logger.info("访问了api1Demo1接口");
+        return ResponseMessageBuilder.build(ErrorCode.SUCCESS.getCode(), "api1Demo1");
+    }
+    @GetMapping(value = "/api1/demo2")
+    public ResponseMessage<String> api1Demo2(){
+        logger.info("访问了api1Demo2接口");
+        return ResponseMessageBuilder.build(ErrorCode.SUCCESS.getCode(), "api1Demo2");
+    }
+
+    @GetMapping(value = "/api2/demo1")
+    public ResponseMessage<String> api2Demo1(){
+        logger.info("访问了api2Demo1接口");
+        return ResponseMessageBuilder.build(ErrorCode.SUCCESS.getCode(), "api2Demo1");
+    }
+    @GetMapping(value = "/api2/demo2")
+    public ResponseMessage<String> api2Demo2(){
+        logger.info("访问了api2Demo2接口");
+        return ResponseMessageBuilder.build(ErrorCode.SUCCESS.getCode(), "api2Demo2");
     }
 }

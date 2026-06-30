@@ -29,6 +29,11 @@
         </dependency>
 
         <dependency>
+            <groupId>com.alibaba.csp</groupId>
+            <artifactId>sentinel-spring-cloud-gateway-adapter</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>io.binghe.seckill</groupId>
             <artifactId>seckill-common</artifactId>
             <version>${project.version}</version>

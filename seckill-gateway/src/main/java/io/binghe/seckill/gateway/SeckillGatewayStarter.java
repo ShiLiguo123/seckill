@@ -33,6 +33,7 @@ public class SeckillGatewayStarter {
 
     public static void main(String[] args) {
         System.setProperty("user.home", "/home/binghe/gateway");
+        System.setProperty("csp.sentinel.app.type", "1");
         SpringApplication.run(SeckillGatewayStarter.class, args);
     }
 }
