@@ -135,6 +135,7 @@
 * [《Seckill秒杀系统》第86章：秒杀系统整合业务网关](https://articles.zsxq.com/id_dopd3zuw0363.html)
 * [《Seckill秒杀系统》第87章：业务网关整合Nacos配置](https://articles.zsxq.com/id_k3v3cwv7ogmd.html)
 * [《Seckill秒杀系统》第88章：业务网关整合Sentinel流控](https://articles.zsxq.com/id_25vqhrif9cf4.html)
+* [《Seckill秒杀系统》第89章：业务网关整合Guava流控](https://articles.zsxq.com/id_c2dzqg1fx62u.html)
 
 ## 基础框架与中间件
 SpringBoot: 2.5.9  
