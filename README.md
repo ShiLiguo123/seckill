@@ -139,6 +139,7 @@
 * [《Seckill秒杀系统》第90章：业务网关使用自带流控](https://articles.zsxq.com/id_weo8s8g7rq8f.html)
 * [《Seckill秒杀系统》第91章：流量网关初步搭建](https://articles.zsxq.com/id_1ew35nlixd6c.html)
 * [《Seckill秒杀系统》第92章：流量网关项目搭建](https://articles.zsxq.com/id_hgqv1euj81d3.html)
+* [《Seckill秒杀系统》第93章：流量网关实现限流](https://articles.zsxq.com/id_41bnbsox6dif.html)
 
 ## 基础框架与中间件
 SpringBoot: 2.5.9  
