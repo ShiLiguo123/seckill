@@ -15,6 +15,7 @@
  */
 package io.binghe.seckill.common.model.dto.activity;
 
+import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -48,6 +49,31 @@ public class SeckillActivityDTO implements Serializable {
     private String activityDesc;
     //数据版本
     private Long version;
+
+    public boolean isEmpty(){
+        return this.id == null
+                && StrUtil.isEmpty(activityName)
+                && startTime == null
+                && endTime == null
+                && status == null;
+    }
+
+    public boolean isFallback(){
+        return id == -1001L;
+    }
+
+    public SeckillActivityDTO() {
+    }
+
+    public SeckillActivityDTO(Long id, String activityName, Date startTime, Date endTime, Integer status, String activityDesc, Long version) {
+        this.id = id;
+        this.activityName = activityName;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.status = status;
+        this.activityDesc = activityDesc;
+        this.version = version;
+    }
 
     public Long getId() {
         return id;

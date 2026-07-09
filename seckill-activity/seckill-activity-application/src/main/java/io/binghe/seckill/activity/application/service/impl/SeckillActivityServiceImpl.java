@@ -15,11 +15,13 @@
  */
 package io.binghe.seckill.activity.application.service.impl;
 
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import io.binghe.seckill.activity.application.builder.SeckillActivityBuilder;
 import io.binghe.seckill.activity.application.cache.service.SeckillActivityCacheService;
 import io.binghe.seckill.activity.application.cache.service.SeckillActivityListCacheService;
 import io.binghe.seckill.activity.application.command.SeckillActivityCommand;
 import io.binghe.seckill.activity.application.service.SeckillActivityService;
+import io.binghe.seckill.activity.application.service.fallback.SeckillActivityFallbackService;
 import io.binghe.seckill.activity.domain.model.entity.SeckillActivity;
 import io.binghe.seckill.activity.domain.service.SeckillActivityDomainService;
 import io.binghe.seckill.common.cache.model.SeckillBusinessCache;
@@ -121,6 +123,9 @@ public class SeckillActivityServiceImpl implements SeckillActivityService {
     }
 
     @Override
+    @SentinelResource(value = "QUEUE-DATA-FLOW",
+            blockHandlerClass = SeckillActivityFallbackService.class, blockHandler = "getSeckillActivityBlockHandler",
+            fallbackClass = SeckillActivityFallbackService.class, fallback = "getSeckillActivityFallback")
     public SeckillActivityDTO getSeckillActivity(Long id, Long version) {
         if (id == null){
             throw new SeckillException(ErrorCode.PARAMS_INVALID);
@@ -136,6 +141,7 @@ public class SeckillActivityServiceImpl implements SeckillActivityService {
         }
         SeckillActivityDTO seckillActivityDTO = SeckillActivityBuilder.toSeckillActivityDTO(seckillActivityCache.getData());
         seckillActivityDTO.setVersion(seckillActivityCache.getVersion());
+        int i = 1 / 0;
         return seckillActivityDTO;
     }
 

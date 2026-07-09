@@ -143,6 +143,7 @@
 * [《Seckill秒杀系统》第94章：服务雪崩与容错方案](https://articles.zsxq.com/id_6d1um38qrxs7.html)
 * [《Seckill秒杀系统》第95章：服务降级核心原理与落地方案](https://articles.zsxq.com/id_ehf2k7838z4b.html)
 * [《Seckill秒杀系统》第96章：热点数据问题与解决方案](https://articles.zsxq.com/id_1j5n26femjpb.html)
+* [《Seckill秒杀系统》第97章：秒杀系统实现服务容错](https://articles.zsxq.com/id_06nk8672ng7a.html)
 
 ## 基础框架与中间件
 SpringBoot: 2.5.9  

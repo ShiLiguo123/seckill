@@ -82,8 +82,8 @@ public class SeckillGatewayConfig {
 
     @PostConstruct
     public void init() {
-//        this.initGatewayRules();
-        this.initCustomizedApis();
+        this.initGatewayRules();
+//        this.initCustomizedApis();
         this.initBlockHandlers();
     }
 
@@ -151,7 +151,7 @@ public class SeckillGatewayConfig {
         //传入资源名称生成GatewayFlowRule
         GatewayFlowRule gatewayFlowRule = new GatewayFlowRule(resource);
         //限流阈值
-        gatewayFlowRule.setCount(1);
+        gatewayFlowRule.setCount(100);
         //统计的时间窗口，单位为
         gatewayFlowRule.setIntervalSec(1);
         return gatewayFlowRule;

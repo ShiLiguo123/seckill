@@ -19,8 +19,8 @@ import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import io.binghe.seckill.activity.application.command.SeckillActivityCommand;
 import io.binghe.seckill.activity.application.service.SeckillActivityService;
 import io.binghe.seckill.activity.domain.model.entity.SeckillActivity;
-import io.binghe.seckill.common.model.dto.activity.SeckillActivityDTO;
 import io.binghe.seckill.common.exception.ErrorCode;
+import io.binghe.seckill.common.model.dto.activity.SeckillActivityDTO;
 import io.binghe.seckill.common.response.ResponseMessage;
 import io.binghe.seckill.common.response.ResponseMessageBuilder;
 import io.binghe.seckill.common.utils.date.JodaDateTimeUtils;
@@ -97,7 +97,6 @@ public class SeckillActivityController /*extends BaseController*/ {
      * 获取id获取秒杀活动详情
      */
     @RequestMapping(value = "/seckillActivity", method = {RequestMethod.GET,RequestMethod.POST})
-    @SentinelResource(value = "QUEUE-DATA-FLOW")
     public ResponseMessage<SeckillActivityDTO> getSeckillActivityById(@RequestParam(value = "id", required = false) Long id,
                                                                       @RequestParam(value = "version", required = false) Long version){
         return ResponseMessageBuilder.build(ErrorCode.SUCCESS.getCode(), seckillActivityService.getSeckillActivity(id, version));

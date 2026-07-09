@@ -89,8 +89,11 @@ public class SeckillGoodsServiceImpl implements SeckillGoodsService {
             throw new SeckillException(ErrorCode.PARAMS_INVALID);
         }
         SeckillActivityDTO seckillActivity = seckillActivityDubboService.getSeckillActivity(seckillGoodsCommond.getActivityId(), seckillGoodsCommond.getVersion());
-        if (seckillActivity == null){
+        if (seckillActivity == null || seckillActivity.isEmpty()){
             throw new SeckillException(ErrorCode.ACTIVITY_NOT_EXISTS);
+        }
+        if (seckillActivity.isFallback()){
+            throw new SeckillException(ErrorCode.SENTINEL_EXCEPTION);
         }
         SeckillGoods seckillGoods = SeckillGoodsBuilder.toSeckillGoods(seckillGoodsCommond);
         seckillGoods.setStartTime(seckillActivity.getStartTime());

@@ -75,7 +75,8 @@ public enum ErrorCode {
     SENTINEL_PARAMAS(2048, "热点参数限流"),
     SENTINEL_SYSTEM(2049, "系统规则（负载/...不满足要求）"),
     SENTINEL_AUTHORITY(2050, "授权规则不通过"),
-    STOCK_IS_NULL(2051, "商品库存不存在");
+    SENTINEL_EXCEPTION(2051, "系统触发降级"),
+    STOCK_IS_NULL(2052, "商品库存不存在");
 
     private final Integer code;
     private final String mesaage;
