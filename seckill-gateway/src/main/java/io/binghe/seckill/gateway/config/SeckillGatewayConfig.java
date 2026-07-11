@@ -60,15 +60,17 @@ import java.util.*;
 public class SeckillGatewayConfig {
     private final List<ViewResolver> viewResolvers;
 
-    private final ServerCodecConfigurer serverCodecConfigurer;
 
     @Value("${spring.cloud.gateway.discovery.locator.route-id-prefix}")
     private String routeIdPrefix;
 
-    public SeckillGatewayConfig(ObjectProvider<List<ViewResolver>> viewResolversProvider,
-                                ServerCodecConfigurer serverCodecConfigurer) {
+    public SeckillGatewayConfig(ObjectProvider<List<ViewResolver>> viewResolversProvider) {
         this.viewResolvers = viewResolversProvider.getIfAvailable(Collections::emptyList);
-        this.serverCodecConfigurer = serverCodecConfigurer;
+    }
+
+    @Bean
+    public ServerCodecConfigurer serverCodecConfigurer() {
+        return ServerCodecConfigurer.create();
     }
 
     /**
@@ -162,7 +164,7 @@ public class SeckillGatewayConfig {
      */
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
-    public SentinelGatewayBlockExceptionHandler sentinelGatewayBlockExceptionHandler() {
+    public SentinelGatewayBlockExceptionHandler sentinelGatewayBlockExceptionHandler(ServerCodecConfigurer serverCodecConfigurer) {
         return new SentinelGatewayBlockExceptionHandler(viewResolvers, serverCodecConfigurer);
     }
 
