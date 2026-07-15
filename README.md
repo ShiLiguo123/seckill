@@ -148,6 +148,7 @@
 * [《Seckill秒杀系统》第99章：秒杀系统整合Nacos配置中心](https://articles.zsxq.com/id_az4qpenpf439.html)
 * [《Seckill秒杀系统》第100章：实现配置动态刷新](https://articles.zsxq.com/id_wi6hrxskrwqp.html)
 * [《Seckill秒杀系统》第101章：实现配置动态共享](https://articles.zsxq.com/id_jz6er8fk05vp.html)
+* [《Seckill秒杀系统》第102章：链路追踪核心原理与解决方案](https://articles.zsxq.com/id_w0kgroc8pw49.html)
 
 ## 基础框架与中间件
 SpringBoot: 2.5.9  
