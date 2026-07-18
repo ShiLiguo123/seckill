@@ -19,13 +19,14 @@ import io.binghe.seckill.common.exception.ErrorCode;
 import io.binghe.seckill.common.model.dto.user.SeckillUserDTO;
 import io.binghe.seckill.common.response.ResponseMessage;
 import io.binghe.seckill.common.response.ResponseMessageBuilder;
-import io.binghe.seckill.ratelimiter.concurrent.annotation.ConcurrentRateLimiter;
 import io.binghe.seckill.user.application.service.SeckillUserService;
 import io.binghe.seckill.user.domain.model.entity.SeckillUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author binghe(微信 : hacker_binghe)
@@ -54,9 +55,25 @@ public class SeckillUserController {
      */
     @RequestMapping(value = "/get", method = {RequestMethod.GET, RequestMethod.POST})
 //    @SeckillRateLimiter(permitsPerSecond = 1, timeout = 0)
-    @ConcurrentRateLimiter(name = "bhRateLimiter", queueCapacity = 0)
+//    @ConcurrentRateLimiter(name = "bhRateLimiter", queueCapacity = 0)
     public ResponseMessage<SeckillUser> get(@RequestParam String username){
        return ResponseMessageBuilder.build(ErrorCode.SUCCESS.getCode(), seckillUserService.getSeckillUserByUserName(username));
+    }
+
+    @RequestMapping(value = "/sleuth/filter/api", method = {RequestMethod.GET, RequestMethod.POST})
+    public ResponseMessage<String> sleuthFilter(HttpServletRequest request) {
+        Object traceIdObj = request.getAttribute("traceId");
+        String traceId = traceIdObj == null ? "" : traceIdObj.toString();
+        logger.info("获取到的traceId为: " + traceId);
+        return ResponseMessageBuilder.build(ErrorCode.SUCCESS.getCode(), "sleuthFilter");
+    }
+
+    @RequestMapping(value = "/async/api", method = {RequestMethod.GET, RequestMethod.POST})
+    public ResponseMessage<String> asyncApi() {
+        logger.info("执行异步任务开始...");
+        seckillUserService.asyncMethod();
+        logger.info("异步任务执行结束...");
+        return ResponseMessageBuilder.build(ErrorCode.SUCCESS.getCode(), "asyncApi");
     }
 
     @GetMapping(value = "/api1/demo1")

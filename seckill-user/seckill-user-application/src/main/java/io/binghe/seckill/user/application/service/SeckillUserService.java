@@ -35,4 +35,9 @@ public interface SeckillUserService {
      * 根据用户名获取用户信息
      */
     SeckillUser getSeckillUserByUserName(String userName);
+
+    /**
+     * 异步方法
+     */
+    void asyncMethod();
 }

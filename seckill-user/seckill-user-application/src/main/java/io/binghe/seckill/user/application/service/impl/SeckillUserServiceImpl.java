@@ -25,7 +25,10 @@ import io.binghe.seckill.user.application.service.SeckillUserService;
 import io.binghe.seckill.user.domain.model.entity.SeckillUser;
 import io.binghe.seckill.user.domain.repository.SeckillUserRepository;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 /**
@@ -37,6 +40,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class SeckillUserServiceImpl implements SeckillUserService {
+    private final Logger logger = LoggerFactory.getLogger(SeckillUserServiceImpl.class);
     @Autowired
     private SeckillUserRepository seckillUserRepository;
     @Autowired
@@ -68,11 +72,18 @@ public class SeckillUserServiceImpl implements SeckillUserService {
 
     @Override
     public SeckillUser getSeckillUserByUserName(String userName) {
+        logger.info("seckill-user|获取用户信息|{}", userName);
         SeckillUser seckillUser = seckillUserRepository.getSeckillUserByUserName(userName);
         if (seckillUser != null){
             seckillUser.setPassword("");
         }
         return seckillUser;
+    }
+
+    @Async
+    @Override
+    public void asyncMethod() {
+        logger.info("执行了异步任务...");
     }
 
 }

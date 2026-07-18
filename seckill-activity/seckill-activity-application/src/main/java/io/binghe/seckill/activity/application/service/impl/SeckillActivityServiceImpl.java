@@ -141,7 +141,7 @@ public class SeckillActivityServiceImpl implements SeckillActivityService {
         }
         SeckillActivityDTO seckillActivityDTO = SeckillActivityBuilder.toSeckillActivityDTO(seckillActivityCache.getData());
         seckillActivityDTO.setVersion(seckillActivityCache.getVersion());
-        int i = 1 / 0;
+//        int i = 1 / 0;
         return seckillActivityDTO;
     }
 

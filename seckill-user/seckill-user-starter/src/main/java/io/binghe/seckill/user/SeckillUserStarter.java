@@ -18,6 +18,7 @@ package io.binghe.seckill.user;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 /**
  * @author binghe(微信 : hacker_binghe)
@@ -26,6 +27,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
  * @github https://github.com/binghe001
  * @copyright 公众号: 冰河技术
  */
+@EnableAsync
 @SpringBootApplication
 @EnableDiscoveryClient
 public class SeckillUserStarter {
