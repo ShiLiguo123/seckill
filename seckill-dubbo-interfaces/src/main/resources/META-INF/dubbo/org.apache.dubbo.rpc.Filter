@@ -1,0 +1,1 @@
+traceFilter=io.binghe.seckill.dubbo.interfaces.filter.DubboTraceFilter
