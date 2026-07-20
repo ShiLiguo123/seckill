@@ -58,6 +58,7 @@
         <jwt.version>3.4.0</jwt.version>
         <dubbo3.version>3.0.7</dubbo3.version>
         <hutool.version>5.8.18</hutool.version>
+        <zipkin.version>2.2.8.RELEASE</zipkin.version>
         <sentinal.version>1.8.4</sentinal.version>
         <commons-pool2.version>2.11.1</commons-pool2.version>
         <sharding.jdbc.version>4.1.1</sharding.jdbc.version>
@@ -126,9 +127,15 @@
             <artifactId>spring-cloud-starter-bootstrap</artifactId>
         </dependency>
 
-        <dependency>
+        <!--<dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-sleuth</artifactId>
+        </dependency>-->
+
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-zipkin</artifactId>
+            <version>${zipkin.version}</version>
         </dependency>
 
         <dependency>
