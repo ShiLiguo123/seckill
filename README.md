@@ -152,6 +152,7 @@
 * [《Seckill秒杀系统》第103章：整合Sleuth实现链路追踪](https://articles.zsxq.com/id_i68crg1dcwlj.html)
 * [《Seckill秒杀系统》第104章：扩展Dubbo源码实现链路追踪](https://articles.zsxq.com/id_njz1wp1hsjac.html)
 * [《Seckill秒杀系统》第105章：Sleuth整合ZipKin实现可视化](https://articles.zsxq.com/id_gkdo616fwap6.html)
+* [《Seckill秒杀系统》第106章：日志治理概述、原则与架构](https://articles.zsxq.com/id_v47kptus05xf.html)
 
 ## 基础框架与中间件
 SpringBoot: 2.5.9  
