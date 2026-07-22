@@ -153,6 +153,7 @@
 * [《Seckill秒杀系统》第104章：扩展Dubbo源码实现链路追踪](https://articles.zsxq.com/id_njz1wp1hsjac.html)
 * [《Seckill秒杀系统》第105章：Sleuth整合ZipKin实现可视化](https://articles.zsxq.com/id_gkdo616fwap6.html)
 * [《Seckill秒杀系统》第106章：日志治理概述、原则与架构](https://articles.zsxq.com/id_v47kptus05xf.html)
+* [《Seckill秒杀系统》第107章：快速搭建ELK环境并导入配置](https://articles.zsxq.com/id_l1w75ok62ws6.html)
 
 ## 基础框架与中间件
 SpringBoot: 2.5.9  

@@ -84,12 +84,12 @@ public class SeckillReservationUserCacheServiceImpl implements SeckillReservatio
         if (seckillReservationUserCache != null){
             //版本号为空，则直接返回本地缓存中的数据
             if (seckillReservationUserCache.getVersion() == null){
-                logger.info("SeckillReservationUserCache|命中本地缓存|{}|{}", userId, goodsId);
+                logger.info("SeckillReservationUserCache|命中本地缓存|{},{}", userId, goodsId);
                 return seckillReservationUserCache;
             }
             //传递的版本号小于等于缓存中的版本号，则说明缓存中的数据比客户端的数据新，直接返回本地缓存中的数据
             if (version.compareTo(seckillReservationUserCache.getVersion()) <= 0){
-                logger.info("SeckillReservationUserCache|命中本地缓存|{}|{}", userId, goodsId);
+                logger.info("SeckillReservationUserCache|命中本地缓存|{},{}", userId, goodsId);
                 return seckillReservationUserCache;
             }
             //传递的版本号大于缓存中的版本号，说明缓存中的数据比较落后，从分布式缓存获取数据并更新到本地缓存
@@ -104,7 +104,7 @@ public class SeckillReservationUserCacheServiceImpl implements SeckillReservatio
      * 获取分布式缓存数据
      */
     private SeckillBusinessCache<SeckillReservationUser> getSeckillReservationUserDistributedCache(Long userId, Long goodsId) {
-        logger.info("SeckillReservationUserCache|读取分布式缓存|{}|{}", userId, goodsId);
+        logger.info("SeckillReservationUserCache|读取分布式缓存|{},{}", userId, goodsId);
         String localKey = StringUtil.append(userId, goodsId);
         String distributeKey = StringUtil.append(SeckillConstants.SECKILL_RESERVATION_USER_CACHE_KEY, localKey);
         //从分布式缓存中获取数据
@@ -120,7 +120,7 @@ public class SeckillReservationUserCacheServiceImpl implements SeckillReservatio
             if (localCacheUpdatelock.tryLock()){
                 try {
                     localSeckillReservationUserCacheService.put(localKey, seckillReservationUserCache);
-                    logger.info("SeckillReservationUserCache|本地缓存已经更新|{}|{}", userId, goodsId);
+                    logger.info("SeckillReservationUserCache|本地缓存已经更新|{},{}", userId, goodsId);
                 }finally {
                     localCacheUpdatelock.unlock();
                 }
@@ -131,7 +131,7 @@ public class SeckillReservationUserCacheServiceImpl implements SeckillReservatio
 
     @Override
     public SeckillBusinessCache<SeckillReservationUser> tryUpdateSeckillReservationUserCacheByUserIdAndGoodsId(Long userId, Long goodsId, boolean doubleCheck) {
-        logger.info("SeckillReservationUserCache|更新分布式缓存|{}|{}", userId, goodsId);
+        logger.info("SeckillReservationUserCache|更新分布式缓存|{},{}", userId, goodsId);
         String localKey = StringUtil.append(userId, goodsId);
         String distributeKey = StringUtil.append(SeckillConstants.SECKILL_RESERVATION_USER_CACHE_KEY, localKey);
         //获取分布式锁，保证只有一个线程在更新分布式缓存
@@ -158,10 +158,10 @@ public class SeckillReservationUserCacheServiceImpl implements SeckillReservatio
             }
             //将数据保存到分布式缓存
             distributedCacheService.put(distributeKey, JSON.toJSONString(seckillReservationUserCache), SeckillConstants.HOURS_24);
-            logger.info("SeckillReservationUserCache|分布式缓存已经更新|{}|{}", userId, goodsId);
+            logger.info("SeckillReservationUserCache|分布式缓存已经更新|{},{}", userId, goodsId);
             return seckillReservationUserCache;
         } catch (InterruptedException e) {
-            logger.error("SeckillReservationUserCache|更新分布式缓存失败|{}|{}", userId, goodsId);
+            logger.error("SeckillReservationUserCache|更新分布式缓存失败|{},{}", userId, goodsId);
             return new SeckillBusinessCache<SeckillReservationUser>().retryLater();
         }finally {
             lock.unlock();

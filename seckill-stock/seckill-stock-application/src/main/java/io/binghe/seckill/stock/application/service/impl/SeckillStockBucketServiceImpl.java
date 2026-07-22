@@ -146,7 +146,7 @@ public class SeckillStockBucketServiceImpl implements SeckillStockBucketService 
             }
         }catch (Exception e){
             isUpdate = false;
-            logger.error("decreaseStock|抛出异常|{}|{}",txMessage.getTxNo(), e.getMessage());
+            logger.error("decreaseStock|抛出异常|{},{}",txMessage.getTxNo(), e.getMessage());
             //发送失败消息给订单微服务
             messageSenderService.send(getErrorMessage(txMessage));
         }

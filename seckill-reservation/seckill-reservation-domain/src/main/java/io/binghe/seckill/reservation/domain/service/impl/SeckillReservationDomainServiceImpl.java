@@ -87,10 +87,10 @@ public class SeckillReservationDomainServiceImpl implements SeckillReservationDo
         if (status == null || goodsId == null){
             throw new SeckillException(ErrorCode.PARAMS_INVALID);
         }
-        logger.info("updateConfigStatus|更新商品预约配置状态|{}|{}", status, goodsId);
+        logger.info("updateConfigStatus|更新商品预约配置状态|{},{}", status, goodsId);
         boolean success = seckillReservationRepository.updateConfigStatus(status, goodsId);
         if (success){
-            logger.info("updateConfigStatus|更新商品预约配置状态成功|{}|{}", status, goodsId);
+            logger.info("updateConfigStatus|更新商品预约配置状态成功|{},{}", status, goodsId);
             SeckillReservationConfigEvent seckillReservationConfigEvent = new SeckillReservationConfigEvent(goodsId, status, this.getConfigTopicEvent());
             messageSenderService.send(seckillReservationConfigEvent);
         }
@@ -154,10 +154,10 @@ public class SeckillReservationDomainServiceImpl implements SeckillReservationDo
         if (goodsId == null || userId == null){
             throw new SeckillException(ErrorCode.PARAMS_INVALID);
         }
-        logger.info("cancelReserveGoods|取消预约秒杀商品|{}|{}", goodsId, userId);
+        logger.info("cancelReserveGoods|取消预约秒杀商品|{},{}", goodsId, userId);
         boolean success = seckillReservationRepository.cancelReserveGoods(goodsId, userId);
         if (success){
-            logger.info("cancelReserveGoods|取消预约秒杀商品成功|{}|{}", goodsId, userId);
+            logger.info("cancelReserveGoods|取消预约秒杀商品成功|{},{}", goodsId, userId);
             SeckillReservationUserEvent seckillReservationUserEvent = new SeckillReservationUserEvent(userId, goodsId, SeckillReservationUserStatus.DELETE.getCode(), this.getUserTopicEvent());
             messageSenderService.send(seckillReservationUserEvent);
         }

@@ -110,7 +110,7 @@ public class SeckillPlaceOrderBucketService implements SeckillPlaceOrderService 
             if (decrementResult == SeckillConstants.LUA_BUCKET_STOCK_EXECUTE_SUCCESS){
                 Long incrementResult = distributedCacheService.incrementBucketStock(keys, seckillOrderCommand.getQuantity());
                 if (incrementResult != SeckillConstants.LUA_BUCKET_STOCK_EXECUTE_SUCCESS){
-                    logger.error("placeOrder|恢复预扣减的库存失败|{}|{}", userId, JSONUtil.toJsonStr(seckillOrderCommand), e);
+                    logger.error("placeOrder|恢复预扣减的库存失败|{},{}", userId, JSONUtil.toJsonStr(seckillOrderCommand), e);
                 }
             }
         }

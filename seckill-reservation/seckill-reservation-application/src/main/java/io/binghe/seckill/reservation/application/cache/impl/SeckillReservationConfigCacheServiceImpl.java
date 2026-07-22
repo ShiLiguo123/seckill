@@ -95,7 +95,7 @@ public class SeckillReservationConfigCacheServiceImpl implements SeckillReservat
 
     @Override
     public SeckillBusinessCache<SeckillReservationConfig> updateSeckillReservationConfigCurrentUserCount(Long goodsId, Integer status, Long version) {
-        logger.info("SeckillReservationConfigCache|更新分布式缓存当前预约人数|{}|{}", goodsId, status);
+        logger.info("SeckillReservationConfigCache|更新分布式缓存当前预约人数|{},{}", goodsId, status);
         SeckillBusinessCache<SeckillReservationConfig> seckillReservationConfigCache = this.getSeckillReservationConfig(goodsId, version);
         if (seckillReservationConfigCache.isRetryLater() || !seckillReservationConfigCache.isExist()){
             return seckillReservationConfigCache;
@@ -116,7 +116,7 @@ public class SeckillReservationConfigCacheServiceImpl implements SeckillReservat
         seckillReservationConfigCache = new SeckillBusinessCache<SeckillReservationConfig>().with(seckillReservationConfig).withVersion(SystemClock.millisClock().now());
         //将数据保存到分布式缓存
         distributedCacheService.put(this.getKey(SeckillConstants.SECKILL_RESERVATION_CONFIG_CACHE_KEY, goodsId), JSON.toJSONString(seckillReservationConfigCache), SeckillConstants.HOURS_24);
-        logger.info("SeckillReservationConfigCache|分布式缓存已经更新|{}|{}", goodsId, status);
+        logger.info("SeckillReservationConfigCache|分布式缓存已经更新|{},{}", goodsId, status);
         return seckillReservationConfigCache;
     }
 

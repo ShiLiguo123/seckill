@@ -36,13 +36,13 @@ public class SeckillActivityFallbackService {
     private static final Logger LOGGER = LoggerFactory.getLogger(SeckillActivityFallbackService.class);
 
     public static SeckillActivityDTO getSeckillActivityBlockHandler(Long id, Long version, BlockException e){
-        LOGGER.info("getSeckillActivityBlockHandler|处理lockHandler|{}|{}|{}",id, version, e.getMessage());
+        LOGGER.info("getSeckillActivityBlockHandler|处理lockHandler|{},{},{}",id, version, e.getMessage());
         Date date = new Date();
         return new SeckillActivityDTO(-1001L, "BlockHandler活动", date, date, SeckillActivityStatus.OFFLINE.getCode(), "BlockHandler活动", 0L);
     }
 
     public static SeckillActivityDTO getSeckillActivityFallback(Long id, Long version, Throwable t){
-        LOGGER.info("getSeckillActivityBlockHandler|处理Fallback|{}|{}|{}", id, version, t.getMessage());
+        LOGGER.info("getSeckillActivityBlockHandler|处理Fallback|{},{},{}", id, version, t.getMessage());
         Date date = new Date();
         return new SeckillActivityDTO(-1001L, "Fallback活动", date, date, SeckillActivityStatus.OFFLINE.getCode(), "Fallback活动", 0L);
     }

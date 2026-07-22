@@ -79,7 +79,7 @@ public class RateLimiterInterceptor implements EnvironmentAware {
         if (success){
             return pjp.proceed(args);
         }
-        logger.error("around|访问接口过于频繁|{}|{}", className, methodName);
+        logger.error("around|访问接口过于频繁|{},{}", className, methodName);
         throw new SeckillException(ErrorCode.RETRY_LATER);
     }
 
