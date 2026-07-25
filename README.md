@@ -155,6 +155,7 @@
 * [《Seckill秒杀系统》第106章：日志治理概述、原则与架构](https://articles.zsxq.com/id_v47kptus05xf.html)
 * [《Seckill秒杀系统》第107章：快速搭建ELK环境并导入配置](https://articles.zsxq.com/id_l1w75ok62ws6.html)
 * [《Seckill秒杀系统》第108章：秒杀系统整合日志治理](https://articles.zsxq.com/id_2s53oznk3aox.html)
+* [《Seckill秒杀系统》第109章：实现基于条件限流防刷](https://articles.zsxq.com/id_r0vtpqu8stp3.html)
 
 ## 基础框架与中间件
 SpringBoot: 2.5.9  
