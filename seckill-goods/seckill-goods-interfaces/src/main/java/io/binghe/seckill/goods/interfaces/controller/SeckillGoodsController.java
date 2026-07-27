@@ -64,7 +64,7 @@ public class SeckillGoodsController /*extends BaseController*/ {
      * 获取商品详情（带缓存）
      */
     @RequestMapping(value = "/getSeckillGoods", method = {RequestMethod.GET,RequestMethod.POST})
-    @SentinelResource(value = "QUEUE-DATA-FLOW")
+    //@SentinelResource(value = "QUEUE-DATA-FLOW")
     public ResponseMessage<SeckillGoodsDTO> getSeckillGoods(Long id, Long version){
         return ResponseMessageBuilder.build(ErrorCode.SUCCESS.getCode(), seckillGoodsService.getSeckillGoods(id, version));
     }
