@@ -158,7 +158,7 @@
 * [《Seckill秒杀系统》第109章：实现基于条件限流防刷](https://articles.zsxq.com/id_r0vtpqu8stp3.html)
 
 ## 基础框架与中间件
-SpringBoot: 2.5.9  
+SpringBoot: 2.6.3  
 Dubbo: 3.0.7  
 Nacos: 2.0.3
 
