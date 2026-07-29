@@ -6,6 +6,8 @@ server {
     access_log logs/domain-access.log access;
     charset utf-8;
 
+    #lua_need_request_body on;
+
     #模拟用户id
     set_by_lua_block $user_id{
         return "binghe";
@@ -13,6 +15,10 @@ server {
 
     #用户token,可作为标识用户的唯一id
     set_by_lua_file $user_access_token D:/Workspaces/myself/seckill/myself/seckill/seckill/seckill-nginx/lua/set_common_var.lua;
+
+
+    #token编排
+    set $token "";
 
     location / {
         root   html;
@@ -27,24 +33,196 @@ server {
     #    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     #}
 
+    #测试获取请求参数
+    location = /test {
+         content_by_lua_block {
+             ngx.req.read_body()
+             local args, err = ngx.req.get_post_args()
+
+             if err == "truncated" then
+                 -- one can choose to ignore or reject the current request here
+             end
+
+             if not args then
+                 ngx.say("failed to get post args: ", err)
+                 return
+             end
+             for key, val in pairs(args) do
+                 if type(val) == "table" then
+                     ngx.say(key, ": ", table.concat(val, ", "))
+                 else
+                     ngx.say(key, ": ", val)
+                 end
+             end
+         }
+     }
+
+     #测试2
+     location = /test2 {
+          content_by_lua_block {
+              ngx.req.read_body()
+              local args, err = ngx.req.get_body_data()
+
+              if err == "truncated" then
+                  -- one can choose to ignore or reject the current request here
+              end
+              ngx.say(args)
+
+          }
+      }
+
     location /seckill-user/user/get {
         limit_req zone=limit_by_user_access_token burst=1 nodelay;
         proxy_pass http://real_server;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        header_filter_by_lua_block{
+           local accessToken = require("access_token")
+           local access_token = accessToken.get_access_token()
+           ngx.header["x-st-token"] = ngx.md5(access_token.."1")
+           --这里为了解决跨域问题设置的，不存在跨域时不需要设置以下header
+           ngx.header["Access-Control-Allow-Headers"] = "x-st-token"
+           ngx.header["Access-Control-Allow-Origin"] = "http://localhost:11111"
+           ngx.header["Access-Control-Allow-Credentials"] = "true"
+        }
     }
 
-    location /seckill-activity/activity/seckillActivity {
+    #秒杀活动列表
+    location /seckill-activity/activity/seckillActivityList {
         limit_req zone=limit_by_user_access_token burst=1 nodelay;
         proxy_pass http://real_server;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+
+        #limit_req zone=limit_by_user_access_token burst=1 nodelay;
+        #content_by_lua_file D:/Workspaces/myself/seckill/myself/seckill/seckill/seckill-nginx/lua/query_activity_list.lua;
+        #设置返回的header，并将security token放在header中
+        header_filter_by_lua_block{
+             local accessToken = require("access_token")
+             local access_token = accessToken.get_access_token()
+             ngx.header["x-st-token"] = ngx.md5(access_token.."1")
+             --这里为了解决跨域问题设置的，不存在跨域时不需要设置以下header
+             ngx.header["Access-Control-Allow-Headers"] = "x-st-token"
+             ngx.header["Access-Control-Allow-Origin"] = "http://localhost:11111"
+             ngx.header["Access-Control-Allow-Credentials"] = "true"
+        }
     }
 
+    #秒杀活动详情
+    location /seckill-activity/activity/seckillActivity {
+        limit_req zone=limit_by_user_access_token burst=1 nodelay;
+        access_by_lua_block{
+           local tokenUtil = require("x_st_token")
+           local token = tokenUtil.get_token()
 
+           local accessToken = require("access_token")
+           local access_token = accessToken.get_access_token()
+
+           local nativeToken = ngx.md5(access_token.."1")
+           if nativeToken ~= token then
+             ngx.say("{\"code\": 2100, \"data\" : \"鉴权失败,您没有权限直接访问获取秒杀活动详情接口\"}")
+             return ngx.exit(500)
+           end
+        }
+
+        proxy_pass http://real_server;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+
+        header_filter_by_lua_block{
+             local accessToken = require("access_token")
+             local access_token = accessToken.get_access_token()
+             ngx.header["x-st-token"] = ngx.md5(access_token.."2")
+             --这里为了解决跨域问题设置的，不存在跨域时不需要设置以下header
+             ngx.header["Access-Control-Allow-Headers"] = "x-st-token"
+             ngx.header["Access-Control-Allow-Origin"] = "http://localhost:11111"
+             ngx.header["Access-Control-Allow-Credentials"] = "true"
+        }
+    }
+
+    #秒杀商品列表
+    location /seckill-goods/goods/getSeckillGoodsList {
+        limit_req zone=limit_by_user_access_token burst=1 nodelay;
+        access_by_lua_block{
+           local tokenUtil = require("x_st_token")
+           local token = tokenUtil.get_token()
+
+           local accessToken = require("access_token")
+           local access_token = accessToken.get_access_token()
+
+           local nativeToken = ngx.md5(access_token.."2")
+           if nativeToken ~= token then
+             ngx.say("{\"code\": 2100, \"data\" : \"鉴权失败,您没有权限直接访问获取秒杀商品列表接口\"}")
+             return ngx.exit(500)
+           end
+        }
+
+        proxy_pass http://real_server;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+
+        header_filter_by_lua_block{
+             local accessToken = require("access_token")
+             local access_token = accessToken.get_access_token()
+             ngx.header["x-st-token"] = ngx.md5(access_token.."3")
+             --这里为了解决跨域问题设置的，不存在跨域时不需要设置以下header
+             ngx.header["Access-Control-Allow-Headers"] = "x-st-token"
+             ngx.header["Access-Control-Allow-Origin"] = "http://localhost:11111"
+             ngx.header["Access-Control-Allow-Credentials"] = "true"
+        }
+    }
+
+    #秒杀商品详情
     location /seckill-goods/goods/getSeckillGoods {
+        limit_req zone=limit_by_user_access_token burst=1 nodelay;
+        access_by_lua_block{
+           local tokenUtil = require("x_st_token")
+           local token = tokenUtil.get_token()
+
+           local accessToken = require("access_token")
+           local access_token = accessToken.get_access_token()
+
+           local nativeToken = ngx.md5(access_token.."3")
+           if nativeToken ~= token then
+             ngx.say("{\"code\": 2100, \"data\" : \"鉴权失败,您没有权限直接访问获取秒杀商品详情接口\"}")
+             return ngx.exit(500)
+           end
+        }
+        proxy_pass http://real_server;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+
+        header_filter_by_lua_block{
+             local accessToken = require("access_token")
+             local access_token = accessToken.get_access_token()
+             ngx.header["x-st-token"] = ngx.md5(access_token.."4")
+             --这里为了解决跨域问题设置的，不存在跨域时不需要设置以下header
+             ngx.header["Access-Control-Allow-Headers"] = "x-st-token"
+             ngx.header["Access-Control-Allow-Origin"] = "http://localhost:11111"
+             ngx.header["Access-Control-Allow-Credentials"] = "true"
+        }
+    }
+
+    #秒杀下单
+    location /seckill-order/order/saveSeckillOrder {
+        access_by_lua_block{
+           local tokenUtil = require("x_st_token")
+           local token = tokenUtil.get_token()
+
+           local accessToken = require("access_token")
+           local access_token = accessToken.get_access_token()
+
+           local nativeToken = ngx.md5(access_token.."4")
+           if nativeToken ~= token then
+             ngx.say("{\"code\": 2100, \"data\" : \"鉴权失败,您没有权限直接访问秒杀下单接口\"}")
+             return ngx.exit(500)
+           end
+        }
         limit_req zone=limit_by_user_access_token burst=1 nodelay;
         proxy_pass http://real_server;
         proxy_set_header Host $host;
