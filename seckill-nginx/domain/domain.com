@@ -210,24 +210,27 @@ server {
 
     #秒杀下单
     location /seckill-order/order/saveSeckillOrder {
-        access_by_lua_block{
-           local tokenUtil = require("x_st_token")
-           local token = tokenUtil.get_token()
+        #access_by_lua_block{
+        #   local tokenUtil = require("x_st_token")
+        #   local token = tokenUtil.get_token()
+        #
+        #   local accessToken = require("access_token")
+        #   local access_token = accessToken.get_access_token()
+        #
+        #   local nativeToken = ngx.md5(access_token.."4")
+        #   if nativeToken ~= token then
+        #     ngx.say("{\"code\": 2100, \"data\" : \"鉴权失败,您没有权限直接访问秒杀下单接口\"}")
+        #     return ngx.exit(500)
+        #   end
+        #}
 
-           local accessToken = require("access_token")
-           local access_token = accessToken.get_access_token()
-
-           local nativeToken = ngx.md5(access_token.."4")
-           if nativeToken ~= token then
-             ngx.say("{\"code\": 2100, \"data\" : \"鉴权失败,您没有权限直接访问秒杀下单接口\"}")
-             return ngx.exit(500)
-           end
-        }
+        access_by_lua_file D:/Workspaces/myself/seckill/myself/seckill/seckill/seckill-nginx/lua/submit_access.lua;
         limit_req zone=limit_by_user_access_token burst=1 nodelay;
         proxy_pass http://real_server;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        error_page 500 502 503 504 @json_fail;
     }
 
 
@@ -236,6 +239,8 @@ server {
     location = /50x.html {
         root   html;
     }
+
+    include D:/Workspaces/myself/seckill/myself/seckill/seckill/seckill-nginx/domain/public.com;
 }
 
 server {
