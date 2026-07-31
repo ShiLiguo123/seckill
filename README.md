@@ -158,6 +158,7 @@
 * [《Seckill秒杀系统》第109章：实现基于条件限流防刷](https://articles.zsxq.com/id_r0vtpqu8stp3.html)
 * [《Seckill秒杀系统》第110章：实现基于Token编排机制防刷](https://articles.zsxq.com/id_6qu3h1z8lrcn.html)
 * [《Seckill秒杀系统》第111章：实现基于黑名单机制防刷](https://articles.zsxq.com/id_nbiqv82rroru.html)
+* [《Seckill秒杀系统》第112章：黑灰产与风控基础知识介绍](https://articles.zsxq.com/id_2p4ahqwgvd5g.html)
 
 ## 基础框架与中间件
 SpringBoot: 2.6.3  
