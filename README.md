@@ -160,6 +160,7 @@
 * [《Seckill秒杀系统》第111章：实现基于黑名单机制防刷](https://articles.zsxq.com/id_nbiqv82rroru.html)
 * [《Seckill秒杀系统》第112章：黑灰产与风控基础知识介绍](https://articles.zsxq.com/id_2p4ahqwgvd5g.html)
 * [《Seckill秒杀系统》第113章：风控模型架构与落地方案](https://articles.zsxq.com/id_3tw56uw470jg.html)
+* [《Seckill秒杀系统》第114章：秒杀系统风控模型设计](https://articles.zsxq.com/id_rhnfwh1bwao5.html)
 
 ## 基础框架与中间件
 SpringBoot: 2.6.3  
