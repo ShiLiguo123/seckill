@@ -15,10 +15,11 @@
  */
 package io.binghe.seckill.stock.interfaces.controller;
 
+import io.binghe.seckill.common.constants.SeckillConstants;
 import io.binghe.seckill.common.exception.ErrorCode;
-import io.binghe.seckill.stock.application.model.command.SeckillStockBucketWrapperCommand;
 import io.binghe.seckill.common.response.ResponseMessage;
 import io.binghe.seckill.common.response.ResponseMessageBuilder;
+import io.binghe.seckill.stock.application.model.command.SeckillStockBucketWrapperCommand;
 import io.binghe.seckill.stock.application.model.dto.SeckillStockBucketDTO;
 import io.binghe.seckill.stock.application.service.SeckillStockBucketService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +42,7 @@ public class SeckillStockBucketController {
      * 库存分桶
      */
     @RequestMapping(value = "/arrangeStockBuckets", method = {RequestMethod.GET,RequestMethod.POST})
-    public ResponseMessage<String> arrangeStockBuckets(@RequestAttribute Long userId, @RequestBody SeckillStockBucketWrapperCommand seckillStockCommond){
+    public ResponseMessage<String> arrangeStockBuckets(@RequestHeader(SeckillConstants.USER_ID) Long userId, @RequestBody SeckillStockBucketWrapperCommand seckillStockCommond){
         seckillStockBucketService.arrangeStockBuckets(userId, seckillStockCommond);
         return ResponseMessageBuilder.build(ErrorCode.SUCCESS.getCode());
     }

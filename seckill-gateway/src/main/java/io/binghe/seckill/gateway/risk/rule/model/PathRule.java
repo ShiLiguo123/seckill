@@ -13,30 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.binghe.seckill.common.interceptor.config;
+package io.binghe.seckill.gateway.risk.rule.model;
 
-import io.binghe.seckill.common.interceptor.auth.AuthInterceptor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import java.util.List;
 
 /**
  * @author binghe(微信 : hacker_binghe)
  * @version 1.0.0
- * @description 安全适配器
+ * @description 基于路径的校验规则
  * @github https://github.com/binghe001
  * @copyright 公众号: 冰河技术
  */
-@Configuration
-public class SecurityAdapter implements WebMvcConfigurer {
+public class PathRule extends Rule {
 
-    @Autowired
-    private AuthInterceptor authInterceptor;
+    private List<Rule> urlPaths;
 
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(authInterceptor).addPathPatterns("/**").excludePathPatterns("/user/login");
+    public List<Rule> getUrlPaths() {
+        return urlPaths;
     }
 
+    public PathRule setUrlPaths(List<Rule> urlPaths) {
+        this.urlPaths = urlPaths;
+        return this;
+    }
 }

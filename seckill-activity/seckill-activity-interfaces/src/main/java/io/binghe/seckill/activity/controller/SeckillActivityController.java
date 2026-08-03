@@ -76,7 +76,7 @@ public class SeckillActivityController /*extends BaseController*/ {
      * 获取秒杀活动列表
      */
     @RequestMapping(value = "/seckillActivityList", method = {RequestMethod.GET,RequestMethod.POST})
-    @SentinelResource(value = "QUEUE-DATA-FLOW")
+    //@SentinelResource(value = "QUEUE-DATA-FLOW")
     public ResponseMessage<List<SeckillActivityDTO>> getSeckillActivityList(@RequestParam(value = "status", required = false) Integer status,
                                                                             @RequestParam(value = "version", required = false) Long version){
         return ResponseMessageBuilder.build(ErrorCode.SUCCESS.getCode(), seckillActivityService.getSeckillActivityList(status, version));

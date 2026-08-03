@@ -105,6 +105,11 @@ public class SeckillConstants {
     public static final long ORDER_TASK_EXPIRE_SECONDS = 24 * 3600;
 
     /**
+     * 用户id
+     */
+    public static final String USER_ID = "userId";
+
+    /**
      * 商品key前缀
      */
     public static final String GOODS_ITEM_KEY_PREFIX = "item:";
@@ -315,6 +320,11 @@ public class SeckillConstants {
      * 订单锁
      */
     public static final String ORDER_LOCK_KEY_PREFIX = "order:lock:";
+
+    /**
+     * 风控前缀
+     */
+    public static final String RISK_CONTROL_KEY_PREFIX = "risk:control:";
 
     /**
      * 订单任务id的key

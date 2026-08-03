@@ -26,14 +26,14 @@ import com.alibaba.csp.sentinel.adapter.gateway.sc.SentinelGatewayFilter;
 import com.alibaba.csp.sentinel.adapter.gateway.sc.callback.BlockRequestHandler;
 import com.alibaba.csp.sentinel.adapter.gateway.sc.callback.GatewayCallbackManager;
 import com.alibaba.csp.sentinel.adapter.gateway.sc.exception.SentinelGatewayBlockExceptionHandler;
+import io.binghe.seckill.common.config.JdbcConfig;
+import io.binghe.seckill.common.config.MyBatisConfig;
+import io.binghe.seckill.common.config.RedisConfig;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.context.annotation.*;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -54,6 +54,7 @@ import java.util.*;
  * @copyright 公众号: 冰河技术
  */
 @Configuration
+@Import({RedisConfig.class})
 @ComponentScan(value = {"io.binghe.seckill", "com.alibaba.cola"})
 @ServletComponentScan(basePackages = {"io.binghe.seckill"})
 @EnableAspectJAutoProxy(proxyTargetClass = true)

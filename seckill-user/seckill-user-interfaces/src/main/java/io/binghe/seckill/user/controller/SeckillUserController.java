@@ -15,6 +15,7 @@
  */
 package io.binghe.seckill.user.controller;
 
+import io.binghe.seckill.common.constants.SeckillConstants;
 import io.binghe.seckill.common.exception.ErrorCode;
 import io.binghe.seckill.common.model.dto.user.SeckillUserDTO;
 import io.binghe.seckill.common.response.ResponseMessage;
@@ -56,8 +57,9 @@ public class SeckillUserController {
     @RequestMapping(value = "/get", method = {RequestMethod.GET, RequestMethod.POST})
 //    @SeckillRateLimiter(permitsPerSecond = 1, timeout = 0)
 //    @ConcurrentRateLimiter(name = "bhRateLimiter", queueCapacity = 0)
-    public ResponseMessage<SeckillUser> get(@RequestParam String username){
-       return ResponseMessageBuilder.build(ErrorCode.SUCCESS.getCode(), seckillUserService.getSeckillUserByUserName(username));
+    public ResponseMessage<SeckillUser> get(@RequestHeader(SeckillConstants.USER_ID) Long userId, @RequestParam String username){
+        logger.info("SeckillUserController|获取到的userId|{}", userId);
+        return ResponseMessageBuilder.build(ErrorCode.SUCCESS.getCode(), seckillUserService.getSeckillUserByUserName(username));
     }
 
     @RequestMapping(value = "/sleuth/filter/api", method = {RequestMethod.GET, RequestMethod.POST})

@@ -16,6 +16,7 @@
 package io.binghe.seckill.order.interfaces.controller;
 
 import com.alibaba.csp.sentinel.annotation.SentinelResource;
+import io.binghe.seckill.common.constants.SeckillConstants;
 import io.binghe.seckill.common.exception.ErrorCode;
 import io.binghe.seckill.common.model.dto.order.SeckillOrderSubmitDTO;
 import io.binghe.seckill.common.response.ResponseMessage;
@@ -26,7 +27,7 @@ import io.binghe.seckill.order.application.service.SeckillOrderService;
 import io.binghe.seckill.order.application.service.SeckillSubmitOrderService;
 import io.binghe.seckill.order.domain.model.entity.SeckillOrder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestAttribute;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -54,7 +55,7 @@ public class SeckillOrderController {
      */
     @RequestMapping(value = "/saveSeckillOrder", method = {RequestMethod.GET,RequestMethod.POST})
     @SentinelResource(value = "SAVE-DATA-FLOW")
-    public ResponseMessage<SeckillOrderSubmitDTO> saveSeckillOrder(@RequestAttribute Long userId, SeckillOrderCommand seckillOrderCommand){
+    public ResponseMessage<SeckillOrderSubmitDTO> saveSeckillOrder(@RequestHeader(SeckillConstants.USER_ID) Long userId, SeckillOrderCommand seckillOrderCommand){
         SeckillOrderSubmitDTO seckillOrderSubmitDTO = seckillSubmitOrderService.saveSeckillOrder(userId, seckillOrderCommand);
         return ResponseMessageBuilder.build(ErrorCode.SUCCESS.getCode(), seckillOrderSubmitDTO);
     }
@@ -81,7 +82,7 @@ public class SeckillOrderController {
      * 如果调用此接口（含重试），返回了订单id，则异步下单获取到了与同步下单相同的数据，就可以通过订单id来查询订单信息了。
      */
     @RequestMapping(value = "/getSeckillOrderSubmitDTO", method = {RequestMethod.GET,RequestMethod.POST})
-    public ResponseMessage<SeckillOrderSubmitDTO> get(@RequestAttribute Long userId, SeckillOrderTaskCommand seckillOrderTaskCommand){
+    public ResponseMessage<SeckillOrderSubmitDTO> get(@RequestHeader(SeckillConstants.USER_ID) Long userId, SeckillOrderTaskCommand seckillOrderTaskCommand){
         SeckillOrderSubmitDTO seckillOrderSubmitDTO = seckillOrderService.getSeckillOrderSubmitDTOByTaskId(seckillOrderTaskCommand.getOrderTaskId(), userId, seckillOrderTaskCommand.getGoodsId());
         return ResponseMessageBuilder.build(ErrorCode.SUCCESS.getCode(), seckillOrderSubmitDTO);
     }

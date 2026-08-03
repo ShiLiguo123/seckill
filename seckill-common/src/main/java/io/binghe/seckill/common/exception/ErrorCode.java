@@ -76,7 +76,11 @@ public enum ErrorCode {
     SENTINEL_SYSTEM(2049, "系统规则（负载/...不满足要求）"),
     SENTINEL_AUTHORITY(2050, "授权规则不通过"),
     SENTINEL_EXCEPTION(2051, "系统触发降级"),
-    STOCK_IS_NULL(2052, "商品库存不存在");
+    RISK_CONTROL_INVALID(2052, "风控校验不通过"),
+    RISK_CONTROL_ACCOUNT_INVALID(2053, "账户风控校验不通过"),
+    RISK_CONTROL_IP_INVALID(2054, "IP风控校验不通过"),
+    RISK_CONTROL_PATH_INVALID(2055, "资源风控校验不通过"),
+    STOCK_IS_NULL(2056, "商品库存不存在");
 
     private final Integer code;
     private final String mesaage;

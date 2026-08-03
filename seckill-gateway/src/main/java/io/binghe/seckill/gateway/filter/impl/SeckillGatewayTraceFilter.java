@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.binghe.seckill.gateway.filter;
+package io.binghe.seckill.gateway.filter.impl;
 
+import io.binghe.seckill.gateway.enums.SeckillGatewayFilterEnum;
+import io.binghe.seckill.gateway.filter.SeckillGatewayGlobalFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
-import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.cloud.sleuth.CurrentTraceContext;
 import org.springframework.cloud.sleuth.Tracer;
 import org.springframework.cloud.sleuth.instrument.web.WebFluxSleuthOperators;
-import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
@@ -36,8 +36,8 @@ import reactor.core.publisher.Mono;
  * @copyright 公众号: 冰河技术
  */
 @Component
-public class SeckillGatewayFilter implements GlobalFilter, Ordered {
-    private final Logger logger = LoggerFactory.getLogger(SeckillGatewayFilter.class);
+public class SeckillGatewayTraceFilter extends SeckillGatewayGlobalFilter {
+    private final Logger logger = LoggerFactory.getLogger(SeckillGatewayTraceFilter.class);
     @Autowired
     private Tracer tracer;
     @Autowired
@@ -51,6 +51,6 @@ public class SeckillGatewayFilter implements GlobalFilter, Ordered {
 
     @Override
     public int getOrder() {
-        return 0;
+        return SeckillGatewayFilterEnum.TRANCE.getCode();
     }
 }
