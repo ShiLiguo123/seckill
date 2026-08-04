@@ -162,6 +162,7 @@
 * [《Seckill秒杀系统》第113章：风控模型架构与落地方案](https://articles.zsxq.com/id_3tw56uw470jg.html)
 * [《Seckill秒杀系统》第114章：秒杀系统风控模型设计](https://articles.zsxq.com/id_rhnfwh1bwao5.html)
 * [《Seckill秒杀系统》第115章：秒杀系统风控模型实现](https://articles.zsxq.com/id_rw4vcwo2o0wa.html)
+* [《Seckill秒杀系统》第116章：容器化集群部署架构设计](https://articles.zsxq.com/id_v6vtpb1kg0mx.html)
 
 ## 基础框架与中间件
 SpringBoot: 2.6.3  
