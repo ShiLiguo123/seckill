@@ -7,13 +7,68 @@ networks:
 volumes:
   prometheus_data: {}
 services:
-  seckill-app:
-    image: seckill-app
-    container_name: seckill-app
+  seckill-user:
+    image: seckill-user
+    container_name: seckill-user
     environment:
       - SPRING_PROFILES_ACTIVE=docker
     ports:
-      - 8090:8090
+      - 8081:8081
+    networks:
+      - binghe-cluster-apps
+    restart: on-failure
+  seckill-activity:
+    image: seckill-activity
+    container_name: seckill-activity
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    ports:
+      - 8082:8082
+      - 20880:20880
+    networks:
+      - binghe-cluster-apps
+    restart: on-failure
+  seckill-goods:
+    image: seckill-goods
+    container_name: seckill-goods
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    ports:
+      - 8083:8083
+      - 20881:20881
+    networks:
+      - binghe-cluster-apps
+    restart: on-failure
+  seckill-order:
+    image: seckill-order
+    container_name: seckill-order
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    ports:
+      - 8084:8084
+      - 20882:20882
+    networks:
+      - binghe-cluster-apps
+    restart: on-failure
+  seckill-reservation:
+    image: seckill-reservation
+    container_name: seckill-reservation
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    ports:
+      - 8086:8086
+      - 20886:20886
+    networks:
+      - binghe-cluster-apps
+    restart: on-failure
+  seckill-stock:
+    image: seckill-stock
+    container_name: seckill-stock
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    ports:
+      - 8085:8085
+      - 20883:20883
     networks:
       - binghe-cluster-apps
     restart: on-failure
@@ -23,7 +78,7 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=docker
     ports:
-      - 8080:8080
+      - 10002:10002
     networks:
       - binghe-cluster-apps
     restart: on-failure
