@@ -39,6 +39,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.ResourceTransactionManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +64,7 @@ public class SeckillStockBucketArrangementServiceImpl implements SeckillStockBuc
     @Autowired
     private DistributedLockFactory distributedLockFactory;
     @Autowired
-    private DataSourceTransactionManager dataSourceTransactionManager;
+    private ResourceTransactionManager dataSourceTransactionManager;
     @Autowired
     private TransactionDefinition transactionDefinition;
     @Value("${place.order.type:bucket}")
