@@ -27,6 +27,12 @@ if not ff then
     return ngx.exit(500)
 end
 
+--校验用户是否登录
+if not user_token then
+    ngx.say("{\"code\": 2012, \"data\" : \"用户未登录\"}")
+    return ngx.exit(200)
+end
+
 -- 校验编排Token是否合法
 local nativeToken = ngx.md5(user_token.."4")
 if nativeToken ~= token then

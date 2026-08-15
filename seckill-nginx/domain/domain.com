@@ -71,6 +71,13 @@ server {
           }
       }
 
+    location /seckill-user/user/login {
+        proxy_pass http://real_server;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+
     location /seckill-user/user/get {
         limit_req zone=limit_by_user_access_token burst=1 nodelay;
         proxy_pass http://real_server;
@@ -91,6 +98,7 @@ server {
     #秒杀活动列表
     location /seckill-activity/activity/seckillActivityList {
         limit_req zone=limit_by_user_access_token burst=1 nodelay;
+        access_by_lua_file D:/Workspaces/myself/seckill/myself/seckill/seckill/seckill-nginx/lua/get_activity_list_access.lua;
         proxy_pass http://real_server;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
@@ -113,20 +121,7 @@ server {
     #秒杀活动详情
     location /seckill-activity/activity/seckillActivity {
         limit_req zone=limit_by_user_access_token burst=1 nodelay;
-        access_by_lua_block{
-           local tokenUtil = require("x_st_token")
-           local token = tokenUtil.get_token()
-
-           local accessToken = require("access_token")
-           local access_token = accessToken.get_access_token()
-
-           local nativeToken = ngx.md5(access_token.."1")
-           if nativeToken ~= token then
-             ngx.say("{\"code\": 2100, \"data\" : \"鉴权失败,您没有权限直接访问获取秒杀活动详情接口\"}")
-             return ngx.exit(500)
-           end
-        }
-
+        access_by_lua_file D:/Workspaces/myself/seckill/myself/seckill/seckill/seckill-nginx/lua/get_activity_detail_access.lua;
         proxy_pass http://real_server;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
@@ -146,19 +141,7 @@ server {
     #秒杀商品列表
     location /seckill-goods/goods/getSeckillGoodsList {
         limit_req zone=limit_by_user_access_token burst=1 nodelay;
-        access_by_lua_block{
-           local tokenUtil = require("x_st_token")
-           local token = tokenUtil.get_token()
-
-           local accessToken = require("access_token")
-           local access_token = accessToken.get_access_token()
-
-           local nativeToken = ngx.md5(access_token.."2")
-           if nativeToken ~= token then
-             ngx.say("{\"code\": 2100, \"data\" : \"鉴权失败,您没有权限直接访问获取秒杀商品列表接口\"}")
-             return ngx.exit(500)
-           end
-        }
+        access_by_lua_file D:/Workspaces/myself/seckill/myself/seckill/seckill/seckill-nginx/lua/get_goods_list_access.lua;
 
         proxy_pass http://real_server;
         proxy_set_header Host $host;
@@ -179,19 +162,7 @@ server {
     #秒杀商品详情
     location /seckill-goods/goods/getSeckillGoods {
         limit_req zone=limit_by_user_access_token burst=1 nodelay;
-        access_by_lua_block{
-           local tokenUtil = require("x_st_token")
-           local token = tokenUtil.get_token()
-
-           local accessToken = require("access_token")
-           local access_token = accessToken.get_access_token()
-
-           local nativeToken = ngx.md5(access_token.."3")
-           if nativeToken ~= token then
-             ngx.say("{\"code\": 2100, \"data\" : \"鉴权失败,您没有权限直接访问获取秒杀商品详情接口\"}")
-             return ngx.exit(500)
-           end
-        }
+        access_by_lua_file D:/Workspaces/myself/seckill/myself/seckill/seckill/seckill-nginx/lua/get_goods_detail_access.lua;
         proxy_pass http://real_server;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
@@ -210,20 +181,6 @@ server {
 
     #秒杀下单
     location /seckill-order/order/saveSeckillOrder {
-        #access_by_lua_block{
-        #   local tokenUtil = require("x_st_token")
-        #   local token = tokenUtil.get_token()
-        #
-        #   local accessToken = require("access_token")
-        #   local access_token = accessToken.get_access_token()
-        #
-        #   local nativeToken = ngx.md5(access_token.."4")
-        #   if nativeToken ~= token then
-        #     ngx.say("{\"code\": 2100, \"data\" : \"鉴权失败,您没有权限直接访问秒杀下单接口\"}")
-        #     return ngx.exit(500)
-        #   end
-        #}
-
         access_by_lua_file D:/Workspaces/myself/seckill/myself/seckill/seckill/seckill-nginx/lua/submit_access.lua;
         limit_req zone=limit_by_user_access_token burst=1 nodelay;
         proxy_pass http://real_server;
