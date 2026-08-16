@@ -174,9 +174,26 @@
 
 
 ## 基础框架与中间件
-SpringBoot: 2.6.3  
-Dubbo: 3.0.7  
-Nacos: 2.0.3
+
+* 开发框架：SpringBoot、SpringCloud、SpringCloud Alibaba、Dubbo。
+* 缓存：Redis分布式缓存+Guava本地缓存。
+* 数据库：MySQL。
+* 流量网关：OpenResty+Lua。
+* 业务网关：SpringCloud Gateway。
+* 持久层框架：MyBatis。
+* 服务配置与注册发现：Nacos。
+* 单机异步：Cola。
+* 分布式事务：Hmily、Seata、RocketMQ。
+* 分库分表：ShardingSphere。
+* 日志治理：ELK（Elasticsearch、Logstash、Kibana）。
+* 链路追踪：Sleuth、Zipkin、Prometheus。
+* 容器：Docker。
+* 容器化管理：Swarm、Portainer。
+* 监控：Prometheus、Grafana。
+* 系统限流：OpenResty+Lua、Sentinel。
+* 消息中间件：RocketMQ。
+* 单元测试：Junit。
+* 压测工具：JMeter。
 
 ## 基础环境安装
 
