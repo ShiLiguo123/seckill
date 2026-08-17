@@ -44,6 +44,13 @@
     <a href="https://github.com/binghe001/BingheGuide">关注冰河技术，解锁更多技能！</a>
 </div>
 
+## 专栏结构
+
+<div align="center">
+    <img src="images/seckill.png?raw=true" width="80%">
+    <br/>
+</div>
+
 ## 专栏文章
 
 * [《Seckill秒杀系统》开篇：我要手把手教你搭建并研发一套抗瞬时百万流量的秒杀系统](https://articles.zsxq.com/id_52v1wwqt8uez.html)
@@ -171,6 +178,7 @@
 * [《Seckill秒杀系统》第122章：服务器物理机极致优化](https://articles.zsxq.com/id_i7qwgtktwgdo.html)
 * [《Seckill秒杀系统》第123章：单机服务极致优化](https://articles.zsxq.com/id_vla569lwcv5p.html)
 * [《Seckill秒杀系统》第124章：秒杀系统流程极致优化](https://articles.zsxq.com/id_ezkr511hqn61.html)
+* [《Seckill秒杀系统》结尾：秒杀系统整体专栏总结](https://articles.zsxq.com/id_lsps4inuwvh3.html)
 
 
 ## 基础框架与中间件
