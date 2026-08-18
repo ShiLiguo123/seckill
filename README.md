@@ -47,7 +47,7 @@
 ## 专栏结构
 
 <div align="center">
-    <img src="images/seckill.png?raw=true" width="80%">
+    <img src="https://binghe.gitcode.host/images/project/seckill/seckill-2023-10-05-003.png?raw=true" width="80%">
     <br/>
 </div>
 
