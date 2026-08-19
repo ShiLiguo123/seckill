@@ -17,6 +17,8 @@ package io.binghe.seckill.common.model.dto.activity;
 
 import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
@@ -32,6 +34,7 @@ import java.util.Date;
 public class SeckillActivityDTO implements Serializable {
     private static final long serialVersionUID = 1507710823959609002L;
     //活动id
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
     //活动名称
     private String activityName;

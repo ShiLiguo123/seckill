@@ -15,6 +15,8 @@
  */
 package io.binghe.seckill.stock.domain.model.entity;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import io.binghe.seckill.common.utils.id.SnowFlakeFactory;
 
 import java.io.Serializable;
@@ -29,8 +31,10 @@ import java.io.Serializable;
 public class SeckillStockBucket implements Serializable {
     private static final long serialVersionUID = 6965796752002288513L;
     //数据主键id
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
     //商品id
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long goodsId;
     //初始库存
     private Integer initialStock;

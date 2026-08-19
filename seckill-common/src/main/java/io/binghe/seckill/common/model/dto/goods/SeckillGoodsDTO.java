@@ -16,6 +16,8 @@
 package io.binghe.seckill.common.model.dto.goods;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import io.binghe.seckill.common.model.enums.SeckillGoodsStatus;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -34,10 +36,12 @@ public class SeckillGoodsDTO implements Serializable {
 
     private static final long serialVersionUID = 8084686081356925122L;
     //数据id
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
     //商品名称
     private String goodsName;
     //秒杀活动id
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long activityId;
     //活动开始时间
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")

@@ -16,6 +16,8 @@
 package io.binghe.seckill.activity.domain.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import io.binghe.seckill.common.model.enums.SeckillActivityStatus;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -33,6 +35,7 @@ import java.util.Date;
 public class SeckillActivity implements Serializable {
     private static final long serialVersionUID = -7079319520596736847L;
     //活动id
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
     //活动名称
     private String activityName;

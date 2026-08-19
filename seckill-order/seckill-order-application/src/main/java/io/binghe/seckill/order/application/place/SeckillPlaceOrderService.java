@@ -45,7 +45,7 @@ public interface SeckillPlaceOrderService {
     /**
      * 本地事务执行保存订单操作
      */
-    void saveOrderInTransaction(TxMessage txMessage);
+    boolean saveOrderInTransaction(TxMessage txMessage);
 
     /**
      * 构建订单

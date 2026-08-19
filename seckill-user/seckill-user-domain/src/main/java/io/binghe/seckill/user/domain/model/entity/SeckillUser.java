@@ -15,6 +15,9 @@
  */
 package io.binghe.seckill.user.domain.model.entity;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+
 import java.io.Serializable;
 
 /**
@@ -27,6 +30,7 @@ import java.io.Serializable;
 public class SeckillUser implements Serializable {
     private static final long serialVersionUID = -3004624289691589697L;
     //用户id
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
     //用户名
     private String userName;

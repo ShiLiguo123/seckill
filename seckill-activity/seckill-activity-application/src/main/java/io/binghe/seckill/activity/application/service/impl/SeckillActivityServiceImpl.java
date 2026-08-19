@@ -123,9 +123,9 @@ public class SeckillActivityServiceImpl implements SeckillActivityService {
     }
 
     @Override
-    @SentinelResource(value = "QUEUE-DATA-FLOW",
-            blockHandlerClass = SeckillActivityFallbackService.class, blockHandler = "getSeckillActivityBlockHandler",
-            fallbackClass = SeckillActivityFallbackService.class, fallback = "getSeckillActivityFallback")
+//    @SentinelResource(value = "QUEUE-DATA-FLOW",
+//            blockHandlerClass = SeckillActivityFallbackService.class, blockHandler = "getSeckillActivityBlockHandler",
+//            fallbackClass = SeckillActivityFallbackService.class, fallback = "getSeckillActivityFallback")
     public SeckillActivityDTO getSeckillActivity(Long id, Long version) {
         if (id == null){
             throw new SeckillException(ErrorCode.PARAMS_INVALID);

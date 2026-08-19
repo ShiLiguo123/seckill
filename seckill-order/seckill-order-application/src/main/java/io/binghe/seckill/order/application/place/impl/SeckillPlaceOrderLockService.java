@@ -34,6 +34,8 @@ import io.binghe.seckill.order.application.place.SeckillPlaceOrderService;
 import io.binghe.seckill.order.domain.model.entity.SeckillOrder;
 import io.binghe.seckill.order.domain.service.SeckillOrderDomainService;
 import org.apache.dubbo.config.annotation.DubboReference;
+import org.apache.rocketmq.client.producer.SendStatus;
+import org.apache.rocketmq.client.producer.TransactionSendResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -104,45 +106,60 @@ public class SeckillPlaceOrderLockService implements SeckillPlaceOrderService {
             isDecrementCacheStock = true;
 
         } catch (Exception e) {
+            logger.error("SeckillPlaceOrderLockService|下单异常|参数:{}|异常信息:{}", JSONObject.toJSONString(seckillOrderCommand), e.getMessage());
             //已经扣减了缓存中的库存，或者扣减缓存库存后小于0，则需要增加回来
             if (isDecrementCacheStock || result < 0){
                 distributedCacheService.increment(key, seckillOrderCommand.getQuantity());
             }
+            exception = true;
+            // 其实可以统一返回库存不足
             if (e instanceof InterruptedException){
                 logger.error("SeckillPlaceOrderLockService|下单分布式锁被中断|参数:{}|异常信息:{}", JSONObject.toJSONString(seckillOrderCommand), e.getMessage());
-            }else{
-                logger.error("SeckillPlaceOrderLockService|分布式锁下单失败|参数:{}|异常信息:{}", JSONObject.toJSONString(seckillOrderCommand), e.getMessage());
+            }else if (e instanceof SeckillException){
+                throw (SeckillException)e;
+            }else {
+                throw new SeckillException(ErrorCode.RETRY_LATER);
             }
-            exception = true;
         }finally {
             lock.unlock();
         }
         //发送事务消息
-        messageSenderService.sendMessageInTransaction(this.getTxMessage(SeckillConstants.TOPIC_TX_MSG, txNo, userId,  SeckillConstants.PLACE_ORDER_TYPE_LOCK, exception, seckillOrderCommand, seckillGoods, 0, seckillOrderCommand.getOrderTaskId()), null);
+        TransactionSendResult sendResult = messageSenderService.sendMessageInTransaction(this.getTxMessage(SeckillConstants.TOPIC_TX_MSG, txNo, userId, SeckillConstants.PLACE_ORDER_TYPE_LOCK, exception, seckillOrderCommand, seckillGoods, 0, seckillOrderCommand.getOrderTaskId()), null);
+        if (sendResult.getSendStatus() != SendStatus.SEND_OK) {
+            logger.error("placeOrder|发送事务消息失败|参数:{}", JSONObject.toJSONString(seckillOrderCommand));
+            //未抛出异常
+            if (!exception && (isDecrementCacheStock || result < 0)){
+                distributedCacheService.increment(key, seckillOrderCommand.getQuantity());
+            }
+        }
         return txNo;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void saveOrderInTransaction(TxMessage txMessage) {
+    public boolean saveOrderInTransaction(TxMessage txMessage) {
+        boolean executeResult = false;
         try{
             Boolean submitTransaction = distributedCacheService.hasKey(SeckillConstants.getKey(SeckillConstants.ORDER_TX_KEY, String.valueOf(txMessage.getTxNo())));
             if (BooleanUtil.isTrue(submitTransaction)){
                 logger.info("saveOrderInTransaction|已经执行过本地事务|{}", txMessage.getTxNo());
-                return;
+                return true;
             }
             //构建订单
             SeckillOrder seckillOrder = this.buildSeckillOrder(txMessage);
             //保存订单
-            seckillOrderDomainService.saveSeckillOrder(seckillOrder);
+            executeResult = seckillOrderDomainService.saveSeckillOrder(seckillOrder);
             //保存事务日志
-            distributedCacheService.put(SeckillConstants.getKey(SeckillConstants.ORDER_TX_KEY, String.valueOf(txMessage.getTxNo())), txMessage.getTxNo(), SeckillConstants.TX_LOG_EXPIRE_DAY, TimeUnit.DAYS);
+            if (executeResult){
+                distributedCacheService.put(SeckillConstants.getKey(SeckillConstants.ORDER_TX_KEY, String.valueOf(txMessage.getTxNo())), txMessage.getTxNo(), SeckillConstants.TX_LOG_EXPIRE_DAY, TimeUnit.DAYS);
+            }
         }catch (Exception e){
             logger.error("saveOrderInTransaction|异常|{}", e.getMessage());
             distributedCacheService.delete(SeckillConstants.getKey(SeckillConstants.ORDER_TX_KEY, String.valueOf(txMessage.getTxNo())));
             this.rollbackCacheStack(txMessage);
             throw e;
         }
+        return executeResult;
     }
 
     /**

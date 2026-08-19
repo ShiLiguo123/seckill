@@ -36,6 +36,8 @@ import io.binghe.seckill.order.application.place.SeckillPlaceOrderService;
 import io.binghe.seckill.order.domain.model.entity.SeckillOrder;
 import io.binghe.seckill.order.domain.service.SeckillOrderDomainService;
 import org.apache.dubbo.config.annotation.DubboReference;
+import org.apache.rocketmq.client.producer.SendStatus;
+import org.apache.rocketmq.client.producer.TransactionSendResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,17 +107,33 @@ public class SeckillPlaceOrderBucketService implements SeckillPlaceOrderService 
             this.checkResult(decrementResult);
         }catch (Exception e){
             exception = true;
-            logger.error("SeckillPlaceOrderLuaService|下单异常|参数:{}|异常信息:{}", JSONObject.toJSONString(seckillOrderCommand), e.getMessage());
+            logger.error("SeckillPlaceOrderBucketService|下单异常|参数:{}|异常信息:{}", JSONObject.toJSONString(seckillOrderCommand), e.getMessage());
             //扣减分桶库存的脚本执行成功，则需要回滚分桶库存
             if (decrementResult == SeckillConstants.LUA_BUCKET_STOCK_EXECUTE_SUCCESS){
                 Long incrementResult = distributedCacheService.incrementBucketStock(keys, seckillOrderCommand.getQuantity());
                 if (incrementResult != SeckillConstants.LUA_BUCKET_STOCK_EXECUTE_SUCCESS){
-                    logger.error("placeOrder|恢复预扣减的库存失败|{},{}", userId, JSONUtil.toJsonStr(seckillOrderCommand), e);
+                    logger.error("SeckillPlaceOrderBucketService|恢复预扣减的库存失败|{},{}", userId, JSONUtil.toJsonStr(seckillOrderCommand), e);
                 }
+            }
+            // 其实可以统一返回库存不足
+            if (e instanceof SeckillException){
+                throw e;
+            }else {
+                throw new SeckillException(ErrorCode.RETRY_LATER);
             }
         }
         //发送事务消息
-        messageSenderService.sendMessageInTransaction(this.getTxMessage(SeckillConstants.TOPIC_BUCKET_TX_MSG, txNo, userId, SeckillConstants.PLACE_ORDER_TYPE_BUCKET, exception, seckillOrderCommand, seckillGoods, bucketSerialNo, seckillOrderCommand.getOrderTaskId()), null);
+        TransactionSendResult sendResult = messageSenderService.sendMessageInTransaction(this.getTxMessage(SeckillConstants.TOPIC_BUCKET_TX_MSG, txNo, userId, SeckillConstants.PLACE_ORDER_TYPE_BUCKET, exception, seckillOrderCommand, seckillGoods, bucketSerialNo, seckillOrderCommand.getOrderTaskId()), null);
+        if (sendResult.getSendStatus() != SendStatus.SEND_OK){
+            logger.error("SeckillPlaceOrderBucketService|发送事务消息失败|参数:{}", JSONObject.toJSONString(seckillOrderCommand));
+            //未抛出异常，并且已经扣减缓存库存
+            if (!exception && decrementResult == SeckillConstants.LUA_BUCKET_STOCK_EXECUTE_SUCCESS){
+                Long incrementResult = distributedCacheService.incrementBucketStock(keys, seckillOrderCommand.getQuantity());
+                if (incrementResult != SeckillConstants.LUA_BUCKET_STOCK_EXECUTE_SUCCESS){
+                    logger.error("SeckillPlaceOrderBucketService|恢复预扣减的库存失败|{}", userId, JSONUtil.toJsonStr(seckillOrderCommand));
+                }
+            }
+        }
         return txNo;
     }
 
@@ -194,25 +212,29 @@ public class SeckillPlaceOrderBucketService implements SeckillPlaceOrderService 
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void saveOrderInTransaction(TxMessage txMessage) {
+    public boolean saveOrderInTransaction(TxMessage txMessage) {
+        boolean executeResult = false;
         try{
             Boolean submitTransaction = distributedCacheService.hasKey(SeckillConstants.getKey(SeckillConstants.ORDER_TX_KEY, String.valueOf(txMessage.getTxNo())));
             if (BooleanUtil.isTrue(submitTransaction)){
                 logger.info("saveOrderInTransaction|已经执行过本地事务|{}", txMessage.getTxNo());
-                return;
+                return true;
             }
             //构建订单
             SeckillOrder seckillOrder = this.buildSeckillOrder(txMessage);
             //保存订单
-            seckillOrderDomainService.saveSeckillOrder(seckillOrder);
+            executeResult = seckillOrderDomainService.saveSeckillOrder(seckillOrder);
             //保存事务日志
-            distributedCacheService.put(SeckillConstants.getKey(SeckillConstants.ORDER_TX_KEY, String.valueOf(txMessage.getTxNo())), txMessage.getTxNo(), SeckillConstants.TX_LOG_EXPIRE_DAY, TimeUnit.DAYS);
+            if (executeResult){
+                distributedCacheService.put(SeckillConstants.getKey(SeckillConstants.ORDER_TX_KEY, String.valueOf(txMessage.getTxNo())), txMessage.getTxNo(), SeckillConstants.TX_LOG_EXPIRE_DAY, TimeUnit.DAYS);
+            }
         }catch (Exception e){
             logger.error("saveOrderInTransaction|异常|{}", e);
             distributedCacheService.delete(SeckillConstants.getKey(SeckillConstants.ORDER_TX_KEY, String.valueOf(txMessage.getTxNo())));
             this.rollbackCacheStack(txMessage);
             throw e;
         }
+        return executeResult;
     }
 
 

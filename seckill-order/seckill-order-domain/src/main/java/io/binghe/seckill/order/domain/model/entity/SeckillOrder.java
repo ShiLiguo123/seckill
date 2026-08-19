@@ -16,6 +16,8 @@
 package io.binghe.seckill.order.domain.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
@@ -32,10 +34,13 @@ import java.util.Date;
 public class SeckillOrder implements Serializable {
     private static final long serialVersionUID = -2900817329676795585L;
     //订单id
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
     //用户id
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long userId;
     //商品id
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long goodsId;
     //商品名称
     private String goodsName;
@@ -46,6 +51,7 @@ public class SeckillOrder implements Serializable {
     //订单总金额
     private BigDecimal orderPrice;
     //活动id
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long activityId;
     //订单状态 1：已创建 2：已支付 0：已取消； -1：已删除
     private Integer status;

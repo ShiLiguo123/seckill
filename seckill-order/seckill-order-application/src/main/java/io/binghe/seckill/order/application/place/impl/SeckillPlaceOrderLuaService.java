@@ -23,15 +23,17 @@ import io.binghe.seckill.common.constants.SeckillConstants;
 import io.binghe.seckill.common.exception.ErrorCode;
 import io.binghe.seckill.common.exception.SeckillException;
 import io.binghe.seckill.common.model.dto.goods.SeckillGoodsDTO;
+import io.binghe.seckill.common.model.message.TxMessage;
 import io.binghe.seckill.common.utils.id.SnowFlakeFactory;
 import io.binghe.seckill.dubbo.interfaces.goods.SeckillGoodsDubboService;
 import io.binghe.seckill.mq.MessageSenderService;
-import io.binghe.seckill.common.model.message.TxMessage;
 import io.binghe.seckill.order.application.model.command.SeckillOrderCommand;
 import io.binghe.seckill.order.application.place.SeckillPlaceOrderService;
 import io.binghe.seckill.order.domain.model.entity.SeckillOrder;
 import io.binghe.seckill.order.domain.service.SeckillOrderDomainService;
 import org.apache.dubbo.config.annotation.DubboReference;
+import org.apache.rocketmq.client.producer.SendStatus;
+import org.apache.rocketmq.client.producer.TransactionSendResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,33 +94,52 @@ public class SeckillPlaceOrderLuaService implements SeckillPlaceOrderService {
                 //将内存中的库存增加回去
                 distributedCacheService.incrementByLua(key, seckillOrderCommand.getQuantity());
             }
+
+            // 其实可以统一返回库存不足
+            if (e instanceof SeckillException){
+                throw e;
+            }else {
+                throw new SeckillException(ErrorCode.RETRY_LATER);
+            }
         }
         //发送事务消息
-        messageSenderService.sendMessageInTransaction(this.getTxMessage(SeckillConstants.TOPIC_TX_MSG, txNo, userId, SeckillConstants.PLACE_ORDER_TYPE_LUA, exception, seckillOrderCommand, seckillGoods, 0, seckillOrderCommand.getOrderTaskId()), null);
+        TransactionSendResult sendResult = messageSenderService.sendMessageInTransaction(this.getTxMessage(SeckillConstants.TOPIC_TX_MSG, txNo, userId, SeckillConstants.PLACE_ORDER_TYPE_LUA, exception, seckillOrderCommand, seckillGoods, 0, seckillOrderCommand.getOrderTaskId()), null);
+        //发送消息失败
+        if (sendResult.getSendStatus() != SendStatus.SEND_OK){
+            //未抛出异常
+            if (!exception && decrementResult == SeckillConstants.LUA_RESULT_EXECUTE_TOKEN_SUCCESS){
+                //将内存中的库存增加回去
+                distributedCacheService.incrementByLua(key, seckillOrderCommand.getQuantity());
+            }
+        }
         return txNo;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void saveOrderInTransaction(TxMessage txMessage) {
+    public boolean saveOrderInTransaction(TxMessage txMessage) {
+        boolean executeResult = false;
         try{
             Boolean submitTransaction = distributedCacheService.hasKey(SeckillConstants.getKey(SeckillConstants.ORDER_TX_KEY, String.valueOf(txMessage.getTxNo())));
             if (BooleanUtil.isTrue(submitTransaction)){
                 logger.info("saveOrderInTransaction|已经执行过本地事务|{}", txMessage.getTxNo());
-                return;
+                return true;
             }
             //构建订单
             SeckillOrder seckillOrder = this.buildSeckillOrder(txMessage);
             //保存订单
-            seckillOrderDomainService.saveSeckillOrder(seckillOrder);
+            executeResult = seckillOrderDomainService.saveSeckillOrder(seckillOrder);
             //保存事务日志
-            distributedCacheService.put(SeckillConstants.getKey(SeckillConstants.ORDER_TX_KEY, String.valueOf(txMessage.getTxNo())), txMessage.getTxNo(), SeckillConstants.TX_LOG_EXPIRE_DAY, TimeUnit.DAYS);
+            if (executeResult){
+                distributedCacheService.put(SeckillConstants.getKey(SeckillConstants.ORDER_TX_KEY, String.valueOf(txMessage.getTxNo())), txMessage.getTxNo(), SeckillConstants.TX_LOG_EXPIRE_DAY, TimeUnit.DAYS);
+            }
         }catch (Exception e){
             logger.error("saveOrderInTransaction|异常|{}", e.getMessage());
             distributedCacheService.delete(SeckillConstants.getKey(SeckillConstants.ORDER_TX_KEY, String.valueOf(txMessage.getTxNo())));
             this.rollbackCacheStack(txMessage);
             throw e;
         }
+        return executeResult;
     }
 
     /**

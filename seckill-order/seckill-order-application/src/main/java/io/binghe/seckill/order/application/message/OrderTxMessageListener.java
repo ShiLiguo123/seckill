@@ -56,9 +56,13 @@ public class OrderTxMessageListener implements RocketMQLocalTransactionListener{
             if (BooleanUtil.isTrue(txMessage.getException())){
                 return RocketMQLocalTransactionState.ROLLBACK;
             }
-            seckillPlaceOrderService.saveOrderInTransaction(txMessage);
-            logger.info("executeLocalTransaction|秒杀订单微服务成功提交本地事务|{}", txMessage.getTxNo());
-            return RocketMQLocalTransactionState.COMMIT;
+            boolean executeResult = seckillPlaceOrderService.saveOrderInTransaction(txMessage);
+            if (executeResult){
+                logger.info("executeLocalTransaction|秒杀订单微服务提交本地事务成功|{}", txMessage.getTxNo());
+                return RocketMQLocalTransactionState.COMMIT;
+            }
+            logger.info("executeLocalTransaction|秒杀订单微服务提交本地事务失败|{}", txMessage.getTxNo());
+            return RocketMQLocalTransactionState.ROLLBACK;
         }catch (Exception e){
             logger.error("executeLocalTransaction|秒杀订单微服务异常回滚事务|{}",txMessage.getTxNo());
             return RocketMQLocalTransactionState.ROLLBACK;
