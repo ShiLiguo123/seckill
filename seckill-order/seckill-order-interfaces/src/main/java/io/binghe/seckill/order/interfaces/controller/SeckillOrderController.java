@@ -16,6 +16,7 @@
 package io.binghe.seckill.order.interfaces.controller;
 
 import com.alibaba.csp.sentinel.annotation.SentinelResource;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.binghe.seckill.common.constants.SeckillConstants;
 import io.binghe.seckill.common.exception.ErrorCode;
 import io.binghe.seckill.common.model.dto.order.SeckillOrderSubmitDTO;
@@ -72,7 +73,7 @@ public class SeckillOrderController {
      * 获取商品维度的订单列表
      */
     @RequestMapping(value = "/getSeckillOrderByGoodsId", method = {RequestMethod.GET,RequestMethod.POST})
-    public ResponseMessage<List<SeckillOrder>> getSeckillOrderByGoodsId(Long goodsId){
+    public ResponseMessage<List<SeckillOrder>> getSeckillOrderByGoodsId(@JsonFormat(shape = JsonFormat.Shape.STRING) Long goodsId){
         List<SeckillOrder> seckillOrderList = seckillOrderService.getSeckillOrderByGoodsId(goodsId);
         return ResponseMessageBuilder.build(ErrorCode.SUCCESS.getCode(), seckillOrderList);
     }

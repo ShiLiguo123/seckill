@@ -23,6 +23,7 @@ import io.binghe.seckill.common.shiro.utils.JwtUtils;
 import io.binghe.seckill.gateway.enums.SeckillGatewayFilterEnum;
 import io.binghe.seckill.gateway.filter.SeckillGatewayGlobalFilter;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.server.reactive.ServerHttpRequest;
@@ -38,6 +39,7 @@ import reactor.core.publisher.Mono;
  * @copyright 公众号: 冰河技术
  */
 @Component
+@ServletComponentScan(basePackages = {"io.binghe.seckill"})
 public class SeckillGatewayAuthFilter extends SeckillGatewayGlobalFilter {
 
     @Override

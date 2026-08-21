@@ -19,6 +19,7 @@ import io.binghe.seckill.common.exception.ErrorCode;
 import io.binghe.seckill.gateway.enums.SeckillGatewayFilterEnum;
 import io.binghe.seckill.gateway.filter.SeckillGatewayGlobalFilter;
 import io.binghe.seckill.gateway.risk.rule.service.SeckillGatewayRuleChainService;
+import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
@@ -34,6 +35,7 @@ import java.util.List;
  * @copyright 公众号: 冰河技术
  */
 @Component
+@ServletComponentScan(basePackages = {"io.binghe.seckill"})
 public class SeckillGatewayRiskControlFilter extends SeckillGatewayGlobalFilter {
 
     @Override

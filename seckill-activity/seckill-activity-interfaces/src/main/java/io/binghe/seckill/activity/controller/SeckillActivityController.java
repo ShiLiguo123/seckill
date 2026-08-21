@@ -16,6 +16,7 @@
 package io.binghe.seckill.activity.controller;
 
 import com.alibaba.csp.sentinel.annotation.SentinelResource;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.binghe.seckill.activity.application.command.SeckillActivityCommand;
 import io.binghe.seckill.activity.application.service.SeckillActivityService;
 import io.binghe.seckill.activity.domain.model.entity.SeckillActivity;
@@ -97,7 +98,7 @@ public class SeckillActivityController /*extends BaseController*/ {
      * 获取id获取秒杀活动详情
      */
     @RequestMapping(value = "/seckillActivity", method = {RequestMethod.GET,RequestMethod.POST})
-    public ResponseMessage<SeckillActivityDTO> getSeckillActivityById(@RequestParam(value = "id", required = false) Long id,
+    public ResponseMessage<SeckillActivityDTO> getSeckillActivityById(@RequestParam(value = "id", required = false) @JsonFormat(shape = JsonFormat.Shape.STRING) Long id,
                                                                       @RequestParam(value = "version", required = false) Long version){
         return ResponseMessageBuilder.build(ErrorCode.SUCCESS.getCode(), seckillActivityService.getSeckillActivity(id, version));
     }
@@ -106,7 +107,7 @@ public class SeckillActivityController /*extends BaseController*/ {
      * 获取id获取秒杀活动详情
      */
     @RequestMapping(value = "/getSeckillActivityById", method = {RequestMethod.GET,RequestMethod.POST})
-    public ResponseMessage<SeckillActivity> getSeckillActivityById(@RequestParam(value = "id", required = false) Long id){
+    public ResponseMessage<SeckillActivity> getSeckillActivityById(@RequestParam(value = "id", required = false) @JsonFormat(shape = JsonFormat.Shape.STRING) Long id){
         return ResponseMessageBuilder.build(ErrorCode.SUCCESS.getCode(), seckillActivityService.getSeckillActivityById(id));
     }
 
@@ -115,7 +116,7 @@ public class SeckillActivityController /*extends BaseController*/ {
      */
     @RequestMapping(value = "/updateStatus", method = {RequestMethod.GET,RequestMethod.POST})
     public ResponseMessage<String> updateStatus(@RequestParam(value = "status", required = false) Integer status,
-                                                @RequestParam(value = "id", required = false) Long id){
+                                                @RequestParam(value = "id", required = false) @JsonFormat(shape = JsonFormat.Shape.STRING) Long id){
         seckillActivityService.updateStatus(status, id);
         return ResponseMessageBuilder.build(ErrorCode.SUCCESS.getCode());
     }

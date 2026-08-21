@@ -90,7 +90,7 @@
 
 	//查看商品
 	function getGoods(activityId){
-		window.location.href="goods_list.html?activityId=" + activityId;
+		window.location.href="goods_list.html?activityId=" + String(BigInt(activityId));
 	}
 
 	//显示状态

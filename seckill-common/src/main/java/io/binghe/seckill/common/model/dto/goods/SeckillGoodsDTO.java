@@ -36,12 +36,12 @@ public class SeckillGoodsDTO implements Serializable {
 
     private static final long serialVersionUID = 8084686081356925122L;
     //数据id
-    @JsonSerialize(using = ToStringSerializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long id;
     //商品名称
     private String goodsName;
     //秒杀活动id
-    @JsonSerialize(using = ToStringSerializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long activityId;
     //活动开始时间
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")

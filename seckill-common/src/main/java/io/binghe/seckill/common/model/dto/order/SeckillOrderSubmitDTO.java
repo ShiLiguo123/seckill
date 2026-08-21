@@ -15,8 +15,7 @@
  */
 package io.binghe.seckill.common.model.dto.order;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 /**
  * @author binghe(微信 : hacker_binghe)
@@ -36,7 +35,7 @@ public class SeckillOrderSubmitDTO {
     /**
      * 商品id
      */
-    @JsonSerialize(using = ToStringSerializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long goodsId;
 
     /**

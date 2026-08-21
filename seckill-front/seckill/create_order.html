@@ -81,7 +81,7 @@
             headers:{
                 "access-token": get(common_localstorage_key)
             },
-            url:"http://"+g_host+"/goods/getSeckillGoodsId?id=" + goodsId,
+            url:"http://"+g_host+"/goods/getSeckillGoodsId?id=" + String(BigInt(goodsId)),
             xhrFields: {withCredentials: true},
             success:function (data) {
                 if (data.code == 1001) {
@@ -143,11 +143,11 @@
                 url: "http://"+g_host+"/order/saveSeckillOrder",
                 data: {
                     "userId": userId,
-                    "goodsId": goodsId,
+                    "goodsId": String(BigInt(goodsId)),
                     "goodsName": goodsName,
                     "activityPrice": activityPrice,
                     "quantity": quantity,
-                    "activityId": activityId
+                    "activityId": String(BigInt(activityId))
                 },
                 xhrFields: {withCredentials: true},
                 success: function (data) {
@@ -159,7 +159,7 @@
                         window.location.href = "login.html";
                     }else if (data.code == 2014){
                         alert("商品已下线");
-                        window.location.href = "goods_list.html?activityId=" + activityId;
+                        window.location.href = "goods_list.html?activityId=" + String(BigInt(activityId));
                     }
                     else {
                         alert("创建失败：" + data.data);

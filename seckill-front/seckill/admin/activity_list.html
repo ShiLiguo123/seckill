@@ -105,7 +105,7 @@
 
 
 	function getOrders(activityId){
-		window.location.href = "order_list.html?activityId=" + activityId;
+		window.location.href = "order_list.html?activityId=" +  String(BigInt(activityId));
 	}
 
 	//上线活动
@@ -115,7 +115,7 @@
 			headers:{
 				"access-token": get(common_localstorage_key)
 			},
-			data: { "status": 1, "id": activityId},
+			data: { "status": 1, "id": String(BigInt(activityId))},
 			url:"http://"+g_host+"/activity/updateStatus",
 			xhrFields: {withCredentials: true},
 			success:function (data) {
@@ -142,7 +142,7 @@
 			headers:{
 				"access-token": get(common_localstorage_key)
 			},
-			data: { "status": -1, "id": activityId},
+			data: { "status": -1, "id": String(BigInt(activityId))},
 			url:"http://"+g_host+"/activity/updateStatus",
 			xhrFields: {withCredentials: true},
 			success:function (data) {
@@ -165,7 +165,7 @@
 
 	//查看商品
 	function getGoods(activityId){
-		window.location.href="goods_list.html?activityId=" + activityId;
+		window.location.href="goods_list.html?activityId=" + String(BigInt(activityId));
 	}
 	//添加商品
 	function submitGoods(data){
@@ -175,7 +175,7 @@
 			alert("秒杀活动已经结束，不能发布商品");
 			return;
 		}
-		window.location.href="create_goods.html?activityId=" + id;
+		window.location.href="create_goods.html?activityId=" + String(BigInt(id));
 	}
 	//添加活动
 	function submitActivity(){

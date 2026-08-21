@@ -15,6 +15,8 @@
  */
 package io.binghe.seckill.stock.application.model.command;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.io.Serializable;
 
 /**
@@ -27,8 +29,10 @@ import java.io.Serializable;
 public class SeckillStockBucketGoodsCommand implements Serializable {
     private static final long serialVersionUID = -3277417752771378782L;
     //用户id
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long userId;
     //商品id
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long goodsId;
 
     public SeckillStockBucketGoodsCommand() {

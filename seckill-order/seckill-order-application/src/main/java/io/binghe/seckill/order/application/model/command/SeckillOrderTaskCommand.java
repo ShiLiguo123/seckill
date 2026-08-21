@@ -15,6 +15,8 @@
  */
 package io.binghe.seckill.order.application.model.command;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 /**
  * @author binghe(微信 : hacker_binghe)
  * @version 1.0.0
@@ -32,6 +34,7 @@ public class SeckillOrderTaskCommand {
     /**
      * 商品id
      */
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long goodsId;
 
     public String getOrderTaskId() {

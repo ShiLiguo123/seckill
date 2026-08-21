@@ -15,6 +15,8 @@
  */
 package io.binghe.seckill.reservation.application.command;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.io.Serializable;
 
 /**
@@ -26,8 +28,10 @@ import java.io.Serializable;
  */
 public class SeckillReservationUserCommand implements Serializable {
     //用户id
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long userId;
     //商品id
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long goodsId;
 
     public SeckillReservationUserCommand() {

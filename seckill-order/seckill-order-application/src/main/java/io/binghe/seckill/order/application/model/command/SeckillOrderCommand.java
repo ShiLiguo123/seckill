@@ -1,5 +1,7 @@
 package io.binghe.seckill.order.application.model.command;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.io.Serializable;
 
 /**
@@ -13,10 +15,12 @@ public class SeckillOrderCommand implements Serializable {
 
     private static final long serialVersionUID = 2150071992328498340L;
     //商品id
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long goodsId;
     //购买数量
     private Integer quantity;
     //活动id
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long activityId;
     //商品版本号
     private Long version;

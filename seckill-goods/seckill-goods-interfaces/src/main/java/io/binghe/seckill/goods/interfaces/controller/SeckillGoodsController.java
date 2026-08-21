@@ -16,6 +16,7 @@
 package io.binghe.seckill.goods.interfaces.controller;
 
 import com.alibaba.csp.sentinel.annotation.SentinelResource;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.binghe.seckill.application.command.SeckillGoodsCommond;
 import io.binghe.seckill.application.service.SeckillGoodsService;
 import io.binghe.seckill.common.exception.ErrorCode;
@@ -56,7 +57,7 @@ public class SeckillGoodsController /*extends BaseController*/ {
      * 获取商品详情
      */
     @RequestMapping(value = "/getSeckillGoodsId", method = {RequestMethod.GET,RequestMethod.POST})
-    public ResponseMessage<SeckillGoods> getSeckillGoodsId(Long id){
+    public ResponseMessage<SeckillGoods> getSeckillGoodsId(@JsonFormat(shape = JsonFormat.Shape.STRING) Long id){
         return ResponseMessageBuilder.build(ErrorCode.SUCCESS.getCode(), seckillGoodsService.getSeckillGoodsId(id));
     }
 
@@ -65,7 +66,7 @@ public class SeckillGoodsController /*extends BaseController*/ {
      */
     @RequestMapping(value = "/getSeckillGoods", method = {RequestMethod.GET,RequestMethod.POST})
     //@SentinelResource(value = "QUEUE-DATA-FLOW")
-    public ResponseMessage<SeckillGoodsDTO> getSeckillGoods(Long id, Long version){
+    public ResponseMessage<SeckillGoodsDTO> getSeckillGoods(@JsonFormat(shape = JsonFormat.Shape.STRING) Long id, Long version){
         return ResponseMessageBuilder.build(ErrorCode.SUCCESS.getCode(), seckillGoodsService.getSeckillGoods(id, version));
     }
 
@@ -73,7 +74,7 @@ public class SeckillGoodsController /*extends BaseController*/ {
      * 获取商品列表
      */
     @RequestMapping(value = "/getSeckillGoodsByActivityId", method = {RequestMethod.GET,RequestMethod.POST})
-    public ResponseMessage<List<SeckillGoods>> getSeckillGoodsByActivityId(Long activityId){
+    public ResponseMessage<List<SeckillGoods>> getSeckillGoodsByActivityId(@JsonFormat(shape = JsonFormat.Shape.STRING) Long activityId){
         return ResponseMessageBuilder.build(ErrorCode.SUCCESS.getCode(), seckillGoodsService.getSeckillGoodsByActivityId(activityId));
     }
     /**
@@ -81,7 +82,7 @@ public class SeckillGoodsController /*extends BaseController*/ {
      */
     @RequestMapping(value = "/getSeckillGoodsList", method = {RequestMethod.GET,RequestMethod.POST})
     @SentinelResource(value = "QUEUE-DATA-DEGRADE")
-    public ResponseMessage<List<SeckillGoodsDTO>> getSeckillGoodsByActivityId(Long activityId, Long version){
+    public ResponseMessage<List<SeckillGoodsDTO>> getSeckillGoodsByActivityId(@JsonFormat(shape = JsonFormat.Shape.STRING) Long activityId, Long version){
         return ResponseMessageBuilder.build(ErrorCode.SUCCESS.getCode(), seckillGoodsService.getSeckillGoodsList(activityId, version));
     }
 
@@ -89,7 +90,7 @@ public class SeckillGoodsController /*extends BaseController*/ {
      * 更新商品状态
      */
     @RequestMapping(value = "/updateStatus", method = {RequestMethod.GET,RequestMethod.POST})
-    public ResponseMessage<String> updateStatus(Integer status, Long id){
+    public ResponseMessage<String> updateStatus(Integer status, @JsonFormat(shape = JsonFormat.Shape.STRING) Long id){
         seckillGoodsService.updateStatus(status, id);
         return ResponseMessageBuilder.build(ErrorCode.SUCCESS.getCode());
     }

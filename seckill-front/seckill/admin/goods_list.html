@@ -55,7 +55,7 @@
 			headers:{
 				"access-token": get(common_localstorage_key)
 			},
-			url:"http://"+g_host+"/goods/getSeckillGoodsByActivityId?activityId=" + activityId,
+			url:"http://"+g_host+"/goods/getSeckillGoodsByActivityId?activityId=" + String(BigInt(activityId)),
 			xhrFields: {withCredentials: true},
 			success:function (data) {
 				if (data.code == 1001) {
@@ -122,7 +122,7 @@
 			headers:{
 				"access-token": get(common_localstorage_key)
 			},
-			data: { "status": 1, "id": activityId},
+			data: { "status": 1, "id": String(BigInt(activityId))},
 			url:"http://"+g_host+"/goods/updateStatus",
 			xhrFields: {withCredentials: true},
 			success:function (data) {
@@ -149,7 +149,7 @@
 			headers:{
 				"access-token": get(common_localstorage_key)
 			},
-			data: { "status": -1, "id": activityId},
+			data: { "status": -1, "id": String(BigInt(activityId))},
 			url:"http://"+g_host+"/goods/updateStatus",
 			xhrFields: {withCredentials: true},
 			success:function (data) {

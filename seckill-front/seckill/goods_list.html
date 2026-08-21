@@ -50,7 +50,7 @@
 			headers:{
 				"access-token": get(common_localstorage_key)
 			},
-			url:"http://"+g_host+"/goods/getSeckillGoodsByActivityId?activityId=" + activityId,
+			url:"http://"+g_host+"/goods/getSeckillGoodsByActivityId?activityId=" + String(BigInt(activityId)),
 			xhrFields: {withCredentials: true},
 			success:function (data) {
 				if (data.code == 1001) {
@@ -124,7 +124,7 @@
 			alert("秒杀活动已经结束，不能抢购");
 			return false;
 		}
-		window.location.href = "create_order.html?goodsId=" + id;
+		window.location.href = "create_order.html?goodsId=" + String(BigInt(id));
 	}
 
 	function getStatus(status){

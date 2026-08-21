@@ -20,6 +20,7 @@ import io.binghe.seckill.gateway.filter.SeckillGatewayGlobalFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.sleuth.CurrentTraceContext;
 import org.springframework.cloud.sleuth.Tracer;
@@ -36,6 +37,7 @@ import reactor.core.publisher.Mono;
  * @copyright 公众号: 冰河技术
  */
 @Component
+@ServletComponentScan(basePackages = {"io.binghe.seckill"})
 public class SeckillGatewayTraceFilter extends SeckillGatewayGlobalFilter {
     private final Logger logger = LoggerFactory.getLogger(SeckillGatewayTraceFilter.class);
     @Autowired

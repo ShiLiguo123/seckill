@@ -31,6 +31,7 @@ import java.util.Date;
 public class SeckillReservationConfigCommand implements Serializable {
     private static final long serialVersionUID = 6994147588632776413L;
     //商品id
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long goodsId;
     //预约人数上限
     private Integer reserveMaxUserCount;

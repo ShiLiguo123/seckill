@@ -16,6 +16,7 @@
 package io.binghe.seckill.interfaces.controller;
 
 import com.alibaba.csp.sentinel.annotation.SentinelResource;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.binghe.seckill.common.exception.ErrorCode;
 import io.binghe.seckill.common.response.ResponseMessage;
 import io.binghe.seckill.common.response.ResponseMessageBuilder;
@@ -69,7 +70,7 @@ public class SeckillReservationController {
      * 更新预约配置状态
      */
     @RequestMapping(value = "/config/updateConfigStatus", method = {RequestMethod.GET,RequestMethod.POST})
-    public ResponseMessage<String> updateConfigStatus(Integer status, Long goodsId){
+    public ResponseMessage<String> updateConfigStatus(Integer status, @JsonFormat(shape = JsonFormat.Shape.STRING) Long goodsId){
         seckillReservationService.updateConfigStatus(status, goodsId);
         return ResponseMessageBuilder.build(ErrorCode.SUCCESS.getCode());
     }
@@ -87,7 +88,7 @@ public class SeckillReservationController {
      * 获取预约配置详情，此接口可在商详页也不调用，如果正常展示数据，则说明商品开通了预约通道，需要提前预约再进行秒杀抢购下单，如果数据为空，则说明商品未开通预约通道，无需提前预约即可下单
      */
     @RequestMapping(value = "/config/getConfigDetail", method = {RequestMethod.GET,RequestMethod.POST})
-    public ResponseMessage<SeckillReservationConfig> getConfigDetail(Long goodsId, Long version){
+    public ResponseMessage<SeckillReservationConfig> getConfigDetail(@JsonFormat(shape = JsonFormat.Shape.STRING) Long goodsId, Long version){
         SeckillReservationConfig serviceConfigDetail = seckillReservationService.getConfigDetail(goodsId, version);
         return ResponseMessageBuilder.build(ErrorCode.SUCCESS.getCode(), serviceConfigDetail);
     }
@@ -96,7 +97,7 @@ public class SeckillReservationController {
      * 根据商品id查看预约用户列表
      */
     @RequestMapping(value = "/user/getUserListByGoodsId", method = {RequestMethod.GET,RequestMethod.POST})
-    public ResponseMessage<List<SeckillReservationUser>> getUserListByGoodsId(Long goodsId, Long version){
+    public ResponseMessage<List<SeckillReservationUser>> getUserListByGoodsId(@JsonFormat(shape = JsonFormat.Shape.STRING) Long goodsId, Long version){
         List<SeckillReservationUser> serviceUserList = seckillReservationService.getUserListByGoodsId(goodsId, version);
         return ResponseMessageBuilder.build(ErrorCode.SUCCESS.getCode(), serviceUserList);
     }

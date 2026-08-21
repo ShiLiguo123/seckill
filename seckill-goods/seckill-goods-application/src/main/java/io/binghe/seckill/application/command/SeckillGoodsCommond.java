@@ -16,11 +16,9 @@
 package io.binghe.seckill.application.command;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
 
 /**
  * @author binghe(微信 : hacker_binghe)
@@ -33,6 +31,7 @@ public class SeckillGoodsCommond implements Serializable {
     //商品名称
     private String goodsName;
     //秒杀活动id
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long activityId;
     //商品原价
     private BigDecimal originalPrice;

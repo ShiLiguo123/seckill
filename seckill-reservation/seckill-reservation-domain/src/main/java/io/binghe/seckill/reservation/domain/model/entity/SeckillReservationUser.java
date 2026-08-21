@@ -17,8 +17,6 @@ package io.binghe.seckill.reservation.domain.model.entity;
 
 import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
@@ -34,18 +32,18 @@ import java.util.Date;
 public class SeckillReservationUser implements Serializable {
     private static final long serialVersionUID = 3249880048600298460L;
     //预约记录id
-    @JsonSerialize(using = ToStringSerializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long id;
     //预约配置id
-    @JsonSerialize(using = ToStringSerializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long reserveConfigId;
     //商品id
-    @JsonSerialize(using = ToStringSerializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long goodsId;
     //商品名称
     private String goodsName;
     //用户id
-    @JsonSerialize(using = ToStringSerializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long userId;
     //预约时间
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")

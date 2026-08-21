@@ -15,6 +15,7 @@
  */
 package io.binghe.seckill.stock.interfaces.controller;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.binghe.seckill.common.constants.SeckillConstants;
 import io.binghe.seckill.common.exception.ErrorCode;
 import io.binghe.seckill.common.response.ResponseMessage;
@@ -51,7 +52,7 @@ public class SeckillStockBucketController {
      * 获取库存分桶数据
      */
     @RequestMapping(value = "/getTotalStockBuckets", method = {RequestMethod.GET,RequestMethod.POST})
-    public ResponseMessage<SeckillStockBucketDTO> getTotalStockBuckets(Long goodsId, Long version){
+    public ResponseMessage<SeckillStockBucketDTO> getTotalStockBuckets(@JsonFormat(shape = JsonFormat.Shape.STRING) Long goodsId, Long version){
         return ResponseMessageBuilder.build(ErrorCode.SUCCESS.getCode(), seckillStockBucketService.getTotalStockBuckets(goodsId, version));
     }
 

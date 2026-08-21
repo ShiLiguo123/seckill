@@ -46,7 +46,7 @@
 			headers:{
 				"access-token": get(common_localstorage_key)
 			},
-			url:"http://"+g_host+"/order/getSeckillOrderByActivityId?activityId=" + activityId,
+			url:"http://"+g_host+"/order/getSeckillOrderByActivityId?activityId=" + String(BigInt(activityId)),
 			xhrFields: {withCredentials: true},
 			success:function (data) {
 				if (data.code == 1001) {
