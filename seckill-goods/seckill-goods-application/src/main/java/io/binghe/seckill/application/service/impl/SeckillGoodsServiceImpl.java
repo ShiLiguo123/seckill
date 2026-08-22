@@ -28,6 +28,8 @@ import io.binghe.seckill.common.cache.model.SeckillBusinessCache;
 import io.binghe.seckill.common.constants.SeckillConstants;
 import io.binghe.seckill.common.exception.ErrorCode;
 import io.binghe.seckill.common.exception.SeckillException;
+import io.binghe.seckill.common.lock.DistributedLock;
+import io.binghe.seckill.common.lock.factoty.DistributedLockFactory;
 import io.binghe.seckill.common.model.dto.activity.SeckillActivityDTO;
 import io.binghe.seckill.common.model.dto.goods.SeckillGoodsDTO;
 import io.binghe.seckill.common.model.dto.stock.SeckillStockDTO;
@@ -81,7 +83,9 @@ public class SeckillGoodsServiceImpl implements SeckillGoodsService {
     private SeckillGoodsListCacheService seckillGoodsListCacheService;
     @Autowired
     private MessageSenderService messageSenderService;
-
+    @Autowired
+    private DistributedLockFactory distributedLockFactory;
+    private String lockKeySuffix = "_lock";
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void saveSeckillGoods(SeckillGoodsCommond seckillGoodsCommond) {
@@ -246,26 +250,43 @@ public class SeckillGoodsServiceImpl implements SeckillGoodsService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean updateAvailableStock(TxMessage txMessage) {
-        Boolean decrementStock = distributedCacheService.hasKey(SeckillConstants.getKey(SeckillConstants.GOODS_TX_KEY, String.valueOf(txMessage.getTxNo())));
-        if (BooleanUtil.isTrue(decrementStock)){
-            logger.info("updateAvailableStock|秒杀商品微服务已经扣减过库存|{}", txMessage.getTxNo());
-            return true;
-        }
         boolean isUpdate = false;
+        String redisKey = SeckillConstants.getKey(SeckillConstants.GOODS_TX_KEY, String.valueOf(txMessage.getTxNo()));
+        String lockKey = redisKey.concat(lockKeySuffix);
+        DistributedLock distributedLock = distributedLockFactory.getDistributedLock(lockKey);
         try{
+            //未获取到锁，不能更新库存，直接返回false
+            if (!distributedLock.tryLock()){
+                return isUpdate;
+            }
+            Boolean decrementStock = distributedCacheService.hasKey(redisKey);
+            if (BooleanUtil.isTrue(decrementStock)){
+                logger.info("updateAvailableStock|秒杀商品微服务已经扣减过库存|{}", txMessage.getTxNo());
+                return true;
+            }
             isUpdate = seckillGoodsDomainService.updateAvailableStock(txMessage.getQuantity(), txMessage.getGoodsId());
             //成功扣减库存成功
             if (isUpdate){
-                distributedCacheService.put(SeckillConstants.getKey(SeckillConstants.GOODS_TX_KEY, String.valueOf(txMessage.getTxNo())), txMessage.getTxNo(), SeckillConstants.TX_LOG_EXPIRE_DAY, TimeUnit.DAYS);
+                distributedCacheService.put(redisKey, txMessage.getTxNo(), SeckillConstants.TX_LOG_EXPIRE_DAY, TimeUnit.DAYS);
             }else{
                 //发送失败消息给订单微服务
                 messageSenderService.send(getErrorMessage(txMessage));
             }
         }catch (Exception e){
+            //已经扣减了商品库存
+            if (isUpdate){
+                //回滚数据库库存
+                seckillGoodsDomainService.incrementAvailableStock(txMessage.getQuantity(), txMessage.getGoodsId());
+                //清除缓存标识
+                distributedCacheService.delete(redisKey);
+            }
+            //重置isUpdate的值
             isUpdate = false;
             logger.error("updateAvailableStock|抛出异常|{},{}",txMessage.getTxNo(), e.getMessage());
             //发送失败消息给订单微服务
             messageSenderService.send(getErrorMessage(txMessage));
+        }finally {
+            distributedLock.unlock();
         }
         return isUpdate;
     }

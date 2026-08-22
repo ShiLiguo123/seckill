@@ -53,6 +53,10 @@ public interface SeckillGoodsMapper {
      * 扣减库存
      */
     int updateAvailableStock(@Param("count") Integer count, @Param("id") Long id);
+    /**
+     * 扣减库存
+     */
+    int incrementAvailableStock(@Param("count") Integer count, @Param("id") Long id);
 
     /**
      * 获取当前可用库存

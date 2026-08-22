@@ -66,7 +66,7 @@ public class SeckillStockBucketServiceImpl implements SeckillStockBucketService 
     private DistributedCacheService distributedCacheService;
     @Autowired
     private MessageSenderService messageSenderService;
-
+    private String lockKeySuffix = "_lock";
     @Override
     public void arrangeStockBuckets(Long userId, SeckillStockBucketWrapperCommand stockBucketWrapperCommand) {
         if (userId == null || stockBucketWrapperCommand == null) {
@@ -129,26 +129,43 @@ public class SeckillStockBucketServiceImpl implements SeckillStockBucketService 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean decreaseStock(TxMessage txMessage) {
-        Boolean decrementStock = distributedCacheService.hasKey(SeckillConstants.getKey(SeckillConstants.STOCK_TX_KEY, String.valueOf(txMessage.getTxNo())));
-        if (BooleanUtil.isTrue(decrementStock)){
-            logger.info("updateAvailableStock|秒杀商品微服务已经扣减过库存|{}", txMessage.getTxNo());
-            return true;
-        }
         boolean isUpdate = false;
+        String redisKey = SeckillConstants.getKey(SeckillConstants.STOCK_TX_KEY, String.valueOf(txMessage.getTxNo()));
+        String lockKey = redisKey.concat(lockKeySuffix);
+        DistributedLock distributedLock = distributedLockFactory.getDistributedLock(lockKey);
         try{
+            //未获取到锁，不能更新库存，直接返回false
+            if (!distributedLock.tryLock()){
+                return isUpdate;
+            }
+            Boolean decrementStock = distributedCacheService.hasKey(redisKey);
+            if (BooleanUtil.isTrue(decrementStock)){
+                logger.info("updateAvailableStock|秒杀商品微服务已经扣减过库存|{}", txMessage.getTxNo());
+                return true;
+            }
             isUpdate = seckillStockBucketDomainService.decreaseStock(new SeckillStockBucketDeduction(txMessage.getGoodsId(), txMessage.getQuantity(), txMessage.getUserId(), txMessage.getBucketSerialNo()));
             //成功扣减库存成功
             if (isUpdate){
-                distributedCacheService.put(SeckillConstants.getKey(SeckillConstants.STOCK_TX_KEY, String.valueOf(txMessage.getTxNo())), txMessage.getTxNo(), SeckillConstants.TX_LOG_EXPIRE_DAY, TimeUnit.DAYS);
+                distributedCacheService.put(redisKey, txMessage.getTxNo(), SeckillConstants.TX_LOG_EXPIRE_DAY, TimeUnit.DAYS);
             }else{
                 //发送失败消息给订单微服务
                 messageSenderService.send(getErrorMessage(txMessage));
             }
         }catch (Exception e){
+            //已经扣减了商品库存
+            if (isUpdate){
+                //回滚数据库库存
+                seckillStockBucketDomainService.increaseStock(new SeckillStockBucketDeduction(txMessage.getGoodsId(), txMessage.getQuantity(), txMessage.getUserId(), txMessage.getBucketSerialNo()));
+                //清除缓存标识
+                distributedCacheService.delete(redisKey);
+            }
+            //重置标识
             isUpdate = false;
             logger.error("decreaseStock|抛出异常|{},{}",txMessage.getTxNo(), e.getMessage());
             //发送失败消息给订单微服务
             messageSenderService.send(getErrorMessage(txMessage));
+        }finally {
+            distributedLock.unlock();
         }
         return isUpdate;
     }

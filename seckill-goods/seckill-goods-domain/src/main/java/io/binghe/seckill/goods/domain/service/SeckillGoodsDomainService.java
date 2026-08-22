@@ -16,6 +16,7 @@
 package io.binghe.seckill.goods.domain.service;
 
 import io.binghe.seckill.goods.domain.model.entity.SeckillGoods;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -58,6 +59,11 @@ public interface SeckillGoodsDomainService {
      * 扣减数据库库存
      */
     boolean updateDbAvailableStock(Integer count, Long id);
+
+    /**
+     * 回滚新增库存
+     */
+    boolean incrementAvailableStock(Integer count, Long id);
 
 
     /**
