@@ -60,6 +60,7 @@
         <hutool.version>5.8.18</hutool.version>
         <zipkin.version>2.2.8.RELEASE</zipkin.version>
         <sentinal.version>1.8.4</sentinal.version>
+        <nacos.client.version>2.0.4</nacos.client.version>
         <logstash-logback.version>5.1</logstash-logback.version>
         <commons-pool2.version>2.11.1</commons-pool2.version>
         <sharding.jdbc.version>4.1.1</sharding.jdbc.version>
@@ -154,6 +155,18 @@
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.alibaba.nacos</groupId>
+                    <artifactId>nacos-client</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba.nacos</groupId>
+            <artifactId>nacos-client</artifactId>
+            <version>${nacos.client.version}</version>
         </dependency>
 
         <dependency>
