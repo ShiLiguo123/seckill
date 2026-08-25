@@ -1,7 +1,7 @@
 version: '3.2'
 
 networks:
-  binghe-cluster-apps:
+  shiliguo-cluster-apps:
     driver: overlay
 
 volumes:
@@ -15,7 +15,7 @@ services:
     ports:
       - 8090:8090
     networks:
-      - binghe-cluster-apps
+      - shiliguo-cluster-apps
     restart: on-failure
   seckill-gateway:
     image: seckill-gateway
@@ -25,7 +25,7 @@ services:
     ports:
       - 8080:8080
     networks:
-      - binghe-cluster-apps
+      - shiliguo-cluster-apps
     restart: on-failure
 
 
