@@ -1,5 +1,5 @@
 ---
---- Created by binghe.
+--- Created by shiliguo.
 ---
 
 local number_util = {}

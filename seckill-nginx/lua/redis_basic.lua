@@ -1,5 +1,5 @@
 ---
---- Created by binghe.
+--- Created by shiliguo.
 --- 读取Redis基础Lua文件
 ---
 

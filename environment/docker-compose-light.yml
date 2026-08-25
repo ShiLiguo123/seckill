@@ -1,7 +1,7 @@
 version: '3.2'
 
 networks:
-  binghe-network:
+  shiliguo-network:
     driver: bridge
 
 volumes:
@@ -21,12 +21,12 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: seckill
-      MYSQL_USER: binghe
-      MYSQL_PASSWORD: binghe
+      MYSQL_USER: shiliguo
+      MYSQL_PASSWORD: shiliguo
     ports:
     - 3306:3306
     networks:
-    - binghe-network
+    - shiliguo-network
 
   redis:
     container_name: redis
@@ -34,7 +34,7 @@ services:
     ports:
     - 6379:6379
     networks:
-    - binghe-network
+    - shiliguo-network
   redis-commander:
     container_name: redis-commander
     hostname: redis-commander
@@ -44,7 +44,7 @@ services:
     ports:
     - 8082:8081
     networks:
-    - binghe-network
+    - shiliguo-network
   rmqnamesrv:
     image: apacherocketmq/rocketmq:4.5.0
     container_name: rmqnamesrv
@@ -55,7 +55,7 @@ services:
     - ./data/rocketmq/store:/home/rocketmq/store
     command: sh mqnamesrv
     networks:
-    - binghe-network
+    - shiliguo-network
   rmqbroker:
     image: apacherocketmq/rocketmq:4.5.0
     container_name: rmqbroker
@@ -73,7 +73,7 @@ services:
     environment:
     - JAVA_HOME=/usr/lib/jvm/jre
     networks:
-    - binghe-network
+    - shiliguo-network
 
   elasticsearch:
     image: elasticsearch:7.14.2
@@ -87,7 +87,7 @@ services:
       ES_JAVA_OPTS: "-Xmx256m -Xms256m"
       discovery.type: single-node
     networks:
-    - binghe-network
+    - shiliguo-network
 
   logstash:
     image: logstash:7.14.2
@@ -103,7 +103,7 @@ services:
     environment:
       LS_JAVA_OPTS: "-Xmx256m -Xms256m"
     networks:
-    - binghe-network
+    - shiliguo-network
     depends_on:
     - elasticsearch
 
@@ -115,7 +115,7 @@ services:
     ports:
     - "5601:5601"
     networks:
-    - binghe-network
+    - shiliguo-network
     depends_on:
     - elasticsearch
 
@@ -125,7 +125,7 @@ services:
     ports:
       - 8858:8858
     networks:
-      - binghe-network
+      - shiliguo-network
 
   nacos:
     image: nacos/nacos-server:2.0.3
@@ -143,6 +143,6 @@ services:
     - mysql
     restart: on-failure
     networks:
-    - binghe-network
+    - shiliguo-network
 
 
