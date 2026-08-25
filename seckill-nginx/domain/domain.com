@@ -8,7 +8,7 @@ server {
 
     #模拟用户id
     set_by_lua_block $user_id{
-        return "binghe";
+        return "shiliguo";
     }
 
     location / {

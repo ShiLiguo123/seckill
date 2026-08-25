@@ -17,4 +17,4 @@ CREATE TABLE `seckill_user`  (
 -- ----------------------------
 -- Records of seckill_user
 -- ----------------------------
-INSERT INTO `seckill_user` VALUES (100001, 'binghe', '82e11a89d1400005fbb5682d489c5c8e', 1);
+INSERT INTO `seckill_user` VALUES (100001, 'shiliguo', '82e11a89d1400005fbb5682d489c5c8e', 1);
