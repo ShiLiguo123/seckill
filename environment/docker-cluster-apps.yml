@@ -1,7 +1,7 @@
 version: '3.2'
 
 networks:
-  binghe-cluster-apps:
+  shiliguo-cluster-apps:
     driver: overlay
 
 volumes:
@@ -15,7 +15,7 @@ services:
     ports:
       - 8081:8081
     networks:
-      - binghe-cluster-apps
+      - shiliguo-cluster-apps
     restart: on-failure
   seckill-activity:
     image: seckill-activity
@@ -26,7 +26,7 @@ services:
       - 8082:8082
       - 20880:20880
     networks:
-      - binghe-cluster-apps
+      - shiliguo-cluster-apps
     restart: on-failure
   seckill-goods:
     image: seckill-goods
@@ -37,7 +37,7 @@ services:
       - 8083:8083
       - 20881:20881
     networks:
-      - binghe-cluster-apps
+      - shiliguo-cluster-apps
     restart: on-failure
   seckill-order:
     image: seckill-order
@@ -48,7 +48,7 @@ services:
       - 8084:8084
       - 20882:20882
     networks:
-      - binghe-cluster-apps
+      - shiliguo-cluster-apps
     restart: on-failure
   seckill-reservation:
     image: seckill-reservation
@@ -59,7 +59,7 @@ services:
       - 8086:8086
       - 20886:20886
     networks:
-      - binghe-cluster-apps
+      - shiliguo-cluster-apps
     restart: on-failure
   seckill-stock:
     image: seckill-stock
@@ -70,7 +70,7 @@ services:
       - 8085:8085
       - 20883:20883
     networks:
-      - binghe-cluster-apps
+      - shiliguo-cluster-apps
     restart: on-failure
   seckill-gateway:
     image: seckill-gateway
@@ -80,7 +80,7 @@ services:
     ports:
       - 10002:10002
     networks:
-      - binghe-cluster-apps
+      - shiliguo-cluster-apps
     restart: on-failure
 
 
