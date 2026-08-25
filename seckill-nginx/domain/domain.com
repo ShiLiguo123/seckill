@@ -10,7 +10,7 @@ server {
 
     #模拟用户id
     set_by_lua_block $user_id{
-        return "binghe";
+        return "shiliguo";
     }
 
     #用户token,可作为标识用户的唯一id

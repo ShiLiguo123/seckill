@@ -1,5 +1,5 @@
 ---
---- Created by binghe.
+--- Created by shiliguo.
 --- 获取秒杀活动列表的校验
 ---
 

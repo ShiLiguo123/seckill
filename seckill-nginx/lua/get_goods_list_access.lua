@@ -1,5 +1,5 @@
 ---
---- Created by binghe.
+--- Created by shiliguo.
 --- 秒杀商品列表的校验
 ---
 local tokenUtil = require("x_st_token")
