@@ -1,1 +1,1 @@
-traceFilter=io.binghe.seckill.dubbo.interfaces.filter.DubboTraceFilter
+traceFilter=io.shiliguo.seckill.dubbo.interfaces.filter.DubboTraceFilter

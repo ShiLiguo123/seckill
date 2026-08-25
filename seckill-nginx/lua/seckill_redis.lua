@@ -1,5 +1,5 @@
 ---
---- Created by binghe
+--- Created by shiliguo
 --- 操作Redis Lua脚本
 ---
 

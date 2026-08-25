@@ -1,5 +1,5 @@
 ---
---- Created by binghe.
+--- Created by shiliguo.
 --- 秒杀商品详情的校验
 ---
 ---
