@@ -1,7 +1,7 @@
 version: '3.2'
 
 networks:
-  binghe-network:
+  shiliguo-network:
     driver: bridge
 
 volumes:
@@ -21,12 +21,12 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: seckill
-      MYSQL_USER: binghe
-      MYSQL_PASSWORD: binghe
+      MYSQL_USER: shiliguo
+      MYSQL_PASSWORD: shiliguo
     ports:
     - 3306:3306
     networks:
-    - binghe-network
+    - shiliguo-network
   mysqld-exporter:
     image: prom/mysqld-exporter
     container_name: mysqld-exporter
@@ -37,14 +37,14 @@ services:
     depends_on:
     - mysql
     networks:
-    - binghe-network
+    - shiliguo-network
   redis:
     container_name: redis
     image: redislabs/redismod:latest
     ports:
     - 6379:6379
     networks:
-    - binghe-network
+    - shiliguo-network
 
   redis-commander:
     container_name: redis-commander
@@ -55,14 +55,14 @@ services:
     ports:
     - 8082:8081
     networks:
-    - binghe-network
+    - shiliguo-network
   redis-exporter:
     image: oliver006/redis_exporter
     command: -redis.addr redis://redis:6379
     ports:
     - 9121:9121
     networks:
-    - binghe-network
+    - shiliguo-network
 
   sentinel:
     image: bladex/sentinel-dashboard
@@ -70,7 +70,7 @@ services:
     ports:
     - 8858:8858
     networks:
-    - binghe-network
+    - shiliguo-network
   nacos:
     image: nacos/nacos-server:2.0.3
     container_name: nacos-standalone-mysql
@@ -87,7 +87,7 @@ services:
     - mysql
     restart: on-failure
     networks:
-    - binghe-network
+    - shiliguo-network
 
   node-exporter:
     image: prom/node-exporter:latest
@@ -105,7 +105,7 @@ services:
     ports:
     - 9100:9100
     networks:
-    - binghe-network
+    - shiliguo-network
 
   prometheus:
     image: prom/prometheus:latest
@@ -125,7 +125,7 @@ services:
     ports:
     - 9090:9090
     networks:
-    - binghe-network
+    - shiliguo-network
 
   grafana:
     image: grafana/grafana
@@ -142,7 +142,7 @@ services:
     external_links:
     - redis:redis
     networks:
-    - binghe-network
+    - shiliguo-network
 
   rmqnamesrv:
     image: apacherocketmq/rocketmq:4.5.0
@@ -154,7 +154,7 @@ services:
     - ./data/rocketmq/store:/home/rocketmq/store
     command: sh mqnamesrv
     networks:
-    - binghe-network
+    - shiliguo-network
 
   rmqbroker:
     image: apacherocketmq/rocketmq:4.5.0
@@ -173,7 +173,7 @@ services:
     environment:
     - JAVA_HOME=/usr/lib/jvm/jre
     networks:
-    - binghe-network
+    - shiliguo-network
   rmqconsole:
     image: styletang/rocketmq-console-ng:latest
     container_name: rocketmq-console
@@ -185,7 +185,7 @@ services:
     - JAVA_OPTS= -Dlogging.level.root=info  -Drocketmq.namesrv.addr=rmqnamesrv:9876
     - Dcom.rocketmq.sendMessageWithVIPChannel=false
     networks:
-    - binghe-network
+    - shiliguo-network
 
   elasticsearch:
     image: elasticsearch:7.14.2
@@ -199,7 +199,7 @@ services:
       ES_JAVA_OPTS: "-Xmx256m -Xms256m"
       discovery.type: single-node
     networks:
-    - binghe-network
+    - shiliguo-network
 
   logstash:
     image: logstash:7.14.2
@@ -215,7 +215,7 @@ services:
     environment:
       LS_JAVA_OPTS: "-Xmx256m -Xms256m"
     networks:
-    - binghe-network
+    - shiliguo-network
     depends_on:
     - elasticsearch
 
@@ -227,7 +227,7 @@ services:
     ports:
     - "5601:5601"
     networks:
-    - binghe-network
+    - shiliguo-network
     depends_on:
     - elasticsearch
 
